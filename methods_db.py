@@ -8,64 +8,65 @@ MODEL_NODES = 300
 
 class PathwayData(self):
 
-	def __init__(self, id):
-		self.id = pw_id
-		self.pos_gene_counts = {}
-		self.neg_gene_counts = {}
-                self.general_gene_counts = {}
+    def __init__(self, pw_id, pw_name):
+    	self.id = pw_id
+        self.name = pw_name
+    	self.pos_gene_counts = {}
+    	self.neg_gene_counts = {}
+        self.general_gene_counts = {}
 
-	def update_gene_counts(self, gene_id, is_positive):
-		update = None
-		if is_positive:
-			update = self.pos_gene_counts
-		else:
-			update = self.neg_gene_counts
-		if gene_id in update:
-			update += 1
-		else:
-			update[gene_id] = 1
-                if gene_id in self.general_gene_counts:
-                    self.general_gene_counts[gene_id] += 1
-                else:
-                    self.general_gene_counts[gene_id] = 1
+    def update_gene_counts(self, gene_id, is_positive):
+    	update = None
+    	if is_positive:
+    	    update = self.pos_gene_counts
+    	else:
+    	    update = self.neg_gene_counts
+    	if gene_id in update:
+    	    update += 1
+    	else:
+    	    update[gene_id] = 1
+            if gene_id in self.general_gene_counts:
+                self.general_gene_counts[gene_id] += 1
+            else:
+                self.general_gene_counts[gene_id] = 1
 
 class EdgeData(self):
 
-	def __init__(self, pw0, pw1):
-		self.edge = (pw0, pw1)
-		self.shared_genes = {}
-		self.odds_ratio_genes_side = {}
-		self.odds_ratio_genes_any = {}
+    def __init__(self, pw0, pw1):
+    	self.edge = (pw0, pw1)
+    	self.shared_genes = {}
+    	self.odds_ratio_genes_side = {}
+    	self.odds_ratio_genes_any = {}
 
 class InteractionModel:
 
-	def __init__(self):
-		client = MongoClient()
-		self.db = client.networkdb
+    def __init__(self):
+    	client = MongoClient()
+    	self.db = client.networkdb
 
-	def get_pw_name(self, pw_id):
-		"""Wrapper around db.pathways.find_one
-		:rtype: dict|None
-		"""
-		return self.db.pathways.find_one({"_id": pw_id})
+    def get_pw_name(self, pw_id):
+    	"""Wrapper around db.pathways.find_one
+    	:rtype: dict|None
+    	"""
+    	return self.db.pathways.find_one({"_id": pw_id})
 
-	def get_pw_id(self, pw_name):
-		"""Wrapper around db.pathways.find_one
-		:rtype: dict|None
-		"""
-		return self.db.pathways.find_one({"pathway": pw_name})
+    def get_pw_id(self, pw_name):
+    	"""Wrapper around db.pathways.find_one
+    	:rtype: dict|None
+    	"""
+	return self.db.pathways.find_one({"pathway": pw_name})
 
-	def _net_gene_odds_ratio(self, gene, network, edge_in_nodes, side=None):
-		"""Return counts for odds ratio computation in one network
-		:param side: None, "pos_genes", or "neg_genes"
-		"""
-		network_nodes = self.db.network_nodes
-		look_for_gene = None
-		if not side:
-			look_for_gene = {"$or": [{"pos_genes": gene}, {"neg_genes": gene}]}
-		else:
-			look_for_gene = {side: gene}
-		in_edge_nodes = network_nodes.find(
+    def _net_gene_odds_ratio(self, gene, network, edge_in_nodes, side=None):
+    	"""Return counts for odds ratio computation in one network
+    	:param side: None, "pos_genes", or "neg_genes"
+    	"""
+    	network_nodes = self.db.network_nodes
+    	look_for_gene = None
+    	if not side:
+	    look_for_gene = {"$or": [{"pos_genes": gene}, {"neg_genes": gene}]}
+	else:
+            look_for_gene = {side: gene}
+	    in_edge_nodes = network_nodes.find(
 			{"$and": [look_for_gene, {"network": network,
 									  "node": {"$in": edge_in_nodes}}]}).count()
 		in_all_nodes = network_nodes.find(
@@ -94,7 +95,7 @@ class InteractionModel:
 	def query_curated_genes(self, pathway):
 		pw_id = self.get_pathway_id(pathway)
 		if pw_id:
-			pw = PathwayData(pw_id)
+			pw = PathwayData(pw_id, pathway)
 			for doc in db.network_node_pathways.find({"pathway": pw_id}):
 				for gene_id in doc["pos_genes"]:
 					pw.update_gene_counts(gene_id, True)
@@ -104,15 +105,31 @@ class InteractionModel:
 		else:
 			return None
 
-        def _pw_genes_by_odds_ratio(self, pw_obj):
+        def _pw_genes_by_odds_ratio(self, pw_obj, network_nodes_dict):
+            gene_list = []
             for gene_id, count in pw_obj.general_gene_counts:
+                gene_or = self.gene_odds_ratio(gene, network_nodes_dict)
+                if gene_or > 1:
+                    gene_list.append((gene_id, gene_or))
+            gene_list.sort(key=lambda tup: tup[1])
+            gene_list.reverse()
+            return gene_list
 
-
-        def interaction_gene_counts(self, pw0, pw1):
+        def interaction_gene_counts(self, pw0, pw1, side):
             pw0_obj = self.query_curated_genes(pw0)
             pw1_obj = self.query_curated_genes(pw1)
+            network_nodes = {}
+            for edge_info in db.network_edges.find({"edge": {"$in": [[pw0_obj.pw_id, pw1_obj.pw_id], [pw1_obj.pw_id, pw0_obj.pw_id]]}, "type": side}):
+                network = edge_info["network"]
+                if network not in network_nodes:
+                    network_nodes[network] = []
+                network_nodes[network] += edge_info["nodes"]
+            or_gene_list0 = self._pw_genes_by_odds_ratio(pw0_obj, network_nodes)
+            or_gene_list1 = self._pw_genes_by_odds_ratio(pw1_obj, network_nodes)
+            return {"pw0": or_gene_list0, "pw1": or_gene_list1}
 
-
+        def get_gene_samples(self, gene_id):
+            undefined
 
 '''
 def edge_or(all_genes, net_node_dict):
