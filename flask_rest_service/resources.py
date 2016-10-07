@@ -6,23 +6,16 @@ from flask_rest_service import app, api, mongo
 from bson.objectid import ObjectId
 
 class Edge(restful.Resource):
-    def __init__(self, *args, **kwargs):
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument('pw1', type=str)
-        self.parser.add_argument('pw2', type=str)
-        super(Edge, self).__init__()
-
-    def get(self):
-        args = self.parser.parse_args()
-        if not args['pw1'] or not args['pw2']:
-            abort(400)
-        jo1 = json.loads(args['pw1'])
-        jo2 = json.loads(args['pw2'])
+    def get(self, pw1, pw2):
+        x = mongo.db.pathways.find_one_or_404({'_id': pw1})
         return {
-            'test': jo1,
-            'test2': jo2
+            'test1': x['pathway'],
+            'test2': pw2
         }
 
+class Network(restful.Resource):
+    def get(self):
+        pass
 
 class Root(restful.Resource):
     def get(self):
@@ -31,4 +24,5 @@ class Root(restful.Resource):
             'mongo': str(mongo.db)
         }
 
+api.add_resource(Edge, '/edge/<ObjectId:pw1>+<ObjectId:pw2>')
 api.add_resource(Root, '/')
