@@ -7,10 +7,11 @@ from bson.objectid import ObjectId
 
 class Edge(restful.Resource):
     def get(self, pw1, pw2):
-        x = mongo.db.pathways.find_one_or_404({'_id': pw1})
+        pw1_obj = mongo.db.pathways.find_one_or_404({'_id': pw1})
+        pw2_obj = mongo.db.pathways.find_one_or_404({'_id': pw2})
         return {
-            'test1': x['pathway'],
-            'test2': pw2
+            'Pathway 1': pw1_obj['pathway'],
+            'Pathway 2': pw2_obj['pathway']
         }
 
 class Network(restful.Resource):
