@@ -5,7 +5,9 @@ from flask.ext.restful import reqparse
 from flask_rest_service import app, api, mongo
 from webargs import fields, validate
 from webargs.flaskparser import use_args, parser
+
 from bson.objectid import ObjectId
+import methods
 
 class Edge(restful.Resource):
     def get(self, pw1, pw2, etype):
@@ -39,7 +41,7 @@ class Network(restful.Resource):
         print args["pw1"]
         print args["pw2"]
         print args["etype"]
-        return {}
+        return methods.InteractionModel(mongo.db).get_pw_id(args["pw1"])
 
 class Root(restful.Resource):
     def get(self):
