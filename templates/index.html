@@ -12,7 +12,7 @@
 
 </style>
 <body>
-<script src="../static/js/d3.v3.min.js"></script>
+<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
 <script>
 
 var width = 960,
@@ -25,7 +25,7 @@ var svg = d3.select("body").append("svg")
 var force = d3.layout.force()
     .size([width, height]);
 
-d3.tsv("10KP_DIFF_filtered_net.txt", function(error, links) {
+d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
   if (error) throw error;
 
   var nodesByName = {};
@@ -43,8 +43,19 @@ d3.tsv("10KP_DIFF_filtered_net.txt", function(error, links) {
   var link = svg.selectAll(".link")
       .data(links)
     .enter().append("line")
-      .attr("class", "link");
-
+      .attr("class", "link")
+      .on("click", function(d) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/network?pw1=" + d.PW1 + "&pw2=" + d.PW2 + "&etype=" + d.etype, true);
+        xhr.send();
+        xhr.onreadystatechange = processRequest;
+        function processRequest(e) {
+          console.log("HI");
+        }
+        console.log(d);
+        console.log(d.PW1 + " " + d.PW2);
+      });
+      
   // Create the node circles.
   var node = svg.selectAll(".node")
       .data(nodes)
