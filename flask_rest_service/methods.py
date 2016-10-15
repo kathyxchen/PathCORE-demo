@@ -52,6 +52,27 @@ class InteractionModel:
     	:rtype: dict|None
     	"""
 	return self.db.pathways.find_one({"pathway": pw_name})
+
+    def get_edge_info(self, pw1_name, pw2_name, etype):
+        """Top level response to the GET request.
+        """
+        # TODO: may need to be in populate_db.py but not all networks
+        # have the 2 pathways in the same order for an edge.
+        # Likely duplicates.
+        oid1 = self.get_pw_id(pw1_name)["_id"]
+        oid2 = self.get_pw_id(pw2_name)["_id"]
+        # eventually, might need to have a 'filtered' flag in the DB
+        # re: permutation analysis
+        print oid1
+        print oid2
+        print etype
+        edge_in_networks = self.db.network_edges.find({"edge": [oid1, oid2], "type": etype})
+        return edge_in_networks
+        # for edge in edge_in_networks:
+
+
+
+
 '''
 
     def _net_gene_odds_ratio(self, gene, network, edge_in_nodes, side=None):

@@ -41,7 +41,8 @@ class Network(restful.Resource):
         print args["pw1"]
         print args["pw2"]
         print args["etype"]
-        return methods.InteractionModel(mongo.db).get_pw_id(args["pw1"])
+        return methods.InteractionModel(mongo.db).get_edge_info(args["pw1"], args["pw2"], int(args["etype"]))
+        # return methods.InteractionModel(mongo.db).get_pw_id(args["pw1"])
 
 class Root(restful.Resource):
     def get(self):
