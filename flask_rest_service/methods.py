@@ -85,13 +85,14 @@ class EdgeData:
             weighted_or = 0.0
             look_for_gene = {"$or": [{"pos_genes": gene_id}, {"neg_genes": gene_id}]}
             # over all networks, even if edge isn't present in a network.
+            # how many times does this gene appear in a node signature?
             gene_in_num_nodes = float(self.db.network_nodes.find(look_for_gene).count())
 
             if gene_id in self.annotated_genes:
                 annotated_or = self.annotated_genes[gene_id]
             if gene_id in self.not_annotated_genes:
                 unannotated_or = self.not_annotated_genes[gene_id]
-
+            # gene appears in both cases, but is not always annotated to pathways in the edge.
             if gene_id in self.annotated_genes and gene_id in self.not_annotated_genes:
                 total_gene_count = float(annotated_or + unannotated_or)
                 weighted_or = (annotated_or/total_gene_count)*total_gene_count
@@ -166,6 +167,7 @@ class InteractionModel:
                 pw2.bulk_update_gene_counts(pos_genes, neg_genes, node_pw2_def)
         aggregate_edge = EdgeData(self.db, pw1, pw2, edge_in_num_nodes)
         aggregate_edge.compute_odds_ratios()
+
         collect_annotated = []
         collect_weighted = []
         collect_unannotated = []
@@ -180,7 +182,46 @@ class InteractionModel:
         collect_annotated.sort(key=lambda tup: tup[1])
         collect_weighted.sort(key=lambda tup: tup[1])
         collect_unannotated.sort(key=lambda tup: tup[1])
+        print self.sort_samples(collect_weighted)
         return {"annotated": collect_annotated, "weighted": collect_weighted, "unannotated": collect_unannotated}
+
+    def get_gene_sample_values(self, gene_name):
+        return self.db.genes.find_one({"gene": gene_name})["expression"]
+
+    def get_sorted_gene_samples(self, gene_sample_vals):
+        sample_and_val = []
+        index_and_val = [tup for tup in sorted(enumerate(gene_sample_vals), key=lambda x:x[1])]
+        for index, expr_val in index_and_val:
+            sample_name = self.db.samples.find_one({"_id": index})["sample"]
+            sample_and_val.append((sample_name, expr_val))
+        return sample_and_val
+
+    def sort_samples(self, gene_or_list):
+        gene_sample_mat = []
+        sum_or = 0.0
+        for gene_name, or_value in gene_or_list:
+            gene_sample_mat.append(self.get_gene_sample_values(gene_name))
+            sum_or += or_value
+        gene_sample_mat = map(list, zip(*gene_sample_mat))
+        # for each column, metric weights the odds ratio of each gene and the expr val.
+        col_scores = []
+        for column in gene_sample_mat:
+            current_col_score = 0.0
+            normalize_by = 0.0
+            for index, expr in enumerate(column):
+                gene_or = gene_or_list[index][1]
+                relative_or = gene_or/sum_or
+                current_col_score += relative_or * expr
+                normalize_by += expr
+            col_scores.append(current_col_score/normalize_by)
+
+        index_sorted_scores = [tup[0] for tup in sorted(enumerate(col_scores), key=lambda x:x[1])]
+        col_sorted = []
+        col_names = []
+        for index in index_sorted_scores:
+            col_sorted.append(col_scores[index])
+            col_names.append(self.db.sample_labels.find_one({"_id": index})["sample"])
+        return {"sample_gene_vals": col_sorted, "sample_names": col_names, "gene_names": gene_or_list}
 
 '''
 
@@ -256,8 +297,6 @@ class InteractionModel:
             or_gene_list1 = self._pw_genes_by_odds_ratio(pw1_obj, network_nodes)
             return {"pw0": or_gene_list0, "pw1": or_gene_list1}
 
-        def get_gene_samples(self, gene_id):
-            undefined
 
 
 def edge_or(all_genes, net_node_dict):
@@ -280,30 +319,6 @@ def edge_or(all_genes, net_node_dict):
 
     gor_list.sort(key=lambda tup: tup[1])
     print reversed(gor_list)
-
-
-def edge_data(pw1, pw2):
-    # nodes in which an edge appears:
-    net_nodes = {}
-    all_genes = set()
-    for edge_info in db.network_edges.find({"edge": [pw1, pw2]}):
-        net = edge_info["network"]
-        if net not in net_nodes:
-            net_nodes[net] = {1: [], -1: []}
-        net_nodes[net][edge_info["type"]] += edge_info["nodes"]
-        node = db.network_nodes.find({"network": net, "node": {"$in": edge_info["nodes"]}})[0]
-        all_genes = all_genes || set(node["pos_genes"] + node["neg_genes"])
-    for edge_info in db.network_edges.find({"edge": [pw2, pw1]}):
-        net = edge_info["network"]
-        if net not in net_nodes:
-            net_nodes[net] = {1: [], -1: []}
-        net_nodes[net][edge_info["type"]] += edge_info["nodes"]
-        node = db.network_nodes.find({"network": net, "node": {"$in": edge_info["nodes"]}})[0]
-        all_genes = all_genes || set(node["pos_genes"] + node["neg_genes"])
-    print net_nodes
-
-def get_gene_name(gene_id):
-    return db.genes.find({"_id": gene_id})[0]["gene"]
 
 def gene_counts_pw_node(pw):
 	# ignore network number for now...
@@ -369,5 +384,4 @@ for y in inter_pos2neg1:
 	print y + ": " + str(ng1[y]) + " " + str(pg2[y])
 
 
-if __name__ == "__main__":
 '''
