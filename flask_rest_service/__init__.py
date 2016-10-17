@@ -9,7 +9,7 @@ MONGO_URL = os.environ.get('MONGO_URL')
 if not MONGO_URL:
     MONGO_URL = "mongodb://localhost:27017/networkdb";
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder='./templates')
 
 app.config['MONGO_URI'] = MONGO_URL
 mongo = PyMongo(app)
