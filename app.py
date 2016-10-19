@@ -5,5 +5,6 @@ from flask import render_template
 def test():
 	return render_template("index.html", title="test")
 
-app.run(debug=True)
+# app.run(debug=True)
+
 
