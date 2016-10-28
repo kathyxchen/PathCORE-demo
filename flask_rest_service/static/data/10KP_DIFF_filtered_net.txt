@@ -4,12 +4,12 @@ Zinc transport system	Macrolide resistance, MacAB-TolC transporter	44.0		1.0
 Phosphonate transport system	Phosphonate and phosphinate metabolism PA01	41.0		1.0
 Phosphonate transport system	Glycerophospholipid metabolism PA01	32.0		1.0
 Phosphonate and phosphinate metabolism PA01	Glycerophospholipid metabolism PA01	31.0		1.0
-glycine betaine catabolic process- GO	Glycine, serine and threonine metabolism PA01	31.0		1.0
+glycine betaine catabolic process - GO	Glycine, serine and threonine metabolism PA01	31.0		1.0
 Phosphate transport system	Phosphonate transport system	30.0		1.0
-response to chemical- GO	Putative ABC transport system	30.0		1.0
+response to chemical - GO	Putative ABC transport system	30.0		1.0
 Phosphate transport system	Phosphonate and phosphinate metabolism PA01	28.0		1.0
 Bacterial secretion system PA01	Phosphonate and phosphinate metabolism PA01	22.0		1.0
-Iron complex transport system	response to chemical- GO	22.0		1.0
+Iron complex transport system	response to chemical - GO	22.0		1.0
 Iron complex transport system	Biosynthesis of siderophore group nonribosomal peptides PA01	21.0		1.0
 Ribosome PA01	RNA degradation PA01	21.0		1.0
 Bacterial secretion system PA01	Phosphonate transport system	21.0		1.0
@@ -19,28 +19,28 @@ Histidine metabolism PA01	Valine, leucine and isoleucine degradation PA01	20.0		
 Iron complex transport system	Macrolide resistance, MacAB-TolC transporter	19.0		1.0
 Branched-chain amino acid transport system	Glycine betaine/proline transport system	18.0		1.0
 Bacterial secretion system PA01	Type III secretion system	15.375		1.0
-protein secretion by the type III secretion system- GO	Type III secretion system	15.375		1.0
+protein secretion by the type III secretion system - GO	Type III secretion system	15.375		1.0
 Branched-chain amino acid transport system	Glutamate/aspartate transport system	15.0		1.0
 Arginine and proline metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	14.0		1.0
-glycine betaine catabolic process- GO	Glycine betaine/proline transport system	13.0		1.0
+glycine betaine catabolic process - GO	Glycine betaine/proline transport system	13.0		1.0
 Phosphate transport system	Glycerophospholipid metabolism PA01	13.0		1.0
-Bacterial secretion system PA01	protein secretion by the type III secretion system- GO	12.0769230769		1.0
+Bacterial secretion system PA01	protein secretion by the type III secretion system - GO	12.0769230769		1.0
 Glycine betaine/proline transport system	Histidine metabolism PA01	12.0		1.0
 Iron complex transport system	Zinc transport system	11.6666666667		1.0
 Type VI secretion system	Bacterial secretion system PA01	11.25		1.0
 Sulfur metabolism PA01	NitT/TauT family transport system	10.5		1.0
-cellular nitrogen compound biosynthetic process- GO	Cyanoamino acid metabolism PA01	10.3		1.0
+cellular nitrogen compound biosynthetic process - GO	Cyanoamino acid metabolism PA01	10.3		1.0
 Iron complex transport system	Iron(III) transport system	10.0		1.0
-type IV pilus-dependent motility- GO	type IV pilus biogenesis- GO	10.0		1.0
-polysaccharide biosynthetic process- GO	Histidine metabolism PA01	10.0		1.0
+type IV pilus-dependent motility - GO	type IV pilus biogenesis - GO	10.0		1.0
+polysaccharide biosynthetic process - GO	Histidine metabolism PA01	10.0		1.0
 Putative polar amino acid transport system	NitT/TauT family transport system	9.5		1.0
 Cationic antimicrobial peptide (CAMP) resistance PA01	Phospholipid transport system	9.5		1.0
 Valine, leucine and isoleucine degradation PA01	Pyruvate metabolism PA01	9.4		1.0
 Histidine metabolism PA01	Tyrosine metabolism PA01	9.0		1.0
 Biosynthesis of siderophore group nonribosomal peptides PA01	Iron(III) transport system	9.0		1.0
 Porphyrin and chlorophyll metabolism PA01	Spermidine/putrescine transport system	9.0		1.0
-type IV pilus-dependent motility- GO	Putative spermidine/putrescine transport system	9.0		1.0
-Type III secretion system	type IV pilus-dependent motility- GO	8.5		1.0
+type IV pilus-dependent motility - GO	Putative spermidine/putrescine transport system	9.0		1.0
+Type III secretion system	type IV pilus-dependent motility - GO	8.5		1.0
 Branched-chain amino acid transport system	Glycine, serine and threonine metabolism PA01	8.0		1.0
 Sulfur metabolism PA01	D-Methionine transport system	8.0		1.0
 Aminobenzoate degradation PA01	Degradation of aromatic compounds PA01	7.76923076923		1.0
@@ -52,39 +52,39 @@ Iron complex transport system	Putative ABC transport system	6.75		1.0
 Putative polar amino acid transport system	Sulfur metabolism PA01	6.5		1.0
 Oxidative phosphorylation PA01	Purine metabolism PA01	6.33333333333		1.0
 Degradation of aromatic compounds PA01	Type III secretion system	6.33333333333		1.0
-Type VI secretion system	cellular nitrogen compound biosynthetic process- GO	6.3		1.0
-Degradation of aromatic compounds PA01	protein secretion by the type III secretion system- GO	6.1		1.0
-Flagellar assembly PA01	type IV pilus-dependent motility- GO	6.0		1.0
+Type VI secretion system	cellular nitrogen compound biosynthetic process - GO	6.3		1.0
+Degradation of aromatic compounds PA01	protein secretion by the type III secretion system - GO	6.1		1.0
+Flagellar assembly PA01	type IV pilus-dependent motility - GO	6.0		1.0
 Putative polar amino acid transport system	D-Methionine transport system	6.0		1.0
 Branched-chain amino acid transport system	Dipeptide transport system	6.0		1.0
 Histidine metabolism PA01	Pyruvate metabolism PA01	6.0		1.0
 Bacterial secretion system PA01	Glycerophospholipid metabolism PA01	5.5		1.0
 Zinc transport system	Biosynthesis of siderophore group nonribosomal peptides PA01	5.44444444444		1.0
 Type VI secretion system	Cyanoamino acid metabolism PA01	5.33333333333		1.0
-Branched-chain amino acid transport system	glycine betaine catabolic process- GO	5.28571428571		1.0
+Branched-chain amino acid transport system	glycine betaine catabolic process - GO	5.28571428571		1.0
 NitT/TauT family transport system	D-Methionine transport system	5.0		1.0
 Macrolide resistance, MacAB-TolC transporter	Biosynthesis of siderophore group nonribosomal peptides PA01	5.0		1.0
 Oxidative phosphorylation PA01	Ribosome PA01	4.8		1.0
-Multidrug resistance, efflux pump MexGHI-OpmD	cellular nitrogen compound biosynthetic process- GO	4.70588235294		1.0
+Multidrug resistance, efflux pump MexGHI-OpmD	cellular nitrogen compound biosynthetic process - GO	4.70588235294		1.0
 Pyruvate metabolism PA01	Tyrosine metabolism PA01	4.6		1.0
 Dipeptide transport system	Glyoxylate and dicarboxylate metabolism PA01	4.5		1.0
-glycine betaine catabolic process- GO	Putative ABC transport system	4.5		1.0
+glycine betaine catabolic process - GO	Putative ABC transport system	4.5		1.0
 Branched-chain amino acid transport system	Degradation of aromatic compounds PA01	4.5		1.0
 Dipeptide transport system	Valine, leucine and isoleucine degradation PA01	4.5		1.0
 Glyoxylate and dicarboxylate metabolism PA01	Valine, leucine and isoleucine degradation PA01	4.41666666667		1.0
 Valine, leucine and isoleucine degradation PA01	Bacterial chemotaxis PA01	4.33333333333		1.0
 Branched-chain amino acid transport system	Glyoxylate and dicarboxylate metabolism PA01	4.0		1.0
 Macrolide resistance, MacAB-TolC transporter	Hemophore/metalloprotease transport system	4.0		1.0
-cellular nitrogen compound biosynthetic process- GO	Hemophore/metalloprotease transport system	4.0		1.0
+cellular nitrogen compound biosynthetic process - GO	Hemophore/metalloprotease transport system	4.0		1.0
 Oxidative phosphorylation PA01	Ubiquinone and other terpenoid-quinone biosynthesis PA01	4.0		1.0
 Oxidative phosphorylation PA01	Vitamin B6 metabolism PA01	4.0		1.0
 Cyanoamino acid metabolism PA01	Hemophore/metalloprotease transport system	4.0		1.0
 Degradation of aromatic compounds PA01	Bacterial secretion system PA01	3.78571428571		1.0
 Aminobenzoate degradation PA01	Valine, leucine and isoleucine degradation PA01	3.63636363636		1.0
-Degradation of aromatic compounds PA01	glycine betaine catabolic process- GO	3.57142857143		1.0
+Degradation of aromatic compounds PA01	glycine betaine catabolic process - GO	3.57142857143		1.0
 Branched-chain amino acid transport system	Tyrosine metabolism PA01	3.5		1.0
 Glyoxylate and dicarboxylate metabolism PA01	Tyrosine metabolism PA01	3.5		1.0
-polysaccharide biosynthetic process- GO	type IV pilus-dependent motility- GO	3.46153846154		1.0
+polysaccharide biosynthetic process - GO	type IV pilus-dependent motility - GO	3.46153846154		1.0
 Branched-chain amino acid transport system	Valine, leucine and isoleucine degradation PA01	3.25		1.0
 Branched-chain amino acid transport system	Pyruvate metabolism PA01	3.25		1.0
 Glyoxylate and dicarboxylate metabolism PA01	Pyruvate metabolism PA01	3.16666666667		1.0
@@ -103,23 +103,23 @@ Aminobenzoate degradation PA01	Butanoate metabolism PA01	3.0		1.0
 Multidrug resistance, efflux pump MexGHI-OpmD	Cyanoamino acid metabolism PA01	2.85714285714		1.0
 Degradation of aromatic compounds PA01	Glycine betaine/proline transport system	2.75		1.0
 Aminobenzoate degradation PA01	Macrolide resistance, MacAB-TolC transporter	2.75		1.0
-Bacterial secretion system PA01	type IV pilus-dependent motility- GO	2.66666666667		1.0
-polysaccharide biosynthetic process- GO	Flagellar assembly PA01	2.66666666667		1.0
+Bacterial secretion system PA01	type IV pilus-dependent motility - GO	2.66666666667		1.0
+polysaccharide biosynthetic process - GO	Flagellar assembly PA01	2.66666666667		1.0
 Branched-chain amino acid transport system	Putative polar amino acid transport system	2.6		1.0
 Multidrug resistance, efflux pump MexGHI-OpmD	Type VI secretion system	2.6		1.0
 Cationic antimicrobial peptide (CAMP) resistance PA01	Flagellar assembly PA01	2.53846153846		1.0
-protein secretion by the type III secretion system- GO	type IV pilus-dependent motility- GO	2.44444444444		1.0
+protein secretion by the type III secretion system - GO	type IV pilus-dependent motility - GO	2.44444444444		1.0
 Zinc transport system	Iron(III) transport system	2.33333333333		1.0
 Multidrug resistance, efflux pump MexGHI-OpmD	Starch and sucrose metabolism PA01	2.28571428571		1.0
 Cyanoamino acid metabolism PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	2.25		1.0
 Glyoxylate and dicarboxylate metabolism PA01	Nitrogen metabolism PA01	2.21428571429		1.0
-cellular nitrogen compound biosynthetic process- GO	Bacterial chemotaxis PA01	2.125		1.0
-cellular nitrogen compound biosynthetic process- GO	Biosynthesis of siderophore group nonribosomal peptides PA01	2.11764705882		1.0
+cellular nitrogen compound biosynthetic process - GO	Bacterial chemotaxis PA01	2.125		1.0
+cellular nitrogen compound biosynthetic process - GO	Biosynthesis of siderophore group nonribosomal peptides PA01	2.11764705882		1.0
 Oxidative phosphorylation PA01	Valine, leucine and isoleucine degradation PA01	2.11764705882		1.0
 Putative polar amino acid transport system	Nitrogen metabolism PA01	2.11111111111		1.0
 Aminobenzoate degradation PA01	Zinc transport system	2.09090909091		1.0
 Glyoxylate and dicarboxylate metabolism PA01	Oxidative phosphorylation PA01	2.0625		1.0
-Bacterial secretion system PA01	cellular nitrogen compound biosynthetic process- GO	2.0		1.0
+Bacterial secretion system PA01	cellular nitrogen compound biosynthetic process - GO	2.0		1.0
 Degradation of aromatic compounds PA01	Glycine, serine and threonine metabolism PA01	2.0		1.0
 Sulfur metabolism PA01	Phospholipid transport system	2.0		1.0
 Pentose phosphate pathway PA01	Glutathione metabolism PA01	2.0		1.0
@@ -127,16 +127,16 @@ Degradation of aromatic compounds PA01	Chlorocyclohexane and chlorobenzene degra
 Sulfur metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	1.94444444444		1.0
 Aminobenzoate degradation PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	1.91666666667		1.0
 Oxidative phosphorylation PA01	Bacterial chemotaxis PA01	1.91666666667		1.0
-Putative polar amino acid transport system	type IV pilus-dependent motility- GO	1.88888888889		1.0
-Aminobenzoate degradation PA01	glycine betaine catabolic process- GO	1.84615384615		1.0
-cellular nitrogen compound biosynthetic process- GO	Valine, leucine and isoleucine degradation PA01	1.76923076923		1.0
+Putative polar amino acid transport system	type IV pilus-dependent motility - GO	1.88888888889		1.0
+Aminobenzoate degradation PA01	glycine betaine catabolic process - GO	1.84615384615		1.0
+cellular nitrogen compound biosynthetic process - GO	Valine, leucine and isoleucine degradation PA01	1.76923076923		1.0
 Aminobenzoate degradation PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	1.72413793103		1.0
 Valine, leucine and isoleucine degradation PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	1.72222222222		1.0
 Nitrogen metabolism PA01	Sulfur metabolism PA01	1.68421052632		1.0
 Oxidative phosphorylation PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	1.68		1.0
 Branched-chain amino acid transport system	Aminobenzoate degradation PA01	1.63636363636		1.0
 Type VI secretion system	Biosynthesis of siderophore group nonribosomal peptides PA01	1.6		1.0
-cellular nitrogen compound biosynthetic process- GO	protein secretion by the type III secretion system- GO	1.46666666667		1.0
+cellular nitrogen compound biosynthetic process - GO	protein secretion by the type III secretion system - GO	1.46666666667		1.0
 Aminobenzoate degradation PA01	Oxidative phosphorylation PA01	1.44		1.0
 Cationic antimicrobial peptide (CAMP) resistance PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	1.375		1.0
 Dipeptide transport system	Aminobenzoate degradation PA01	1.28571428571		1.0
@@ -149,16 +149,16 @@ Branched-chain amino acid transport system	Tyrosine metabolism PA01	8.5		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Glycerolipid metabolism PA01	8.0		-1.0
 Valine, leucine and isoleucine degradation PA01	Spermidine/putrescine transport system	7.0		-1.0
 Iron complex transport system	Pentose phosphate pathway PA01	7.0		-1.0
-glycine betaine catabolic process- GO	Histidine metabolism PA01	7.0		-1.0
+glycine betaine catabolic process - GO	Histidine metabolism PA01	7.0		-1.0
 Putative polar amino acid transport system	Glycerolipid metabolism PA01	6.0		-1.0
 Zinc transport system	Porphyrin and chlorophyll metabolism PA01	6.0		-1.0
 Macrolide resistance, MacAB-TolC transporter	Porphyrin and chlorophyll metabolism PA01	6.0		-1.0
 Sulfur metabolism PA01	Glycerolipid metabolism PA01	6.0		-1.0
-Flagellar assembly PA01	type IV pilus-dependent motility- GO	5.875		-1.0
+Flagellar assembly PA01	type IV pilus-dependent motility - GO	5.875		-1.0
 Multidrug resistance, efflux pump MexGHI-OpmD	RNA degradation PA01	5.5		-1.0
 Aminobenzoate degradation PA01	Glycerophospholipid metabolism PA01	5.0		-1.0
 Branched-chain amino acid transport system	Glycerolipid metabolism PA01	5.0		-1.0
-cellular nitrogen compound biosynthetic process- GO	Fatty acid metabolism PA01	5.0		-1.0
+cellular nitrogen compound biosynthetic process - GO	Fatty acid metabolism PA01	5.0		-1.0
 Sulfur metabolism PA01	Pyruvate metabolism PA01	4.5		-1.0
 Sulfur metabolism PA01	Tyrosine metabolism PA01	4.4		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Macrolide resistance, MacAB-TolC transporter	4.33333333333		-1.0
@@ -167,45 +167,45 @@ Cyanoamino acid metabolism PA01	Nicotinate and nicotinamide metabolism PA01	4.0	
 Multidrug resistance, efflux pump MexGHI-OpmD	Glutamate/aspartate transport system	4.0		-1.0
 Bacterial chemotaxis PA01	Porphyrin and chlorophyll metabolism PA01	4.0		-1.0
 Putative ABC transport system	Putative sorbitol/mannitol transport system	4.0		-1.0
-cellular nitrogen compound biosynthetic process- GO	Nicotinate and nicotinamide metabolism PA01	4.0		-1.0
+cellular nitrogen compound biosynthetic process - GO	Nicotinate and nicotinamide metabolism PA01	4.0		-1.0
 Histidine metabolism PA01	Porphyrin and chlorophyll metabolism PA01	4.0		-1.0
 Branched-chain amino acid transport system	Hemophore/metalloprotease transport system	4.0		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Iron(III) transport system	4.0		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Zinc transport system	3.875		-1.0
 Aminobenzoate degradation PA01	Phosphonate transport system	3.8		-1.0
-polysaccharide biosynthetic process- GO	Flagellar assembly PA01	3.7		-1.0
+polysaccharide biosynthetic process - GO	Flagellar assembly PA01	3.7		-1.0
 Branched-chain amino acid transport system	Type VI secretion system	3.6		-1.0
 Aminobenzoate degradation PA01	Phosphonate and phosphinate metabolism PA01	3.5		-1.0
 Biosynthesis of siderophore group nonribosomal peptides PA01	Porphyrin and chlorophyll metabolism PA01	3.33333333333		-1.0
 Oxidative phosphorylation PA01	Macrolide resistance, MacAB-TolC transporter	3.33333333333		-1.0
 Glycine, serine and threonine metabolism PA01	Sulfur metabolism PA01	3.25		-1.0
-glycine betaine catabolic process- GO	Tyrosine metabolism PA01	3.2		-1.0
+glycine betaine catabolic process - GO	Tyrosine metabolism PA01	3.2		-1.0
 Degradation of aromatic compounds PA01	Tyrosine metabolism PA01	3.14285714286		-1.0
 Sulfur metabolism PA01	Valine, leucine and isoleucine degradation PA01	3.0		-1.0
 Flagellar assembly PA01	beta-Lactam resistance PA01	3.0		-1.0
 Bacterial chemotaxis PA01	Fatty acid metabolism PA01	3.0		-1.0
 Iron complex transport system	Porphyrin and chlorophyll metabolism PA01	3.0		-1.0
 Bacterial chemotaxis PA01	Spermidine/putrescine transport system	3.0		-1.0
-response to chemical- GO	Putative sorbitol/mannitol transport system	3.0		-1.0
+response to chemical - GO	Putative sorbitol/mannitol transport system	3.0		-1.0
 Folate biosynthesis PA01	Bacterial chemotaxis PA01	3.0		-1.0
-protein secretion by the type III secretion system- GO	ABC-2 type transport system	3.0		-1.0
+protein secretion by the type III secretion system - GO	ABC-2 type transport system	3.0		-1.0
 Starch and sucrose metabolism PA01	Peptidoglycan biosynthesis PA01	3.0		-1.0
 Pyruvate metabolism PA01	Glycerolipid metabolism PA01	3.0		-1.0
 Glutamate/aspartate transport system	Glycerolipid metabolism PA01	3.0		-1.0
 Iron complex transport system	Putative sorbitol/mannitol transport system	3.0		-1.0
 Ribosome PA01	Starch and sucrose metabolism PA01	3.0		-1.0
-cellular nitrogen compound biosynthetic process- GO	RNA degradation PA01	3.0		-1.0
+cellular nitrogen compound biosynthetic process - GO	RNA degradation PA01	3.0		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	2.95238095238		-1.0
 Branched-chain amino acid transport system	Oxidative phosphorylation PA01	2.90909090909		-1.0
 Degradation of aromatic compounds PA01	Multidrug resistance, efflux pump MexGHI-OpmD	2.875		-1.0
 Putative polar amino acid transport system	Flagellar assembly PA01	2.85714285714		-1.0
-glycine betaine catabolic process- GO	Sulfur metabolism PA01	2.83333333333		-1.0
+glycine betaine catabolic process - GO	Sulfur metabolism PA01	2.83333333333		-1.0
 Aminobenzoate degradation PA01	Phosphate transport system	2.83333333333		-1.0
-polysaccharide biosynthetic process- GO	Bacterial secretion system PA01	2.72727272727		-1.0
+polysaccharide biosynthetic process - GO	Bacterial secretion system PA01	2.72727272727		-1.0
 Biosynthesis of siderophore group nonribosomal peptides PA01	Glycerolipid metabolism PA01	2.66666666667		-1.0
 Valine, leucine and isoleucine degradation PA01	Glycerolipid metabolism PA01	2.66666666667		-1.0
-Dipeptide transport system	type IV pilus-dependent motility- GO	2.66666666667		-1.0
-Cationic antimicrobial peptide (CAMP) resistance PA01	type IV pilus-dependent motility- GO	2.26315789474		-1.0
+Dipeptide transport system	type IV pilus-dependent motility - GO	2.66666666667		-1.0
+Cationic antimicrobial peptide (CAMP) resistance PA01	type IV pilus-dependent motility - GO	2.26315789474		-1.0
 Cationic antimicrobial peptide (CAMP) resistance PA01	Tyrosine metabolism PA01	2.2		-1.0
 Degradation of aromatic compounds PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	2.09523809524		-1.0
 Valine, leucine and isoleucine degradation PA01	2-Oxocarboxylic acid metabolism PA01	2.0		-1.0
@@ -220,8 +220,8 @@ Cationic antimicrobial peptide (CAMP) resistance PA01	Chlorocyclohexane and chlo
 Dipeptide transport system	Fatty acid metabolism PA01	2.0		-1.0
 Aminobenzoate degradation PA01	Bacterial secretion system PA01	1.94117647059		-1.0
 Oxidative phosphorylation PA01	Cyanoamino acid metabolism PA01	1.85714285714		-1.0
-polysaccharide biosynthetic process- GO	Cationic antimicrobial peptide (CAMP) resistance PA01	1.7		-1.0
+polysaccharide biosynthetic process - GO	Cationic antimicrobial peptide (CAMP) resistance PA01	1.7		-1.0
 Aminobenzoate degradation PA01	Nitrogen metabolism PA01	1.61904761905		-1.0
-Glyoxylate and dicarboxylate metabolism PA01	cellular nitrogen compound biosynthetic process- GO	1.52631578947		-1.0
-Aminobenzoate degradation PA01	cellular nitrogen compound biosynthetic process- GO	1.52380952381		-1.0
+Glyoxylate and dicarboxylate metabolism PA01	cellular nitrogen compound biosynthetic process - GO	1.52631578947		-1.0
+Aminobenzoate degradation PA01	cellular nitrogen compound biosynthetic process - GO	1.52380952381		-1.0
 Glyoxylate and dicarboxylate metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	1.0		-1.0

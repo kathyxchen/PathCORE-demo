@@ -34,8 +34,8 @@ var force = d3.layout.force()
     .gravity(0.05)
     .size([width, height]);
 
-//d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
-d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
+d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
+//d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
 
   if (error) throw error;
 
@@ -79,7 +79,8 @@ d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
         xhr.send();
         xhr.onreadystatechange = processRequest;
         function processRequest(e) {
-          console.log("HI");
+            console.log("HI");
+            console.log(e);
         }
         console.log(d);
         console.log(d.PW1 + " " + d.PW2);

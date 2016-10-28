@@ -52,15 +52,36 @@ class PathwayData:
 
 class EdgeData:
 
-    def __init__(self, db, pw1, pw2, in_num_nodes):
+    def __init__(self, db, pw1, pw2, in_num_nodes, annotated_counts):
     	self.db = db
         self.edge = (pw1, pw2)
         self.in_num_nodes = in_num_nodes
+        self.annotated_to_edge_counts = annotated_counts
+
+        # TODO: naming. annotated + not annotated is related to
+        # those that show up with a pathway in a node. Annotation
+        # is based on mapping after crosstalk removal.
         self.annotated_genes = {}
         self.not_annotated_genes = {}
 
         self.odds_ratios_genes = {}
+    
+        # this is independent of the self.annotated_genes, which
+        # are the ones that are annotated after CT removal too.
+        self.annotated_odds_ratios = {}
 
+    def compute_annotated_odds_ratios(self):
+        num_networks = len(self.db.network_edges.distinct("network"))
+        all_nodes = float(num_networks * MODEL_NODES)
+        or_denominator = self.in_num_nodes/all_nodes
+        for gene_id, annot_count in self.annotated_to_edge_counts.iteritems():
+            look_for_gene = {"$or": [{"pos_genes": gene_id}, {"neg_genes": gene_id}]}
+            # over all networks, even if edge isn't present in a network.
+            # how many times does this gene appear in a node signature?
+            gene_in_num_nodes = float(self.db.network_nodes.find(look_for_gene).count())
+            or_numerator = annot_count/gene_in_num_nodes
+            self.annotated_odds_ratios[gene_id] = or_numerator/or_denominator
+    
     def compute_odds_ratios(self):
         # ignore gene pos/neg presence:
         pw1 = self.edge[0]
@@ -137,17 +158,20 @@ class InteractionModel:
         account_for_naming = {"$in": [[oid1, oid2], [oid2, oid1]]}
         # eventually, might need to have a 'filtered' flag in the DB
         # re: permutation analysis
-        print oid1
-        print oid2
-        print etype
 
         edge_in_networks = self.db.network_edges.find({"edge": account_for_naming,
                                                        "type": etype})
-        # return edge_in_networks
-
         pw1 = PathwayData(self.db, oid1, pw1_name)
         pw2 = PathwayData(self.db, oid2, pw2_name)
         edge_in_num_nodes = 0
+        annotated_to_pw1 = self.db.pathways.find_one({"_id": oid1})["annotated_genes"]
+        annotated_to_pw2 = self.db.pathways.find_one({"_id": oid2})["annotated_genes"]
+        annotated_to_edge = set(annotated_to_pw1) | set(annotated_to_pw2)
+
+        # how many times did this gene show up in a node with my edge?
+        annotated_to_edge_counts = {}
+        for annot_gene in annotated_to_edge:
+            annotated_to_edge_counts[annot_gene] = 0
         # collect gene count information for both pathways.
         for edge in edge_in_networks:
             network = edge["network"]
@@ -158,6 +182,9 @@ class InteractionModel:
             for node in nodes_info:
                 pos_genes = node["pos_genes"]
                 neg_genes = node["neg_genes"]
+                for annot_gene in annotated_to_edge:
+                    if annot_gene in pos_genes or annot_gene in neg_genes:
+                        annotated_to_edge_counts[annot_gene] += 1
                 node_pw1_def = self.db.network_node_pathways.find_one(
                     {"network": network, "node": node["node"], "pathway": oid1})
                 node_pw2_def = self.db.network_node_pathways.find_one(
@@ -165,8 +192,9 @@ class InteractionModel:
 
                 pw1.bulk_update_gene_counts(pos_genes, neg_genes, node_pw1_def)
                 pw2.bulk_update_gene_counts(pos_genes, neg_genes, node_pw2_def)
-        aggregate_edge = EdgeData(self.db, pw1, pw2, edge_in_num_nodes)
-        aggregate_edge.compute_odds_ratios()
+        aggregate_edge = EdgeData(self.db, pw1, pw2, edge_in_num_nodes, annotated_to_edge_counts)
+        ''' This is the code for examining OR for genes not necessarily annotated to the pathway.
+	    aggregate_edge.compute_odds_ratios()
 
         collect_annotated = []
         collect_weighted = []
@@ -184,6 +212,16 @@ class InteractionModel:
         collect_unannotated.sort(key=lambda tup: tup[1])
         print self.sort_samples(collect_weighted)
         return {"annotated": collect_annotated, "weighted": collect_weighted, "unannotated": collect_unannotated}
+	    '''
+	    # Only look at genes explicitly annotated to each pathway
+        collect_sig = []
+        aggregate_edge.compute_annotated_odds_ratios()
+        for gene_id, odds_ratio in aggregate_edge.annotated_odds_ratios.iteritems():
+            gene_name = self.db.genes.find_one({"_id": gene_id})["gene"]
+            if odds_ratio > 1:
+                collect_sig.append((gene_name, odds_ratio))
+        collect_sig.sort(key=lambda tup: tup[1])
+        return dict(collect_sig)
 
     def get_gene_sample_values(self, gene_name):
         return self.db.genes.find_one({"gene": gene_name})["expression"]
