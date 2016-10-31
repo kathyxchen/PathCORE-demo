@@ -7,7 +7,7 @@ from webargs import fields, validate
 from webargs.flaskparser import use_args, parser
 
 from bson.objectid import ObjectId
-import methods
+from methods import InteractionModel 
 
 class Edge(restful.Resource):
     def get(self, pw1, pw2, etype):
@@ -41,8 +41,7 @@ class Network(restful.Resource):
         print args["pw1"]
         print args["pw2"]
         print args["etype"]
-        return methods.InteractionModel(mongo.db).get_edge_info(args["pw1"], args["pw2"], int(args["etype"]))
-        # return methods.InteractionModel(mongo.db).get_pw_id(args["pw1"])
+        return InteractionModel(mongo.db).get_edge_info(args["pw1"], args["pw2"], int(args["etype"]))
 
 class Root(restful.Resource):
     def get(self):
@@ -52,6 +51,6 @@ class Root(restful.Resource):
         }
 
 api.add_resource(Network, '/network')
-api.add_resource(EdgeDir, '/edge/direct/<ObjectId:pw1>+<ObjectId:pw2>')
-api.add_resource(EdgeInv, '/edge/inverse/<ObjectId:pw1>+<ObjectId:pw2>')
+#api.add_resource(EdgeDir, '/edge/direct/<ObjectId:pw1>+<ObjectId:pw2>')
+#api.add_resource(EdgeInv, '/edge/inverse/<ObjectId:pw1>+<ObjectId:pw2>')
 api.add_resource(Root, '/')

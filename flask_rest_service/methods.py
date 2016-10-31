@@ -79,6 +79,9 @@ class EdgeData:
             # over all networks, even if edge isn't present in a network.
             # how many times does this gene appear in a node signature?
             gene_in_num_nodes = float(self.db.network_nodes.find(look_for_gene).count())
+            if not annot_count and not gene_in_num_nodes:
+                # KEGG annotated gene was not in the compendium
+                continue
             or_numerator = annot_count/gene_in_num_nodes
             self.annotated_odds_ratios[gene_id] = or_numerator/or_denominator
     
@@ -158,7 +161,6 @@ class InteractionModel:
         account_for_naming = {"$in": [[oid1, oid2], [oid2, oid1]]}
         # eventually, might need to have a 'filtered' flag in the DB
         # re: permutation analysis
-
         edge_in_networks = self.db.network_edges.find({"edge": account_for_naming,
                                                        "type": etype})
         pw1 = PathwayData(self.db, oid1, pw1_name)
@@ -167,7 +169,6 @@ class InteractionModel:
         annotated_to_pw1 = self.db.pathways.find_one({"_id": oid1})["annotated_genes"]
         annotated_to_pw2 = self.db.pathways.find_one({"_id": oid2})["annotated_genes"]
         annotated_to_edge = set(annotated_to_pw1) | set(annotated_to_pw2)
-
         # how many times did this gene show up in a node with my edge?
         annotated_to_edge_counts = {}
         for annot_gene in annotated_to_edge:
@@ -192,6 +193,8 @@ class InteractionModel:
 
                 pw1.bulk_update_gene_counts(pos_genes, neg_genes, node_pw1_def)
                 pw2.bulk_update_gene_counts(pos_genes, neg_genes, node_pw2_def)
+        if not edge_in_num_nodes:
+            return {"ERR": "Edge could not be found in the databse."}
         aggregate_edge = EdgeData(self.db, pw1, pw2, edge_in_num_nodes, annotated_to_edge_counts)
         ''' This is the code for examining OR for genes not necessarily annotated to the pathway.
 	    aggregate_edge.compute_odds_ratios()
@@ -221,7 +224,8 @@ class InteractionModel:
             if odds_ratio > 1:
                 collect_sig.append((gene_name, odds_ratio))
         collect_sig.sort(key=lambda tup: tup[1])
-        return dict(collect_sig)
+        scored_samples = self.sort_samples(collect_sig)
+        return scored_samples
 
     def get_gene_sample_values(self, gene_name):
         return self.db.genes.find_one({"gene": gene_name})["expression"]
@@ -259,7 +263,12 @@ class InteractionModel:
         for index in index_sorted_scores:
             col_sorted.append(col_scores[index])
             col_names.append(self.db.sample_labels.find_one({"_id": index})["sample"])
-        return {"sample_gene_vals": col_sorted, "sample_names": col_names, "gene_names": gene_or_list}
+        gene_or_list.reverse()
+        col_sorted.reverse()
+        col_names.reverse()
+        return {"sample_vals_top": col_sorted[:20], "sample_vals_bot": col_sorted[len(col_sorted)-20:],
+                "sample_names_top": col_names[:20], "sample_names_bot": col_sorted[len(col_sorted)-20:],
+                "gene_names": gene_or_list}
 
 '''
 

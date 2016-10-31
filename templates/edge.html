@@ -1,0 +1,20 @@
+<html>
+<div id="test">
+{{ pw1 }}
+{{ pw2 }}
+{{ etype }}
+</div>
+<div id="genes-ranked-or">
+{% for gene, or in analysis.gene_names %}
+    {{ gene }}: {{ or }}<br />
+{% endfor %}
+</div>
+<div id="per-gene-samples">
+</div>
+<div id="sorted-samples-scored">
+    <div class="top-samples">
+    </div>
+    <div class="bot-samples">
+    </div>
+</div>
+</html>

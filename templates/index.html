@@ -21,8 +21,8 @@
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
 <script>
 
-var width  = 960,
-    height = 500;
+var width  = 1460,
+    height = 1000;
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -34,7 +34,7 @@ var force = d3.layout.force()
     .gravity(0.05)
     .size([width, height]);
 
-d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
+d3.tsv("/static/data/10diff-filtered-1KP", function(error, links) {
 //d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
 
   if (error) throw error;
@@ -64,7 +64,7 @@ d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
     .enter().append("line")
       .attr("class", "link")
       .attr("stroke-width", function(d) {
-        return d.weight/5.0;
+        return d.weight/4.0;
       })
       .style("stroke", function(d) {
         if (d.type == 1) {
@@ -73,17 +73,47 @@ d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
           return "#FF9933";
         }
       })
+      .on("mouseover", function() {
+        d3.select(this).style("stroke", "red");
+      })
+      .on("mouseout", function() {
+        var etype = d3.select(this)[0][0].__data__.Type;
+        var color;
+        if (etype == 1) {
+            color = "#6600FF";
+        } else {
+            color = "#FF9933";
+        }
+        d3.select(this).style("stroke", color); 
+      })
       .on("click", function(d) {
         var xhr = new XMLHttpRequest();
+        etype = parseInt(d.Type);
+        if (etype == -1) {
+            window.location.href = "/edge/inverse/" + d.PW1 + "&" + d.PW2
+        } else {
+            window.location.href = "/edge/direct/" + d.PW1 + "&" + d.PW2
+        }
+        /*
         xhr.open("GET", "/network?pw1=" + d.PW1 + "&pw2=" + d.PW2 + "&etype=" + parseInt(d.Type), true);
         xhr.send();
         xhr.onreadystatechange = processRequest;
         function processRequest(e) {
-            console.log("HI");
-            console.log(e);
+            ret = e.target.response;
+            if (ret["ERR"]) {
+                alert(ret["ERR"]);
+            } else {
+                console.log(ret);
+                var response = new XMLHttpRequest();
+                if 
+                window.location.href = "/edge/inverse/test+test2";
+                //response.open("POST", "/edge");
+                //response.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                //response.send("genes=" + JSON.stringify(ret));
+                
+            }
         }
-        console.log(d);
-        console.log(d.PW1 + " " + d.PW2);
+        */
       });
   
   link.append("title").text(function(d) {
@@ -139,10 +169,6 @@ d3.tsv("/static/data/10KP_DIFF_filtered_net.txt", function(error, links) {
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-    //node.attr("cx", function(d) { return d.x; })
-    //    .attr("cy", function(d) { return d.y; });
-    
   }
 
   function nodeByName(name) {
