@@ -1,20 +1,92 @@
 <html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
 <div id="test">
-{{ pw1 }}
-{{ pw2 }}
-{{ etype }}
+<h2>({{ pw1 }}, {{ pw2 }})</h2>
+<h3>Type: {{ etype }}</h3>
 </div>
 <div id="genes-ranked-or">
-{% for gene, or in analysis.gene_names %}
-    {{ gene }}: {{ or }}<br />
-{% endfor %}
+<table class="table table-reflow">
+<thead>
+    <tr>
+        {% for gene, or in analysis.gene_names %}
+        <th>{{ gene }}</th>
+        {% endfor %}
+    </tr>
+</thead>
+<tbody>
+    <tr>
+    {% for gene, or in analysis.gene_names %}
+    <td>{{ or }}</td>
+    {% endfor %}
+    </tr>
+</tbody>
+</table>
 </div>
 <div id="per-gene-samples">
 </div>
 <div id="sorted-samples-scored">
     <div class="top-samples">
+    <h2>15 most expressed samples (odds ratio score)</h2>
+    <table class="table table-reflow">
+    <thead>
+        <tr>
+        <th>#</th>
+        {% for gene, or in analysis.gene_names %}
+        <th>{{ gene }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for sample, genes in analysis.most_expressed %}
+        <tr>
+            <th scope="row">{{ sample }}</th>
+            {% for gval in genes %}
+            <td>{{ gval }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
     </div>
     <div class="bot-samples">
+    <h2>15 least expressed samples (odds ratio scores)</h2>
+    <table class="table table-reflow">
+    <thead>
+        <tr>
+        <th>#</th>
+        {% for gene, or in analysis.gene_names %}
+        <th>{{ gene }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for sample, genes in analysis.least_expressed %}
+        <tr>
+            <th scope="row">{{ sample }}</th>
+            {% for gval in genes %}
+            <td>{{ gval }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
     </div>
 </div>
+</body>
 </html>

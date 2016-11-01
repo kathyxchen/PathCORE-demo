@@ -224,11 +224,13 @@ class InteractionModel:
             if odds_ratio > 1:
                 collect_sig.append((gene_name, odds_ratio))
         collect_sig.sort(key=lambda tup: tup[1])
-        scored_samples = self.sort_samples(collect_sig)
-        return scored_samples
+        return self.rank_samples(collect_sig)
 
     def get_gene_sample_values(self, gene_name):
         return self.db.genes.find_one({"gene": gene_name})["expression"]
+    
+    def get_gene_sample_values_normalized(self, gene_name):
+        return self.db.genes.find_one({"gene": gene_name})["normalized_expression"]
 
     def get_sorted_gene_samples(self, gene_sample_vals):
         sample_and_val = []
@@ -238,36 +240,42 @@ class InteractionModel:
             sample_and_val.append((sample_name, expr_val))
         return sample_and_val
 
-    def sort_samples(self, gene_or_list):
-        gene_sample_mat = []
+    def rank_samples(self, gene_or_list):
+        norm_sample_matrix = []
         sum_or = 0.0
         for gene_name, or_value in gene_or_list:
-            gene_sample_mat.append(self.get_gene_sample_values(gene_name))
+            norm_sample_matrix.append(self.get_gene_sample_values_normalized(gene_name))
             sum_or += or_value
-        gene_sample_mat = map(list, zip(*gene_sample_mat))
+        # norm_sample_matrix is currently n_genes x n_samples
+        # we want it to be n_samples x n_genes
+        norm_sample_matrix = map(list, zip(*norm_sample_matrix))
+        
         # for each column, metric weights the odds ratio of each gene and the expr val.
         col_scores = []
-        for column in gene_sample_mat:
-            current_col_score = 0.0
-            normalize_by = 0.0
-            for index, expr in enumerate(column):
+        # for each sample
+        for sample_data in norm_sample_matrix:
+            score = 0.0
+            for index, gene_expr_value in enumerate(sample_data):
                 gene_or = gene_or_list[index][1]
-                relative_or = gene_or/sum_or
-                current_col_score += relative_or * expr
-                normalize_by += expr
-            col_scores.append(current_col_score/normalize_by)
+                weighting = gene_or/sum_or
+                score += weighting * gene_expr_value 
+            col_scores.append(score)
+        index_sorted_scores = [tup[0] for tup in sorted(enumerate(col_scores), key=lambda x:-x[1])]
+        
+        # only get the N most and least expressed
+        N = 15
+        most_expressed = []
+        least_expressed = []
 
-        index_sorted_scores = [tup[0] for tup in sorted(enumerate(col_scores), key=lambda x:x[1])]
-        col_sorted = []
-        col_names = []
-        for index in index_sorted_scores:
-            col_sorted.append(col_scores[index])
-            col_names.append(self.db.sample_labels.find_one({"_id": index})["sample"])
+        for index in index_sorted_scores[:N]:
+            sample_label = self.db.sample_labels.find_one({"_id": index})["sample"]
+            most_expressed.append((sample_label, norm_sample_matrix[index]))
+        for index in index_sorted_scores[-N:]:
+            sample_label = self.db.sample_labels.find_one({"_id": index})["sample"]
+            least_expressed.append((sample_label, norm_sample_matrix[index]))
         gene_or_list.reverse()
-        col_sorted.reverse()
-        col_names.reverse()
-        return {"sample_vals_top": col_sorted[:20], "sample_vals_bot": col_sorted[len(col_sorted)-20:],
-                "sample_names_top": col_names[:20], "sample_names_bot": col_sorted[len(col_sorted)-20:],
+        return {"most_expressed": most_expressed,
+                "least_expressed": least_expressed,
                 "gene_names": gene_or_list}
 
 '''

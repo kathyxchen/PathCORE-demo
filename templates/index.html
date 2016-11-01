@@ -34,8 +34,8 @@ var force = d3.layout.force()
     .gravity(0.05)
     .size([width, height]);
 
-d3.tsv("/static/data/10diff-filtered-1KP", function(error, links) {
-//d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
+//d3.tsv("/static/data/10diff-filtered-1KP", function(error, links) {
+d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
 
   if (error) throw error;
 
