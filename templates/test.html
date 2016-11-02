@@ -22,30 +22,21 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     </div>
 </body>
 <script>
+/*
 var toy = [[0.4, 0.2], [0.3, 0.1]];
 var both_data = [{"target_index": 0, "source_index": 0, "value": 0.01},
             {"target_index": 0, "source_index": 1, "value": 0.0},
             {"target_index": 1, "source_index": 0, "value": 0.05},
             {"target_index": 1, "source_index": 1, "value": 0.15}];
-console.log(data.most_expressed_samples);
-
-var gene_names = []
-
-for (var i = 0; i < data.gene_names.length; i++) {
-    gene_names.push(data.gene_names[i][0]);
-}
-/*
-var data = {"target_structures": ["gene1", "gene2"],
-            "source_structures": ["sample1", "sample2"],
-            "both_data": both_data};
 */
-var data = {"source_structures": data.most_expressed_samples,
-            "target_structures": gene_names,
-            "both_data": data.most_expressed_objs};
+var edge_information = JSON.parse({{ edge_info|tojson }});
+console.log(edge_information);
+
+var data = {"source_structures": edge_information["most_expressed_samples"],
+            "target_structures": edge_information["gene_names"],
+            "both_data": edge_information["most_expressed_objs"]};
 var width = 600, height = 600, 
     cell_size = 25, label_size = 100,
-    //buckets = 9,
-    //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
     color = d3.scale.linear().domain([0,0.33,0.66,1.0]).range(["black","red","yellow","white"]);
 
 var svg = d3.select("#test").append("svg")
@@ -53,19 +44,7 @@ var svg = d3.select("#test").append("svg")
     .attr("height", height)
     .append("g");
 
-console.log(data.both_data);
 var meta_container = $("<div>").attr("class","meta").appendTo($("#test"));
-/*
-var labels = svg.selectAll(".sampleLabel")
-    .data(rows)
-    .enter().append("text")
-        .text(function(d) { return d; })
-        .attr("x", 0)
-        .attr("y", function(d, i) { return i * gridSize; })
-        .style("text-anchor", "end")
-        .attr("transform", "translate(-6," + gridSize/1.5 + ")")
-        .attr("class", function(d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
-*/
 // Build the D3 components that display the heatmap color legend.
 function build_legend(chart_width, chart_height) {
     // Make an array of values, one for each pixel in the width of the legend.
@@ -170,7 +149,7 @@ function build_heatmap(data, chart_width, chart_height) {
         .attr("transform","translate(-70," + (chart_height / 2) +") rotate(90)")
         .text("primary injection structure");
 }
-
+console.log(data);
 var chart_width = cell_size * data.target_structures.length;
 var chart_height = cell_size * data.source_structures.length;
 
