@@ -14,7 +14,7 @@ integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="ano
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-
+<script src="{{ url_for('static', filename='data/single_edge.json') }}"></script>
 </head>
 <body>
     TEST
@@ -27,12 +27,21 @@ var both_data = [{"target_index": 0, "source_index": 0, "value": 0.01},
             {"target_index": 0, "source_index": 1, "value": 0.0},
             {"target_index": 1, "source_index": 0, "value": 0.05},
             {"target_index": 1, "source_index": 1, "value": 0.15}];
+console.log(data.most_expressed_samples);
 
+var gene_names = []
+
+for (var i = 0; i < data.gene_names.length; i++) {
+    gene_names.push(data.gene_names[i][0]);
+}
+/*
 var data = {"target_structures": ["gene1", "gene2"],
             "source_structures": ["sample1", "sample2"],
             "both_data": both_data};
-
-console.log(toy);
+*/
+var data = {"source_structures": data.most_expressed_samples,
+            "target_structures": gene_names,
+            "both_data": data.most_expressed_objs};
 var width = 600, height = 600, 
     cell_size = 25, label_size = 100,
     //buckets = 9,
@@ -44,6 +53,7 @@ var svg = d3.select("#test").append("svg")
     .attr("height", height)
     .append("g");
 
+console.log(data.both_data);
 var meta_container = $("<div>").attr("class","meta").appendTo($("#test"));
 /*
 var labels = svg.selectAll(".sampleLabel")
