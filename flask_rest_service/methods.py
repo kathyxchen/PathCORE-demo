@@ -264,18 +264,33 @@ class InteractionModel:
         
         # only get the N most and least expressed
         N = 15
-        most_expressed = []
-        least_expressed = []
-
-        for index in index_sorted_scores[:N]:
+        most_expressed_idxs = []
+        least_expressed_idxs = []
+        most_expressed_samples = []
+        least_expressed_samples = []
+        for sidx, index in enumerate(index_sorted_scores[:N]):
             sample_label = self.db.sample_labels.find_one({"_id": index})["sample"]
-            most_expressed.append((sample_label, norm_sample_matrix[index]))
-        for index in index_sorted_scores[-N:]:
+            most_expressed_samples.append(sample_label)
+            heatmap_obj = {"source_index": sidx}
+            for gidx, value in enumerate(norm_sample_matrix[index]):
+                heatmap_obj["target_index"] = gidx
+                heatmap_obj["value"] = value
+            most_expressed_idxs(heatmap_obj)
+            #most_expressed.append((sample_label, norm_sample_matrix[index]))
+        for sidx, index in enumerate(index_sorted_scores[-N:]):
             sample_label = self.db.sample_labels.find_one({"_id": index})["sample"]
-            least_expressed.append((sample_label, norm_sample_matrix[index]))
+            least_expressed_samples.append(sample_label)
+            heatmap_obj = {"source_index": sidx}
+            for gidx, value in enumerate(norm_sample_matrix[index]):
+                heatmap_obj["target_index"] = gidx
+                heatmap_obj["value"] = value
+            least_expressed_idxs(heatmap_obj)
+            #least_expressed.append((sample_label, norm_sample_matrix[index]))
         gene_or_list.reverse()
-        return {"most_expressed": most_expressed,
-                "least_expressed": least_expressed,
+        return {"most_expressed_objs": most_expressed_idxs,
+                "least_expressed_objs": least_expressed_idxs,
+                "most_expressed_samples": most_expressed_samples,
+                "least_expressed_samples": least_expressed_samples,
                 "gene_names": gene_or_list}
 
 '''

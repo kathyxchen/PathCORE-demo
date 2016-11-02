@@ -1,0 +1,174 @@
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+
+</head>
+<body>
+    TEST
+    <div id="test">
+    </div>
+</body>
+<script>
+var toy = [[0.4, 0.2], [0.3, 0.1]];
+var both_data = [{"target_index": 0, "source_index": 0, "value": 0.01},
+            {"target_index": 0, "source_index": 1, "value": 0.0},
+            {"target_index": 1, "source_index": 0, "value": 0.05},
+            {"target_index": 1, "source_index": 1, "value": 0.15}];
+
+var data = {"target_structures": ["gene1", "gene2"],
+            "source_structures": ["sample1", "sample2"],
+            "both_data": both_data};
+
+console.log(toy);
+var width = 600, height = 600, 
+    cell_size = 25, label_size = 100,
+    //buckets = 9,
+    //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+    color = d3.scale.linear().domain([0,0.33,0.66,1.0]).range(["black","red","yellow","white"]);
+
+var svg = d3.select("#test").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g");
+
+var meta_container = $("<div>").attr("class","meta").appendTo($("#test"));
+/*
+var labels = svg.selectAll(".sampleLabel")
+    .data(rows)
+    .enter().append("text")
+        .text(function(d) { return d; })
+        .attr("x", 0)
+        .attr("y", function(d, i) { return i * gridSize; })
+        .style("text-anchor", "end")
+        .attr("transform", "translate(-6," + gridSize/1.5 + ")")
+        .attr("class", function(d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+*/
+// Build the D3 components that display the heatmap color legend.
+function build_legend(chart_width, chart_height) {
+    // Make an array of values, one for each pixel in the width of the legend.
+    var legend_data = [];
+    var num_elems = chart_width;
+    for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems * 1); }
+
+    // This scale handles interpolation between projection volume values and 
+    // legend position.
+    var legend_scale = d3.scale.linear()
+        .domain([0,1])
+        .range([0,chart_width]);
+    
+    // This object will generate the tick values along the bottom of the legend.
+    var legend_axis = d3.svg.axis()
+        .scale(legend_scale)
+        .orient("bottom")
+        .tickValues(color.domain());
+
+    // Append the group that will hold all of the legend components.  A set of single-pixel
+    // rectangles are drawn across the legend and colored by their interpolated color value.
+    svg.append("g")
+        .attr("class", "legend axis")
+        .attr("transform", "translate(0,-70)")
+        .call(legend_axis)
+        .selectAll(".legend_cell")
+        .data(legend_data)
+        .enter().append("rect")
+        .attr("x", function(d,i) { return i; })
+        .attr("y", -cell_size)
+        .attr("width", 1)
+        .attr("height", cell_size)
+        .attr("fill", function(d) { return color(d); });
+
+    // A title for the legend.
+    svg.append("text")
+        .attr("x", chart_width / 2)
+        .attr("y", -105)
+        .attr("text-anchor", "middle")
+        .text("projection volume colors");
+
+}
+
+// Construct the heatmap and its axes. The data supplied to this method
+// is an array of source-target volume values.  
+function build_heatmap(data, chart_width, chart_height) {
+
+    // This group will hold all of the rectangles within the heatmap.
+    var cell_group = svg.append("g");
+
+    // Make a rectangle for each source-target projection volume value.
+    var rects = cell_group.selectAll(".cell")
+        .data(data.both_data)
+        .enter().append("rect")
+        .attr("x", function(d) { return d.target_index * cell_size; })
+        .attr("y", function(d) { return d.source_index * cell_size; })
+        .style("fill", function(d) { return color(d.value); })
+        .attr("width", cell_size)
+        .attr("height", cell_size)
+        .on("mouseover", function(d) {
+
+    meta_container.html("<div><div class='label'>Primary Injection Structure:</div><div class='value'>" + "testing" + "</div></div>" + 
+    "<div><div class='label'>Target Structure:</div><div class='value'>" + "testing" + "</div></div>" +
+    "<div><div class='label'>Projection Volume:</div><div class='value'>" + d.value + "</div></div>");
+    });
+
+    // Construct text labels for the y axis (primary injection structures).
+    svg.append("g")
+        .attr("class", "y axis")
+        .selectAll("text")
+        .data(data.source_structures)
+        .enter().append("text")
+        .attr("y", function(d,i) { return i * cell_size + 17.5; })
+        .attr("x", -5)
+        .attr("text-anchor", "end")
+        .text(function(d) { return d; });
+
+    // Construct text labels for the x axis (target structures).
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0,"+chart_height+")")
+        .selectAll("text")
+        .data(data.target_structures)
+        .enter().append("text")
+        .attr("transform", function(d,i) { 
+            var x = (i * cell_size);
+            var y = 0;
+            return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
+        })
+        .text(function(d) { return d; });
+
+    // A title for the x axis.
+    svg.append("text")
+        .attr("x", chart_width / 2)
+        .attr("y", chart_height + 50)
+        .attr("text-anchor", "middle")
+        .text("target structure");
+
+    // A title for the y axis.
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform","translate(-70," + (chart_height / 2) +") rotate(90)")
+        .text("primary injection structure");
+}
+
+var chart_width = cell_size * data.target_structures.length;
+var chart_height = cell_size * data.source_structures.length;
+
+svg.attr("transform", "translate(" + 
+    + ((width / 2) - (chart_width / 2)) + "," 
+    + ((height / 2) - (chart_height / 2)) + ")");
+
+build_heatmap(data, chart_width, chart_height);
+build_legend(chart_width, chart_height);
+</script>
+</html>

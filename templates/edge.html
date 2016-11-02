@@ -14,6 +14,19 @@ integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="ano
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+<script>
+var toy = [[0.4, 0.2], [0.3, 0.1]];
+console.log(toy);
+var width = 200, height = 200, gridSize = Math.floor(width / 2), legendElementWidth = gridSize * 2,
+    buckets = 9,
+    colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
+    rows = ["s1", "s2"],
+    cols = ["g1", "g2"];
+
+
+
+</script>
 </head>
 <body>
 <div id="test">

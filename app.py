@@ -6,6 +6,10 @@ from flask import render_template, request
 def ppin_network():
 	return render_template("index.html", title="ppin network")
 
+@app.route("/heatmap-test")
+def heatmap_test():
+    return render_template("test.html")
+
 @app.route("/edge/inverse/<edge_pws>")
 def edge_inverse(edge_pws):
     pw1, pw2 = edge_pws.split("&")
