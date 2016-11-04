@@ -21,17 +21,17 @@
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
 <script>
 
-var width  = 1460,
-    height = 1000;
+var width  = 1060,
+    height = 700;
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
 var force = d3.layout.force()
-    .distance(100)
+    .distance(200)
     .charge(-100)
-    .gravity(0.05)
+    .gravity(0.1)
     .size([width, height]);
 
 //d3.tsv("/static/data/10diff-filtered-1KP", function(error, links) {
@@ -64,7 +64,11 @@ d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
     .enter().append("line")
       .attr("class", "link")
       .attr("stroke-width", function(d) {
-        return d.weight/4.0;
+        if (d.weight > 15) {
+            return 5 + d.weight/4.0;
+        } else {
+            return d.weight/2.0;
+        }
       })
       .style("stroke", function(d) {
         if (d.type == 1) {
@@ -94,26 +98,6 @@ d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
         } else {
             window.location.href = "/edge/direct/" + d.PW1 + "&" + d.PW2
         }
-        /*
-        xhr.open("GET", "/network?pw1=" + d.PW1 + "&pw2=" + d.PW2 + "&etype=" + parseInt(d.Type), true);
-        xhr.send();
-        xhr.onreadystatechange = processRequest;
-        function processRequest(e) {
-            ret = e.target.response;
-            if (ret["ERR"]) {
-                alert(ret["ERR"]);
-            } else {
-                console.log(ret);
-                var response = new XMLHttpRequest();
-                if 
-                window.location.href = "/edge/inverse/test+test2";
-                //response.open("POST", "/edge");
-                //response.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                //response.send("genes=" + JSON.stringify(ret));
-                
-            }
-        }
-        */
       });
   
   link.append("title").text(function(d) {
@@ -148,11 +132,10 @@ d3.tsv("/static/data/tgraph_aggregate_network.txt", function(error, links) {
       .data(nodes)
     .enter().append("g")
       .attr("class", "node")
-      //.attr("r", 4.5)
       .call(node_drag);
 
   node.append("circle")
-    .attr("r", 4.5)
+    .attr("r", 8)
 
   node.append("text")
     .attr("dx", 12)

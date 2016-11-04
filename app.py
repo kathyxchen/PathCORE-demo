@@ -31,10 +31,11 @@ def get_sample_metadata(sample_names):
     metadata = {}
     for sample in sample_names:
         info = mongo.db.sample_annotations.find_one({"CEL file": sample})
-        del info["_id"]
-        del info["CEL file"]
-        del info["sample_id"]
-        info.pop("Strain", None)
+        if info:
+            del info["_id"]
+            del info["CEL file"]
+            del info["sample_id"]
+            info.pop("Strain", None)
         metadata[sample] = dumps(info)
     return metadata
 

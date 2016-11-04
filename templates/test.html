@@ -48,10 +48,27 @@ var least_expressed_data =
      "both_data": edge_information["least_expressed_objs"],
      "meta": edge_information["least_metadata"]};
 
-function append_heatmap(div_id, data) {
+var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
+var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
+var most_diff = most_expr_max - most_expr_min;
+
+var least_expr_min = Math.min.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
+var least_expr_max = Math.max.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
+var least_diff = least_expr_max - least_expr_min;
+
+var most_colors = ["white", "yellow", "red", "black"];
+var least_colors = ["white", "blue", "purple", "black"];
+
+var most_domain = [most_expr_min, most_expr_min + most_diff/3.0, most_expr_max - most_diff/3.0, most_expr_max];
+var least_domain = [least_expr_min, least_expr_min + least_diff/3.0, least_expr_max - least_diff/3.0, least_expr_max];
+
+var most_colorbar = d3.scale.linear().domain(most_domain).range(most_colors);
+var least_colorbar = d3.scale.linear().domain(least_domain).range(least_colors);
+
+function append_heatmap(div_id, data, color, min, max) {
     var width = 960, height = 600, 
-        cell_size = 25, label_size = 100,
-        color = d3.scale.linear().domain([0,0.33,0.66,1.0]).range(["white", "yellow", "red", "black"]);
+        cell_size = 25, label_size = 100;
+        // color = d3.scale.linear().domain([0,0.33,0.66,1.0]).range(["white", "yellow", "red", "black"]);
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width)
@@ -69,7 +86,7 @@ function append_heatmap(div_id, data) {
         // This scale handles interpolation between projection volume values and 
         // legend position.
         var legend_scale = d3.scale.linear()
-            .domain([0,1])
+            .domain([min,max])
             .range([0,chart_width]);
     
         // This object will generate the tick values along the bottom of the legend.
@@ -181,8 +198,8 @@ function append_heatmap(div_id, data) {
     build_legend(chart_width, chart_height);
 }
 
-append_heatmap("#most_expressed", most_expressed_data);
-append_heatmap("#least_expressed", least_expressed_data);
+append_heatmap("#most_expressed", most_expressed_data, most_colorbar, most_expr_min, most_expr_max);
+append_heatmap("#least_expressed", least_expressed_data, least_colorbar, least_expr_min, least_expr_max);
 
 </script>
 </html>
