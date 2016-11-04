@@ -39,6 +39,6 @@ def get_sample_metadata(sample_names):
         metadata[sample] = dumps(info)
     return metadata
 
-app.run(debug=True)
+#app.run(debug=True)
 
 
