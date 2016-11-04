@@ -41,12 +41,14 @@ var most_expressed_data =
     {"source_structures": edge_information["most_expressed_samples"],
      "target_structures": edge_information["gene_names"],
      "both_data": edge_information["most_expressed_objs"],
-     "meta": edge_information["most_metadata"]};
+     "meta": edge_information["most_metadata"],
+     "oddsratios": edge_information["oddsratios"]};
 var least_expressed_data =
     {"source_structures": edge_information["least_expressed_samples"],
      "target_structures": edge_information["gene_names"],
      "both_data": edge_information["least_expressed_objs"],
-     "meta": edge_information["least_metadata"]};
+     "meta": edge_information["least_metadata"],
+     "oddsratios": edge_information["oddsratios"]};
 
 var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
 var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
@@ -113,9 +115,9 @@ function append_heatmap(div_id, data, color, min, max) {
         // A title for the legend.
         svg.append("text")
            .attr("x", chart_width / 2)
-           .attr("y", -105)
+           .attr("y", -101)
            .attr("text-anchor", "middle")
-           .text("projection volume colors");
+           .text("normalized expression value");
 
     }
 
@@ -143,8 +145,11 @@ function append_heatmap(div_id, data, color, min, max) {
                     metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
                 }
                 meta_container.html("<div style='text-decoration: underline;'>" + sample_name +
-                                    "<br />[ " + data.target_structures[d.target_index] + " expression: " +
-                                    d.value + " ]</div>" +
+                                    " [ " + data.target_structures[d.target_index] + " ]</div>" + 
+                                    "<div><strong>" +
+                                    "expression:</strong> " + d.value + "<br />" + 
+                                    "<strong>odds ratio:</strong> " + 
+                                    data.oddsratios[d.target_index] + "</div>" +
                                     "<div class='value'>" +
                                     metadata_html + "</div></div>");
                 });

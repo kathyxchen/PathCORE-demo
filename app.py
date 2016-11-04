@@ -2,14 +2,15 @@ from flask_rest_service import app, mongo, methods
 import requests
 from flask import render_template, request
 from bson.json_util import dumps
+import pymongo
+from pymongo import MongoClient
 
-@app.route("/ppin-network")
+client = MongoClient("mongodb://{0}:{0}@{1}/{2}".format("kathy", "ds143707.mlab.com:43707", "tgraph-reduced"))
+db2 = client["tgraph-reduced"]
+
+@app.route("/ppin-network/1")
 def ppin_network():
-	return render_template("index.html", title="ppin network")
-
-@app.route("/heatmap-test")
-def heatmap_test():
-    return render_template("test.html")
+	return render_template("index.html", title="ppin network", filename="tgraph_aggregate_network.txt")
 
 @app.route("/edge/inverse/<edge_pws>")
 def edge_inverse(edge_pws):
@@ -27,6 +28,27 @@ def edge_direct(edge_pws):
     edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
     return render_template("test.html", edge_info=dumps(edge_info))
 
+@app.route("/ppin-network/2")
+def reduced_definitions():
+    return render_template("index.html", title="reduced pathway definitions",
+                           filename="tgraph_remove_large_network.txt")
+
+@app.route("/ppin-network/2/edge/inverse/<edge_pws>")
+def rd_edge_inverse(edge_pws):
+    pw1, pw2 = edge_pws.split("&")
+    edge_info = db2.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": -1})
+    edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
+    edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
+    return render_template("test.html", edge_info=dumps(edge_info))
+
+@app.route("/ppin-network/2/edge/direct/<edge_pws>")
+def rd_edge_direct(edge_pws):
+    pw1, pw2 = edge_pws.split("&")   
+    edge_info = db2.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": 1})
+    edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
+    edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
+    return render_template("test.html", edge_info=dumps(edge_info))
+
 def get_sample_metadata(sample_names):
     metadata = {}
     for sample in sample_names:
@@ -36,6 +58,9 @@ def get_sample_metadata(sample_names):
             del info["CEL file"]
             del info["sample_id"]
             info.pop("Strain", None)
+            if "EXPT SUMMARY" in info:
+                max_len = min(len(info["EXPT SUMMARY"]), 140)
+                info["EXPT SUMMARY"] = info["EXPT SUMMARY"][:max_len]
         metadata[sample] = dumps(info)
     return metadata
 
