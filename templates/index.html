@@ -109,16 +109,17 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         tgt.style("stroke-width", Math.max(currWt, 5));
       })
       .on("mouseout", function() {
-        var etype = d3.select(this)[0][0].__data__.Type;
-        var weight = d3.select(this)[0][0].__data__.Weight;
+        var tgt = d3.select(this);
+        var etype = tgt[0][0].__data__.Type;
+        var weight = tgt[0][0].__data__.Weight;
         var color;
         if (etype == 1) {
             color = "#6600FF";
         } else {
             color = "#FF9933";
         }
-        d3.select(this).style("stroke", color); 
-        d3.select(this).style("stroke-width", weightConv(weight));
+        tgt.style("stroke", color); 
+        tgt.style("stroke-width", weightConv(weight));
       })
       .on("click", function(d) {
         var xhr = new XMLHttpRequest();

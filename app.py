@@ -1,7 +1,7 @@
 from flask_rest_service import app, mongo, methods
-import requests
-from flask import render_template, request
+
 from bson.json_util import dumps
+from flask import render_template, request
 import pymongo
 from pymongo import MongoClient
 
@@ -10,41 +10,35 @@ db2 = client["tgraph-reduced"]
 
 @app.route("/ppin-network/1")
 def ppin_network():
-	return render_template("index.html", title="ppin network", filename="tgraph_aggregate_network.txt")
+    return render_template("index.html",
+                           title="ppin network",
+                           filename="tgraph_aggregate_network.txt")
 
 @app.route("/edge/inverse/<edge_pws>")
 def edge_inverse(edge_pws):
-    pw1, pw2 = edge_pws.split("&")
-    edge_info = mongo.db.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": -1})
-    edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
-    edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
-    return render_template("test.html", edge_info=dumps(edge_info))
+    return get_edge_template(edge_pws, -1, mongo.db)
 
 @app.route("/edge/direct/<edge_pws>")
 def edge_direct(edge_pws):
-    pw1, pw2 = edge_pws.split("&")   
-    edge_info = mongo.db.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": 1})
-    edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
-    edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
-    return render_template("test.html", edge_info=dumps(edge_info))
+    return get_edge_template(edge_pws, 1, mongo.db)
 
 @app.route("/ppin-network/2")
-def reduced_definitions():
-    return render_template("index.html", title="reduced pathway definitions",
+def rd_ppin_network():
+    return render_template("index.html",
+                           title="reduced pathway definitions",
                            filename="tgraph_remove_large_network.txt")
 
 @app.route("/ppin-network/2/edge/inverse/<edge_pws>")
 def rd_edge_inverse(edge_pws):
-    pw1, pw2 = edge_pws.split("&")
-    edge_info = db2.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": -1})
-    edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
-    edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
-    return render_template("test.html", edge_info=dumps(edge_info))
+    return get_edge_template(edge_pws, -1, db2)
 
 @app.route("/ppin-network/2/edge/direct/<edge_pws>")
 def rd_edge_direct(edge_pws):
-    pw1, pw2 = edge_pws.split("&")   
-    edge_info = db2.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": 1})
+    return get_edge_template(edge_pws, 1, db2)
+
+def get_edge_template(edge_pws, etype, db):
+    pw1, pw2 = edge_pws.split("&")
+    edge_info = db.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": etype})
     edge_info["most_metadata"] = get_sample_metadata(edge_info["most_expressed_samples"])
     edge_info["least_metadata"] = get_sample_metadata(edge_info["least_expressed_samples"])
     return render_template("test.html", edge_info=dumps(edge_info))
@@ -65,5 +59,3 @@ def get_sample_metadata(sample_names):
     return metadata
 
 #app.run(debug=True)
-
-

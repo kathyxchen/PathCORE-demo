@@ -1,14 +1,11 @@
-import os
 from flask import Flask
 from flask.ext import restful
 from flask.ext.pymongo import PyMongo
 from flask import make_response
 from bson.json_util import dumps
 
+# TODO: switch to a secure db access
 MONGO_URL = "mongodb://kathy:kathy@ds137267.mlab.com:37267/1kp-networkdb"
-#MONGO_URL = os.environ.get('MONGO_URL')
-if not MONGO_URL:
-    MONGO_URL = "mongodb://localhost:27017/networkdb";
 
 app = Flask(__name__, template_folder='../templates')
 
