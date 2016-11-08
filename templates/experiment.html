@@ -19,57 +19,36 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div id="overview">
     </div>
     <div class="container">
-    <h3>10 most expressed samples</h3>
-    <div class="row" id="most_expressed_parent">
-        <div class="col-xs-8" id="most_expressed">
+        <h3>Experiment {{ experiment_name }}</h3>
+        <div class="row" id="experiment_samples">
+        <div class="col-xs-8" id="heatmap">
         </div>
-    </div>
-    </div>
-    <div class="container">
-    <h3>10 least expressed samples</h3>
-    <div class="row" id="least_expressed_parent">
-        <div class="col-xs-8" id="least_expressed">
         </div>
-    </div>
     </div>
 </body>
 <script>
-var edge_information = JSON.parse({{ edge_info|tojson }});
+var heatmap_information = JSON.parse({{ heatmap|tojson }});
 
-var most_expressed_data = 
+var data = 
     {"source_structures": edge_information["most_expressed_samples"],
      "target_structures": edge_information["gene_names"],
      "both_data": edge_information["most_expressed_objs"],
      "meta": edge_information["most_metadata"],
-     "oddsratios": edge_information["oddsratios"]};
-var least_expressed_data =
-    {"source_structures": edge_information["least_expressed_samples"],
-     "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["least_expressed_objs"],
-     "meta": edge_information["least_metadata"],
      "oddsratios": edge_information["oddsratios"]};
 
 var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
 var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
 var most_diff = most_expr_max - most_expr_min;
 
-var least_expr_min = Math.min.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
-var least_expr_max = Math.max.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
-var least_diff = least_expr_max - least_expr_min;
-
 var most_colors = ["white", "yellow", "red", "black"];
-var least_colors = ["white", "blue", "purple", "black"];
 
 var most_domain = [most_expr_min, most_expr_min + most_diff/3.0, most_expr_max - most_diff/3.0, most_expr_max];
-var least_domain = [least_expr_min, least_expr_min + least_diff/3.0, least_expr_max - least_diff/3.0, least_expr_max];
 
 var most_colorbar = d3.scale.linear().domain(most_domain).range(most_colors);
-var least_colorbar = d3.scale.linear().domain(least_domain).range(least_colors);
 
 function append_heatmap(div_id, data, color, min, max) {
     var width = 960, height = 600, 
         cell_size = 25, label_size = 100;
-        // color = d3.scale.linear().domain([0,0.33,0.66,1.0]).range(["white", "yellow", "red", "black"]);
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width)
@@ -146,9 +125,7 @@ function append_heatmap(div_id, data, color, min, max) {
                 meta_container.html("<div style='text-decoration: underline;'>" + sample_name +
                                     " [ " + data.target_structures[d.target_index] + " ]</div>" + 
                                     "<div><strong>" +
-                                    "expression:</strong> " + d.value + "<br />" + 
-                                    "<strong>odds ratio:</strong> " + 
-                                    data.oddsratios[d.target_index] + "</div>" +
+                                    "expression:</strong> " + d.value + "</div>" +
                                     "<div class='value'>" +
                                     metadata_html + "</div></div>");
                 });
