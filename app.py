@@ -24,33 +24,36 @@ def ppin_network():
                            title="ppin network",
                            filename="tgraph_aggregate_network.txt")
 
-@app.route("/edge/inverse/<edge_pws>")
-def edge_inverse(edge_pws):
-    return get_edge_template(edge_pws, -1, mongo.db)
+#@app.route("/edge/inverse/<edge_pws>")
+#def edge_inverse(edge_pws):
+#    return get_edge_template(edge_pws, -1, mongo.db)
 
 @app.route("/edge/direct/<edge_pws>")
 def edge_direct(edge_pws):
     return get_edge_template(edge_pws, 1, mongo.db)
 
-@app.route("/edge/inverse/<edge_pws>/experiment/<experiment>")
-def edge_inverse_experiment(edge_pws):
-    return {}
+#@app.route("/edge/inverse/<edge_pws>/experiment/<experiment>")
+#def edge_inverse_experiment(edge_pws):
+#    return {}
 
 @app.route("/edge/direct/<edge_pws>/experiment/<experiment>")
 def edge_direct_experiment(edge_pws, experiment):
     if not session["edge_info"]:
         get_edge_template(edge_pws, 1, mongo.db)
     # retrieve all samples associated with an experiment.
-    iter_annotations = mongo.db.sample_annotations.find({"Experiment": experiment})
     metadata = {}
     get_samples = {}
     sample_gene_vals = {}
-    # TODO: incorporate the odds ratio and sort samples still?
+    
+    # get all annotations associated with an experiment
+    iter_annotations = mongo.db.sample_annotations.find({"Experiment": experiment})
     for annotation in iter_annotations:
         sample_name = annotation["CEL file"]
         get_samples[sample_name] = annotation["sample_id"]
         metadata[sample_name] = cleanup_annotation(annotation)
         sample_gene_vals[sample_name] = []
+    
+    # for each sample, get the expression value for each gene in the list
     iter_gene_data = mongo.db.genes.find({"gene": {"$in": session["edge_info"]["genes"]}}, {"expression": 0})
     gene_order = []
     for gene_info in iter_gene_data:
@@ -65,14 +68,30 @@ def edge_direct_experiment(edge_pws, experiment):
         whitelist_samples["most"] = edge_exp_data["most"][experiment]
     if experiment in edge_exp_data["least"]:
         whitelist_samples["least"] = edge_exp_data["least"][experiment]
-
-    experiment_data = {"all_samples": sample_gene_vals,
+    
+    experiment_data = {"sample_values": sample_gene_vals,
                        "genes": gene_order,
+                       "samples": _sort_samples(sample_gene_vals, session["edge_info"]["oddsratios"],
+                                                session["edge_info"]["genes"]),
                        "metadata_samples": metadata,
-                       "whitelist_samples": whitelist_samples}
+                       "whitelist_samples": whitelist_samples,
+                       "oddsratios": reversed(sorted(session["edge_info"]["oddsratios"].values()))}
     return render_template("experiment.html",
                            experiment_name=experiment,
                            experiment_information=dumps(experiment_data))
+
+def _sort_samples(sample_gene_values, gene_or_map, genes):
+    sample_scores = []
+    sum_or = float(sum(gene_or_map.values()))
+    for sample, gene_values in sample_gene_values.iteritems():
+        score = 0
+        for index, value in enumerate(gene_values):
+            oddsratio = gene_or_map[genes[index]]
+            score += (oddsratio/sum_or) * value
+        sample_scores.append((sample, score))
+    sample_scores.sort(key=lambda tup: tup[1])
+    sample_scores.reverse()
+    return [tup[0] for tup in sample_scores]
 
 @app.route("/ppin-network/2")
 def rd_ppin_network():
@@ -87,6 +106,7 @@ def rd_edge_inverse(edge_pws):
 @app.route("/ppin-network/2/edge/direct/<edge_pws>")
 def rd_edge_direct(edge_pws):
     return get_edge_template(edge_pws, 1, db2)
+
 
 # HELPER FUNCTIONS
 
@@ -107,13 +127,27 @@ def get_edge_template(edge_pws, etype, db):
     
     least_metadata, least_experiments = get_sample_metadata(edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
+    
+    pao1_names = list(edge_info["gene_names"])
+    rename_genes = db.genes.find({"gene": {"$in": pao1_names}},
+                                 {"expression": 0, "normalized_expression": 0})
+    
+    for gene_info in rename_genes:
+        rename = get_gene_name(gene_info)
+        to_replace = edge_info["gene_names"].index(gene_info["gene"])
+        edge_info["gene_names"][to_replace] = rename
+    
+    gene_or_map = {}
+    for index, gene in enumerate(pao1_names):
+        gene_or_map[gene] = edge_info["oddsratios"][index]
 
     session["counter"] += 1
     session["edge_info"] = {"edge": (pw1, pw2, etype),
                             "experiments": {"most": most_experiments,
                                             "least": least_experiments},
-                            "genes": edge_info["gene_names"]}
-    return render_template("test.html", edge_info=dumps(edge_info))
+                            "genes": pao1_names,
+                            "oddsratios": gene_or_map}
+    return render_template("edge_samples.html", edge_info=dumps(edge_info))
 
 def cleanup_annotation(annotation):
     # gets rid of some unnecessary fields
@@ -123,8 +157,11 @@ def cleanup_annotation(annotation):
     annotation.pop("Strain", None)
     # shortens the experiment summary
     if "EXPT SUMMARY" in annotation:
-        max_len = min(len(annotation["EXPT SUMMARY"]), 140)
+        summary_len = len(annotation["EXPT SUMMARY"])
+        max_len = min(summary_len, 160)
         annotation["EXPT SUMMARY"] = annotation["EXPT SUMMARY"][:max_len]
+        if summary_len != max_len:
+            annotation["EXPT SUMMARY"] += "..."
     return annotation
 
 def get_sample_metadata(sample_names):
