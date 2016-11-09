@@ -151,7 +151,14 @@ function append_heatmap(div_id, data, color, min, max) {
                                     data.oddsratios[d.target_index] + "</div>" +
                                     "<div class='value'>" +
                                     metadata_html + "</div></div>");
-                });
+            })
+            .on("click", function(d) {
+                var sample_name = data.source_structures[d.source_index];
+                var metadata = JSON.parse(data.meta[sample_name]);
+                var experiment = metadata["Experiment"];
+                var xhr = new XMLHttpRequest();
+                window.location.href = window.location.href + "/experiment/" + experiment;
+            });
 
         // Construct text labels for the y axis
         svg.append("g")

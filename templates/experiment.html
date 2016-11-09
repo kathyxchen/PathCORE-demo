@@ -20,31 +20,42 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     </div>
     <div class="container">
         <h3>Experiment {{ experiment_name }}</h3>
-        <div class="row" id="experiment_samples">
+        <div class="row" id="heatmap_parent">
         <div class="col-xs-8" id="heatmap">
         </div>
         </div>
     </div>
 </body>
 <script>
-var heatmap_information = JSON.parse({{ heatmap|tojson }});
+var heatmap_information = JSON.parse({{ experiment_information|tojson }});
+
+var sample_data = heatmap_information["all_samples"];
+var sample_names = Object.keys(sample_data);
+var build_indices = [];
+for (var i = 0; i < sample_names.length; i++) {
+    var sample = sample_names[i];
+    var expr_values = sample_data[sample_names[i]];
+    for (var j = 0; j < expr_values.length; j++) {
+        value = expr_values[j];
+        var coordinate = {};
+        coordinate["source_index"] = i;
+        coordinate["target_index"] = j;
+        coordinate["value"] = value;
+        build_indices.push(coordinate);
+    }
+}
 
 var data = 
-    {"source_structures": edge_information["most_expressed_samples"],
-     "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["most_expressed_objs"],
-     "meta": edge_information["most_metadata"],
-     "oddsratios": edge_information["oddsratios"]};
+    {"source_structures": sample_names,
+     "target_structures": heatmap_information["genes"],
+     "both_data": build_indices,
+     "meta": heatmap_information["metadata_samples"],
+     "whitelist": heatmap_information["whitelist_samples"]
+    };
 
-var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
-var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
-var most_diff = most_expr_max - most_expr_min;
+var colors = ["white", "yellow", "green", "black"];
 
-var most_colors = ["white", "yellow", "red", "black"];
-
-var most_domain = [most_expr_min, most_expr_min + most_diff/3.0, most_expr_max - most_diff/3.0, most_expr_max];
-
-var most_colorbar = d3.scale.linear().domain(most_domain).range(most_colors);
+var colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
 function append_heatmap(div_id, data, color, min, max) {
     var width = 960, height = 600, 
@@ -110,14 +121,16 @@ function append_heatmap(div_id, data, color, min, max) {
         var rects = cell_group.selectAll(".cell")
             .data(data.both_data)
             .enter().append("rect")
-            .attr("x", function(d) { return d.target_index * cell_size; })
-            .attr("y", function(d) { return d.source_index * cell_size; })
+            //.attr("x", function(d) { return d.target_index * cell_size; })
+            //.attr("y", function(d) { return d.source_index * cell_size; })
+            .attr("x", function(d) { return d.source_index * cell_size; })
+            .attr("y", function(d) { return d.target_index * cell_size; })
             .style("fill", function(d) { return color(d.value); })
             .attr("width", cell_size)
             .attr("height", cell_size)
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
-                var metadata = JSON.parse(data.meta[sample_name]);
+                var metadata = data.meta[sample_name];
                 var metadata_html = ""
                 for (var key in metadata) {
                     metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
@@ -134,7 +147,7 @@ function append_heatmap(div_id, data, color, min, max) {
         svg.append("g")
            .attr("class", "y axis")
            .selectAll("text")
-           .data(data.source_structures)
+           .data(data.target_structures)
            .enter().append("text")
            .attr("y", function(d,i) { return i * cell_size + 17.5; })
            .attr("x", -5)
@@ -146,7 +159,7 @@ function append_heatmap(div_id, data, color, min, max) {
            .attr("class", "x axis")
            .attr("transform", "translate(0,"+ chart_height +")")
            .selectAll("text")
-           .data(data.target_structures)
+           .data(data.source_structures)
            .enter().append("text")
            .attr("transform", function(d,i) { 
                 var x = (i * cell_size);
@@ -158,18 +171,18 @@ function append_heatmap(div_id, data, color, min, max) {
         // A title for the x axis.
         svg.append("text")
            .attr("x", chart_width / 2)
-           .attr("y", chart_height + 80)
+           .attr("y", chart_height + 130)
            .attr("text-anchor", "middle")
-           .text("Genes");
+           .text("Samples");
 
         // A title for the y axis.
         svg.append("text")
            .attr("text-anchor", "middle")
-           .attr("transform","translate(-300," + (chart_height / 2) +") rotate(90)")
-           .text("Samples");
+           .attr("transform","translate(-110," + (chart_height / 2) +") rotate(90)")
+           .text("Genes");
     }
-    var chart_width = cell_size * data.target_structures.length;
-    var chart_height = cell_size * data.source_structures.length;
+    var chart_height = cell_size * data.target_structures.length;
+    var chart_width = cell_size * data.source_structures.length;
 
     svg.attr("transform", "translate(" + 
         + ((width / 2) - (chart_width / 2)) + "," 
@@ -179,8 +192,7 @@ function append_heatmap(div_id, data, color, min, max) {
     build_legend(chart_width, chart_height);
 }
 
-append_heatmap("#most_expressed", most_expressed_data, most_colorbar, most_expr_min, most_expr_max);
-append_heatmap("#least_expressed", least_expressed_data, least_colorbar, least_expr_min, least_expr_max);
+append_heatmap("#heatmap", data, colorbar, 0.0, 1.0);
 
 </script>
 </html>
