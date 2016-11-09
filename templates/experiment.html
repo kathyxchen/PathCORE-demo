@@ -30,11 +30,31 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 var heatmap_information = JSON.parse({{ experiment_information|tojson }});
 console.log(heatmap_information);
 var sample_data = heatmap_information["sample_values"];
-var sample_names = Object.keys(sample_data);
+var samples = heatmap_information["samples"];
+// additional sorting step because odds ratio ordering was based on
+// more genes than what we have now...
+var whitelisted = heatmap_information["whitelist_samples"];
+var final_sorted_samples = [];
+var least = [];
+if (whitelisted.hasOwnProperty("most")) {
+    final_sorted_samples = final_sorted_samples.concat(whitelisted["most"]);
+}
+if (whitelisted.hasOwnProperty("least")) {
+    least = whitelisted["least"];
+}
+for (var i = 0; i < samples.length; i++) {
+    if ($.inArray(samples[i], final_sorted_samples) == -1
+        && $.inArray(samples[i], least) == -1) {
+        final_sorted_samples.push(samples[i]);
+    }
+}
+final_sorted_samples = final_sorted_samples.concat(least);
+
+var sample_names = final_sorted_samples;
 var build_indices = [];
 for (var i = 0; i < sample_names.length; i++) {
     var sample = sample_names[i];
-    var expr_values = sample_data[sample_names[i]];
+    var expr_values = sample_data[sample];
     for (var j = 0; j < expr_values.length; j++) {
         value = expr_values[j];
         var coordinate = {};
@@ -50,7 +70,8 @@ var data =
      "target_structures": heatmap_information["genes"],
      "both_data": build_indices,
      "meta": heatmap_information["metadata_samples"],
-     "whitelist": heatmap_information["whitelist_samples"]
+     "whitelist": heatmap_information["whitelist_samples"],
+     "oddsratios": heatmap_information["oddsratios"]
     };
 
 var colors = ["white", "yellow", "green", "black"];
@@ -58,27 +79,27 @@ var colors = ["white", "yellow", "green", "black"];
 var colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
 function append_heatmap(div_id, data, color, min, max) {
-    var width = 960, height = 600, 
+    var width = 960, height = 780, 
         cell_size = 25, label_size = 100;
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width)
-        .attr("height", height)
+        .attr("height", "100%")
         .append("g");
 
-    var meta_container = $("<div class='col-xs-4'>").attr("class","meta").appendTo($(div_id + "_parent"));
+    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4").appendTo($(div_id + "_parent"));
     // Build the D3 components that display the heatmap color legend.
     function build_legend(chart_width, chart_height) {
         // Make an array of values, one for each pixel in the width of the legend.
         var legend_data = [];
-        var num_elems = chart_width;
+        var num_elems = Math.max(chart_width, 100);
         for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems * 1); }
 
         // This scale handles interpolation between projection volume values and 
         // legend position.
         var legend_scale = d3.scale.linear()
             .domain([min,max])
-            .range([0,chart_width]);
+            .range([0,Math.max(chart_width, 100)]);
     
         // This object will generate the tick values along the bottom of the legend.
         var legend_axis = d3.svg.axis()
@@ -90,7 +111,7 @@ function append_heatmap(div_id, data, color, min, max) {
         // rectangles are drawn across the legend and colored by their interpolated color value.
         svg.append("g")
            .attr("class", "legend axis")
-           .attr("transform", "translate(0,-70)")
+           .attr("transform", "translate(0,-100)")
            .call(legend_axis)
            .selectAll(".legend_cell")
            .data(legend_data)
@@ -104,10 +125,9 @@ function append_heatmap(div_id, data, color, min, max) {
         // A title for the legend.
         svg.append("text")
            .attr("x", chart_width / 2)
-           .attr("y", -101)
+           .attr("y", -65)
            .attr("text-anchor", "middle")
            .text("normalized expression value");
-
     }
 
     // Construct the heatmap and its axes. The data supplied to this method
@@ -121,8 +141,6 @@ function append_heatmap(div_id, data, color, min, max) {
         var rects = cell_group.selectAll(".cell")
             .data(data.both_data)
             .enter().append("rect")
-            //.attr("x", function(d) { return d.target_index * cell_size; })
-            //.attr("y", function(d) { return d.source_index * cell_size; })
             .attr("x", function(d) { return d.source_index * cell_size; })
             .attr("y", function(d) { return d.target_index * cell_size; })
             .style("fill", function(d) { return color(d.value); })
@@ -135,13 +153,15 @@ function append_heatmap(div_id, data, color, min, max) {
                 for (var key in metadata) {
                     metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
                 }
-                meta_container.html("<div style='text-decoration: underline;'>" + sample_name +
-                                    " [ " + data.target_structures[d.target_index] + " ]</div>" + 
-                                    "<div><strong>" +
-                                    "expression:</strong> " + d.value + "</div>" +
-                                    "<div class='value'>" +
-                                    metadata_html + "</div></div>");
-                });
+                var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
+                    data.target_structures[d.target_index] + "</p>" +
+                    "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
+                    Math.ceil(d.value * 1000.0) / 1000.0 +
+                    "<br />" + "<strong>odds ratio:</strong> " +
+                    Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
+                    "<p>" + metadata_html + "</p>";
+                meta_container.html(build_html);
+            });
 
         // Construct text labels for the y axis
         svg.append("g")
@@ -166,12 +186,23 @@ function append_heatmap(div_id, data, color, min, max) {
                 var y = 0;
                 return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
            })
-           .text(function(d) { return d; });
+           .text(function(d) { return d; })
+           .style('fill', function(d) {
+                if (data.whitelist.hasOwnProperty("most") 
+                    && $.inArray(d, data.whitelist.most) > -1) {
+                    return 'red';
+                }
+                if (data.whitelist.hasOwnProperty("least")
+                    && $.inArray(d, data.whitelist.least) > -1) {
+                    return 'blue';
+                }
+                return 'black';
+           });
 
         // A title for the x axis.
         svg.append("text")
            .attr("x", chart_width / 2)
-           .attr("y", chart_height + 130)
+           .attr("y", -20)
            .attr("text-anchor", "middle")
            .text("Samples");
 
@@ -185,8 +216,8 @@ function append_heatmap(div_id, data, color, min, max) {
     var chart_width = cell_size * data.source_structures.length;
 
     svg.attr("transform", "translate(" + 
-        + ((width / 2) - (chart_width / 2)) + "," 
-        + ((height / 2) - (chart_height / 2)) + ")");
+        + ((width / 3) - (chart_width / 4)) + "," 
+        + ((height / 4) - (chart_height / 4)) + ")");
 
     build_heatmap(data, chart_width, chart_height);
     build_legend(chart_width, chart_height);
