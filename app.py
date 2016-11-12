@@ -32,6 +32,13 @@ def ppin_network():
 #def edge_inverse(edge_pws):
 #    return get_edge_template(edge_pws, -1, mongo.db)
 
+@app.route("/session/<sample>")
+def session_sample_meta(sample):
+    if sample not in session["edge_info"]["experiment_meta"]:
+        return ""
+    else:
+        return dumps(session["edge_info"]["experiment_meta"][sample])
+
 @app.route("/edge/direct/<edge_pws>")
 def edge_direct(edge_pws):
     return get_edge_template(edge_pws, 1, mongo.db)
@@ -72,12 +79,12 @@ def edge_direct_experiment(edge_pws, experiment):
         whitelist_samples["most"] = edge_exp_data["most"][experiment]
     if experiment in edge_exp_data["least"]:
         whitelist_samples["least"] = edge_exp_data["least"][experiment]
-    
+    print "METADATA IN SESSION"
+    session["edge_info"]["experiment_meta"] = metadata
     experiment_data = {"sample_values": sample_gene_vals,
                        "genes": gene_order,
                        "samples": _sort_samples(sample_gene_vals, session["edge_info"]["oddsratios"],
                                                 session["edge_info"]["genes"]),
-                       "metadata_samples": metadata,
                        "whitelist_samples": whitelist_samples,
                        "oddsratios": reversed(sorted(session["edge_info"]["oddsratios"].values()))}
     return render_template("experiment.html",
@@ -162,7 +169,7 @@ def cleanup_annotation(annotation):
     # shortens the experiment summary
     if "EXPT SUMMARY" in annotation:
         summary_len = len(annotation["EXPT SUMMARY"])
-        max_len = min(summary_len, 160)
+        max_len = min(summary_len, 240)
         annotation["EXPT SUMMARY"] = annotation["EXPT SUMMARY"][:max_len]
         if summary_len != max_len:
             annotation["EXPT SUMMARY"] += "..."

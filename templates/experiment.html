@@ -7,9 +7,7 @@ integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
 integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -26,7 +24,7 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
         </div>
     </div>
 </body>
-<script>
+<script type="text/javascript">
 var heatmap_information = JSON.parse({{ experiment_information|tojson }});
 console.log(heatmap_information);
 var sample_data = heatmap_information["sample_values"];
@@ -69,7 +67,7 @@ var data =
     {"source_structures": sample_names,
      "target_structures": heatmap_information["genes"],
      "both_data": build_indices,
-     "meta": heatmap_information["metadata_samples"],
+     //"meta": heatmap_information["metadata_samples"],
      "whitelist": heatmap_information["whitelist_samples"],
      "oddsratios": heatmap_information["oddsratios"]
     };
@@ -90,17 +88,16 @@ function append_heatmap(div_id, data, color, min, max) {
     var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4").appendTo($(div_id + "_parent"));
     // Build the D3 components that display the heatmap color legend.
     function build_legend(chart_width, chart_height) {
+        chart_width = Math.max(Math.min(chart_width, 500), 100)
         // Make an array of values, one for each pixel in the width of the legend.
         var legend_data = [];
-        var num_elems = Math.max(chart_width, 100);
-        for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems * 1); }
+        for (var i = 0; i < chart_width; i++) { legend_data.push(i / chart_width * 1); }
 
         // This scale handles interpolation between projection volume values and 
         // legend position.
         var legend_scale = d3.scale.linear()
             .domain([min,max])
-            .range([0,Math.max(chart_width, 100)]);
-    
+            .range([0,chart_width]);
         // This object will generate the tick values along the bottom of the legend.
         var legend_axis = d3.svg.axis()
             .scale(legend_scale)
@@ -148,19 +145,22 @@ function append_heatmap(div_id, data, color, min, max) {
             .attr("height", cell_size)
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
-                var metadata = data.meta[sample_name];
-                var metadata_html = ""
-                for (var key in metadata) {
-                    metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
-                }
-                var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
-                    data.target_structures[d.target_index] + "</p>" +
-                    "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
-                    Math.ceil(d.value * 1000.0) / 1000.0 +
-                    "<br />" + "<strong>odds ratio:</strong> " +
-                    Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
-                    "<p>" + metadata_html + "</p>";
-                meta_container.html(build_html);
+                //var metadata = data.meta[sample_name];
+                $.get("/session/" + sample_name, function(metadata) {
+                    metadata = JSON.parse(metadata);
+                    var metadata_html = ""
+                    for (var key in metadata) {
+                        metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
+                    }
+                    var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
+                        data.target_structures[d.target_index] + "</p>" +
+                        "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
+                        Math.ceil(d.value * 1000.0) / 1000.0 +
+                        "<br />" + "<strong>odds ratio:</strong> " +
+                        Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
+                        "<p>" + metadata_html + "</p>";
+                    meta_container.html(build_html);
+                });
             });
 
         // Construct text labels for the y axis
