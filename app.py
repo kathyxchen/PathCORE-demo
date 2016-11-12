@@ -4,8 +4,9 @@ from bson.json_util import dumps
 from flask import render_template, request, session
 import pymongo
 from pymongo import MongoClient
+import os
 
-app.secret_key = "F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT"
+app.secret_key = os.environ.get("SESSION_SECRET")
 
 def sum_session_counter():
     session["edge_info"] = None
@@ -14,8 +15,11 @@ def sum_session_counter():
     except KeyError:
         session["counter"] = 1
 
-client = MongoClient("mongodb://{0}:{0}@{1}/{2}".format("kathy", "ds143707.mlab.com:43707", "tgraph-reduced"))
-db2 = client["tgraph-reduced"]
+REDUCED_NET = "tgraph-reduced"
+client = MongoClient("mongodb://{0}:{1}@{2}/{3}".format(
+    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
+    "ds143707.mlab.com:43707", REDUCED_NET))
+db2 = client[REDUCED_NET]
 
 @app.route("/ppin-network/1")
 def ppin_network():
@@ -179,4 +183,3 @@ def get_sample_metadata(sample_names):
         metadata[sample] = dumps(info)
     return metadata, experiments
 
-#app.run(debug=True)
