@@ -51,7 +51,9 @@ def edge_direct(edge_pws):
 def edge_direct_experiment(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
     etype = 1
-    if not session["edge_info"] or session["edge_info"]["edge"] != (pw1, pw2, etype):
+    print "1"
+    if "edge_info" not in session or session["edge_info"]["edge_name"] != (pw1, pw2, etype):
+        print "could not find this edge, reloading."
         get_edge_template(edge_pws, etype, mongo.db)
     # retrieve all samples associated with an experiment.
     metadata = {}
@@ -82,15 +84,20 @@ def edge_direct_experiment(edge_pws, experiment):
     if experiment in edge_exp_data["least"]:
         whitelist_samples["least"] = edge_exp_data["least"][experiment]
     session["edge_info"]["experiment_meta"] = metadata
-    sgenes, soddsratios, ssample_gene_vals = _sort_genes(sample_gene_vals,
-            session["edge_info"]["oddsratios"], gene_order)
+    sgenes, soddsratios, ssample_gene_vals = _sort_genes(
+            sample_gene_vals, session["edge_info"]["oddsratios"], gene_order)
+    print "2"
     experiment_data = {"sample_values": ssample_gene_vals,
                        "genes": sgenes,
-                       "samples": _sort_samples(ssample_gene_vals, session["edge_info"]["oddsratios"],
+                       "samples": _sort_samples(ssample_gene_vals,
+                                                session["edge_info"]["oddsratios"],
                                                 sgenes),
                        "whitelist_samples": whitelist_samples,
                        "oddsratios": soddsratios}
+    print edge_to_string(session["edge_info"]["edge_name"])
     return render_template("experiment.html",
+                           edge_str=edge_to_string(session["edge_info"]["edge_name"]),
+                           edge=session["edge_info"]["edge_name"],
                            experiment_name=experiment,
                            experiment_information=dumps(experiment_data))
 
@@ -148,6 +155,16 @@ def get_gene_name(gene_info):
     else:
         return gene_info["gene"]
 
+def edge_to_string(edge):
+    pw1, pw2, etype = edge
+    to_str = ""
+    if etype == 1:
+        to_str = "Direct "
+    else:
+        to_str = "Inverse "
+    to_str += "edge [{0}, {1}]".format(pw1, pw2)
+    return to_str
+
 def get_edge_template(edge_pws, etype, db):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.ppin_edge_data.find_one({"edge": [pw1, pw2], "etype": etype})
@@ -172,13 +189,15 @@ def get_edge_template(edge_pws, etype, db):
         gene_or_map[gene] = edge_info["oddsratios"][index]
 
     session["counter"] += 1
-    session["edge_info"] = {"edge": (pw1, pw2, etype),
-                            "experiments": {"most": most_experiments,
+    session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": pao1_names,
                             "renamed_genes": edge_info["gene_names"],
-                            "oddsratios": gene_or_map}
-    return render_template("edge_samples.html", edge_info=dumps(edge_info))
+                            "oddsratios": gene_or_map,
+                            "edge_name": (str(pw1), str(pw2), etype)}
+    return render_template("edge_samples.html",
+        edge_str=edge_to_string(session["edge_info"]["edge_name"]),
+        edge_info=dumps(edge_info))
 
 def cleanup_annotation(annotation):
     # gets rid of some unnecessary fields

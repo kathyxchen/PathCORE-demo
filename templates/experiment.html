@@ -17,7 +17,16 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div id="overview">
     </div>
     <div class="container">
+        <div class="row">
         <h3>Experiment {{ experiment_name }}</h3>
+        <a href="{{ url_for('ppin_network') }}">Return to network</a>
+        <p>
+        <a href="{{ url_for('edge_direct', edge_pws=edge[0] + '&' + edge[1]) }}"> {{ edge_str }}</a>
+        <br />
+        Samples highlighted in <span style="color: red;">red</span> are from the 'most expressed' list,
+        whereas those in <span style="color: blue;">blue</span> are from the 'least expressed' list.
+        </p>
+        </div>
         <div class="row" id="heatmap_parent">
         <div class="col-md-8" id="heatmap" style="overflow-x: scroll;">
         </div>
@@ -26,7 +35,6 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 </body>
 <script type="text/javascript">
 var heatmap_information = JSON.parse({{ experiment_information|tojson }});
-console.log(heatmap_information);
 var sample_data = heatmap_information["sample_values"];
 var samples = heatmap_information["samples"];
 // additional sorting step because odds ratio ordering was based on

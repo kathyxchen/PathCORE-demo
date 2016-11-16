@@ -81,7 +81,15 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         return weight/2.0;
     }
   }
-    
+
+  function lineColor(etype) {
+    if (etype == 1) {
+        return "#6600FF";
+    } else {
+        return "#FF9933";
+    }
+  }
+
   // Create the link lines.
   var link = svg.selectAll(".link")
       .data(links)
@@ -91,11 +99,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         return weightConv(d.weight);
       })
       .style("stroke", function(d) {
-        if (d.type == 1) {
-          return "#6600FF";
-        } else {
-          return "#FF9933";
-        }
+        return lineColor(d.type);
       })
       .on("mouseover", function() {
         var tgt = d3.select(this);
@@ -107,13 +111,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         var tgt = d3.select(this);
         var etype = tgt[0][0].__data__.Type;
         var weight = tgt[0][0].__data__.Weight;
-        var color;
-        if (etype == 1) {
-            color = "#6600FF";
-        } else {
-            color = "#FF9933";
-        }
-        tgt.style("stroke", color); 
+        tgt.style("stroke", lineColor(etype)); 
         tgt.style("stroke-width", weightConv(weight));
       })
       .on("click", function(d) {
@@ -131,7 +129,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
       });
   
   link.append("title").text(function(d) {
-        return d.weight;
+        return "weight: " + d.weight;
       });
   
   var node_drag = d3.behavior.drag()
