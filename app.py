@@ -49,8 +49,10 @@ def edge_direct(edge_pws):
 
 @app.route("/edge/direct/<edge_pws>/experiment/<experiment>")
 def edge_direct_experiment(edge_pws, experiment):
-    if not session["edge_info"]:
-        get_edge_template(edge_pws, 1, mongo.db)
+    pw1, pw2 = edge_pws.split("&")
+    etype = 1
+    if not session["edge_info"] or session["edge_info"]["edge"] != (pw1, pw2, etype):
+        get_edge_template(edge_pws, etype, mongo.db)
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
@@ -79,14 +81,15 @@ def edge_direct_experiment(edge_pws, experiment):
         whitelist_samples["most"] = edge_exp_data["most"][experiment]
     if experiment in edge_exp_data["least"]:
         whitelist_samples["least"] = edge_exp_data["least"][experiment]
-    print "METADATA IN SESSION"
     session["edge_info"]["experiment_meta"] = metadata
-    experiment_data = {"sample_values": sample_gene_vals,
-                       "genes": gene_order,
-                       "samples": _sort_samples(sample_gene_vals, session["edge_info"]["oddsratios"],
-                                                session["edge_info"]["genes"]),
+    sgenes, soddsratios, ssample_gene_vals = _sort_genes(sample_gene_vals,
+            session["edge_info"]["oddsratios"], gene_order)
+    experiment_data = {"sample_values": ssample_gene_vals,
+                       "genes": sgenes,
+                       "samples": _sort_samples(ssample_gene_vals, session["edge_info"]["oddsratios"],
+                                                sgenes),
                        "whitelist_samples": whitelist_samples,
-                       "oddsratios": reversed(sorted(session["edge_info"]["oddsratios"].values()))}
+                       "oddsratios": soddsratios}
     return render_template("experiment.html",
                            experiment_name=experiment,
                            experiment_information=dumps(experiment_data))
@@ -103,6 +106,22 @@ def _sort_samples(sample_gene_values, gene_or_map, genes):
     sample_scores.sort(key=lambda tup: tup[1])
     sample_scores.reverse()
     return [tup[0] for tup in sample_scores]
+
+def _sort_genes(sample_gene_values, gene_or_map, genes):
+    sorted_by_or = reversed(sorted(gene_or_map.items(), key=lambda tup: tup[1]))
+    sorted_sample_gene_values = {}
+    gene_indices = []
+    sorted_oddsratios = []
+    sorted_genes = []
+    for gene, oddsratio in sorted_by_or:
+        sorted_oddsratios.append(oddsratio)
+        sorted_genes.append(gene)
+        gene_indices.append(genes.index(gene))
+    for sample, gene_value_list in sample_gene_values.iteritems():
+        sorted_sample_gene_values[sample] = []
+        for index in gene_indices:
+            sorted_sample_gene_values[sample].append(gene_value_list[index])
+    return sorted_genes, sorted_oddsratios, sorted_sample_gene_values
 
 @app.route("/ppin-network/2")
 def rd_ppin_network():
@@ -149,7 +168,7 @@ def get_edge_template(edge_pws, etype, db):
         edge_info["gene_names"][to_replace] = rename
     
     gene_or_map = {}
-    for index, gene in enumerate(pao1_names):
+    for index, gene in enumerate(edge_info["gene_names"]):
         gene_or_map[gene] = edge_info["oddsratios"][index]
 
     session["counter"] += 1
@@ -157,6 +176,7 @@ def get_edge_template(edge_pws, etype, db):
                             "experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": pao1_names,
+                            "renamed_genes": edge_info["gene_names"],
                             "oddsratios": gene_or_map}
     return render_template("edge_samples.html", edge_info=dumps(edge_info))
 

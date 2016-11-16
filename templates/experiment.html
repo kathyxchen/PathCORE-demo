@@ -19,7 +19,7 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div class="container">
         <h3>Experiment {{ experiment_name }}</h3>
         <div class="row" id="heatmap_parent">
-        <div class="col-md-8" id="heatmap", style="overflow-x: scroll;">
+        <div class="col-md-8" id="heatmap" style="overflow-x: scroll;">
         </div>
         </div>
     </div>
@@ -67,7 +67,6 @@ var data =
     {"source_structures": sample_names,
      "target_structures": heatmap_information["genes"],
      "both_data": build_indices,
-     //"meta": heatmap_information["metadata_samples"],
      "whitelist": heatmap_information["whitelist_samples"],
      "oddsratios": heatmap_information["oddsratios"]
     };
@@ -79,10 +78,12 @@ var colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 function append_heatmap(div_id, data, color, min, max) {
     var width = 960, height = 780, 
         cell_size = 25, label_size = 100;
+    
+    var longest = data.source_structures.reduce(function (a, b) { return a.length > b.length ? a : b; });
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width)
-        .attr("height", "100%")
+        .attr("height", height)
         .append("g");
 
     var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4").appendTo($(div_id + "_parent"));
@@ -145,7 +146,6 @@ function append_heatmap(div_id, data, color, min, max) {
             .attr("height", cell_size)
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
-                //var metadata = data.meta[sample_name];
                 $.get("/session/" + sample_name, function(metadata) {
                     metadata = JSON.parse(metadata);
                     var metadata_html = ""
@@ -162,7 +162,7 @@ function append_heatmap(div_id, data, color, min, max) {
                     meta_container.html(build_html);
                 });
             });
-
+        
         // Construct text labels for the y axis
         svg.append("g")
            .attr("class", "y axis")
@@ -201,7 +201,7 @@ function append_heatmap(div_id, data, color, min, max) {
 
         // A title for the x axis.
         svg.append("text")
-           .attr("x", chart_width / 2)
+           .attr("x", 50)
            .attr("y", -20)
            .attr("text-anchor", "middle")
            .text("Samples");
@@ -214,13 +214,15 @@ function append_heatmap(div_id, data, color, min, max) {
     }
     var chart_height = cell_size * data.target_structures.length;
     var chart_width = cell_size * data.source_structures.length;
-
-    svg.attr("transform", "translate(" + 
-        + ((width / 3) - (chart_width / 4)) + "," 
-        + ((height / 4) - (chart_height / 4)) + ")");
-
     build_heatmap(data, chart_width, chart_height);
     build_legend(chart_width, chart_height);
+    bounding = svg.node().getBBox();
+    svg.attr("transform", "translate(" +
+             bounding.x * -1 + "," +
+             bounding.y * -1 + ")"
+            );
+    d3.select("svg").attr("width", bounding.width);
+    d3.select("svg").attr("height", bounding.height);
 }
 
 append_heatmap("#heatmap", data, colorbar, 0.0, 1.0);
