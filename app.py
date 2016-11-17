@@ -51,9 +51,7 @@ def edge_direct(edge_pws):
 def edge_direct_experiment(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
     etype = 1
-    print "1"
     if "edge_info" not in session or session["edge_info"]["edge_name"] != (pw1, pw2, etype):
-        print "could not find this edge, reloading."
         get_edge_template(edge_pws, etype, mongo.db)
     # retrieve all samples associated with an experiment.
     metadata = {}
@@ -86,7 +84,6 @@ def edge_direct_experiment(edge_pws, experiment):
     session["edge_info"]["experiment_meta"] = metadata
     sgenes, soddsratios, ssample_gene_vals = _sort_genes(
             sample_gene_vals, session["edge_info"]["oddsratios"], gene_order)
-    print "2"
     experiment_data = {"sample_values": ssample_gene_vals,
                        "genes": sgenes,
                        "samples": _sort_samples(ssample_gene_vals,
@@ -94,7 +91,6 @@ def edge_direct_experiment(edge_pws, experiment):
                                                 sgenes),
                        "whitelist_samples": whitelist_samples,
                        "oddsratios": soddsratios}
-    print edge_to_string(session["edge_info"]["edge_name"])
     return render_template("experiment.html",
                            edge_str=edge_to_string(session["edge_info"]["edge_name"]),
                            edge=session["edge_info"]["edge_name"],
