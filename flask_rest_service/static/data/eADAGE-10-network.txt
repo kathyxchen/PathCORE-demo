@@ -1,206 +1,206 @@
 PW1	PW2	weight	features
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	138.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	115.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	111.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	79.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	65.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00236: Putative polar amino acid transport system	61.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	59.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	52.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	52.0	
-KEGG-Module-M00242: Zinc transport system	KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	49.0	
-KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00208: Glycine betaine/proline transport system	48.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	46.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00242: Zinc transport system	43.0	
-KEGG-Module-M00240: Iron complex transport system	KEGG-Module-M00242: Zinc transport system	43.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00240: Iron complex transport system	40.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00332: Type III secretion system	38.0	
-KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	38.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	37.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae01220: Degradation of aromatic compounds - Pseudomonas aeruginosa PAO1	36.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	34.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	33.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00630: Glyoxylate and dicarboxylate metabolism - Pseudomonas aeruginosa PAO1	32.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	31.0	
-KEGG-Module-M00223: Phosphonate transport system	KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	31.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Module-M00644: Multidrug resistance, efflux pump MexGHI-OpmD	30.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00334: Type VI secretion system	30.0	
-KEGG-Module-M00208: Glycine betaine/proline transport system	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	29.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	29.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00630: Glyoxylate and dicarboxylate metabolism - Pseudomonas aeruginosa PAO1	28.0	
-KEGG-Module-M00644: Multidrug resistance, efflux pump MexGHI-OpmD	KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	27.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	27.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	27.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02030: Bacterial chemotaxis - Pseudomonas aeruginosa PAO1	26.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	26.0	
-KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00237: Branched-chain amino acid transport system	25.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	25.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00237: Branched-chain amino acid transport system	24.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	24.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	24.0	
-KEGG-Pathway-pae02040: Flagellar assembly - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00520: Amino sugar and nucleotide sugar metabolism - Pseudomonas aeruginosa PAO1	23.0	
-KEGG-Module-M00223: Phosphonate transport system	KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	23.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	23.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	23.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00237: Branched-chain amino acid transport system	22.0	
-KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	22.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00643: Styrene degradation - Pseudomonas aeruginosa PAO1	22.0	
-KEGG-Module-M00331: Type II general secretion pathway	KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	22.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	21.0	
-KEGG-Module-M00223: Phosphonate transport system	KEGG-Module-M00222: Phosphate transport system	21.0	
-KEGG-Pathway-pae00910: Nitrogen metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	21.0	
-KEGG-Module-M00222: Phosphate transport system	KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	21.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	20.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00270: Cysteine and methionine metabolism - Pseudomonas aeruginosa PAO1	20.0	
-KEGG-Pathway-pae02030: Bacterial chemotaxis - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02040: Flagellar assembly - Pseudomonas aeruginosa PAO1	20.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	20.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00643: Styrene degradation - Pseudomonas aeruginosa PAO1	20.0	
-KEGG-Module-M00242: Zinc transport system	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	19.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00188: NitT/TauT family transport system	19.0	
-KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	19.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00910: Nitrogen metabolism - Pseudomonas aeruginosa PAO1	19.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	19.0	
-KEGG-Module-M00331: Type II general secretion pathway	KEGG-Module-M00223: Phosphonate transport system	19.0	
-KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	KEGG-Pathway-pae00270: Cysteine and methionine metabolism - Pseudomonas aeruginosa PAO1	19.0	
-KEGG-Pathway-pae00030: Pentose phosphate pathway - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00010: Glycolysis / Gluconeogenesis - Pseudomonas aeruginosa PAO1	18.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	18.0	
-KEGG-Module-M00529: Denitrification, nitrate => nitrogen	KEGG-Pathway-pae00910: Nitrogen metabolism - Pseudomonas aeruginosa PAO1	18.0	
-KEGG-Module-M00240: Iron complex transport system	KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	17.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	17.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02040: Flagellar assembly - Pseudomonas aeruginosa PAO1	17.0	
-KEGG-Module-M00644: Multidrug resistance, efflux pump MexGHI-OpmD	KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	17.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	16.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	16.0	
-KEGG-Module-M00331: Type II general secretion pathway	KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	16.0	
-KEGG-Module-M00242: Zinc transport system	KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	16.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00237: Branched-chain amino acid transport system	16.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Module-M00242: Zinc transport system	16.0	
-KEGG-Module-M00222: Phosphate transport system	KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	16.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	15.0	
-KEGG-Module-M00529: Denitrification, nitrate => nitrogen	KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	15.0	
-KEGG-Pathway-pae00643: Styrene degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	15.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00324: Dipeptide transport system	15.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae03018: RNA degradation - Pseudomonas aeruginosa PAO1	15.0	
-KEGG-Module-M00188: NitT/TauT family transport system	KEGG-Module-M00236: Putative polar amino acid transport system	15.0	
-KEGG-Pathway-pae00500: Starch and sucrose metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00644: Multidrug resistance, efflux pump MexGHI-OpmD	15.0	
-KEGG-Module-M00331: Type II general secretion pathway	KEGG-Module-M00222: Phosphate transport system	15.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	14.0	
-KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	14.0	
-KEGG-Module-M00332: Type III secretion system	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	14.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03018: RNA degradation - Pseudomonas aeruginosa PAO1	14.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	13.0	
-KEGG-Module-M00324: Dipeptide transport system	KEGG-Module-M00237: Branched-chain amino acid transport system	13.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	13.0	
-KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02030: Bacterial chemotaxis - Pseudomonas aeruginosa PAO1	13.0	
-KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	12.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00156: Cytochrome c oxidase, cbb3-type	12.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	12.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00324: Dipeptide transport system	11.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	11.0	
-KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00630: Glyoxylate and dicarboxylate metabolism - Pseudomonas aeruginosa PAO1	11.0	
-KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	11.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae03060: Protein export - Pseudomonas aeruginosa PAO1	11.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Module-M00210: Phospholipid transport system	10.0	
-KEGG-Pathway-pae00220: Arginine biosynthesis - Pseudomonas aeruginosa PAO1	KEGG-Module-M00156: Cytochrome c oxidase, cbb3-type	10.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Module-M00208: Glycine betaine/proline transport system	10.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Module-M00335: Sec (secretion) system	10.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	10.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Module-M00335: Sec (secretion) system	9.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00650: Butanoate metabolism - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Module-M00332: Type III secretion system	KEGG-Pathway-pae01220: Degradation of aromatic compounds - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Module-M00709: Macrolide resistance, MacAB-TolC transporter	KEGG-Module-M00334: Type VI secretion system	9.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00410: beta-Alanine metabolism - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03018: RNA degradation - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Module-M00178: Ribosome, bacteria	KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	9.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02030: Bacterial chemotaxis - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	KEGG-Module-M00034: Methionine salvage pathway	8.0	
-KEGG-Pathway-pae01053: Biosynthesis of siderophore group nonribosomal peptides - Pseudomonas aeruginosa PAO1	KEGG-Module-M00190: Iron(III) transport system	8.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Module-M00034: Methionine salvage pathway	8.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Pathway-pae00630: Glyoxylate and dicarboxylate metabolism - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00340: Histidine metabolism - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03060: Protein export - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	KEGG-Module-M00210: Phospholipid transport system	8.0	
-KEGG-Module-M00332: Type III secretion system	KEGG-Module-M00023: Tryptophan biosynthesis, chorismate => tryptophan	8.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Pathway-pae00030: Pentose phosphate pathway - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00561: Glycerolipid metabolism - Pseudomonas aeruginosa PAO1	8.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00023: Tryptophan biosynthesis, chorismate => tryptophan	7.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00330: Arginine and proline metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00410: beta-Alanine metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Module-M00023: Tryptophan biosynthesis, chorismate => tryptophan	7.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Module-M00236: Putative polar amino acid transport system	7.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Pathway-pae00010: Glycolysis / Gluconeogenesis - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Module-M00156: Cytochrome c oxidase, cbb3-type	7.0	
-KEGG-Module-M00332: Type III secretion system	KEGG-Module-M00533: Homoprotocatechuate degradation, homoprotocatechuate => 2-oxohept-3-enedioate	7.0	
-KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00650: Butanoate metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Pathway-pae00280: Valine, leucine and isoleucine degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00230: Glutamate/aspartate transport system	7.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	KEGG-Pathway-pae00410: beta-Alanine metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Pathway-pae01220: Degradation of aromatic compounds - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Pathway-pae00350: Tyrosine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	7.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Module-M00230: Glutamate/aspartate transport system	6.0	
-KEGG-Pathway-pae00860: Porphyrin and chlorophyll metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00299: Spermidine/putrescine transport system	6.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	KEGG-Pathway-pae03018: RNA degradation - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Module-M00721: Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	KEGG-Pathway-pae00330: Arginine and proline metabolism - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00400: Phenylalanine, tyrosine and tryptophan biosynthesis - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03060: Protein export - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Pathway-pae01220: Degradation of aromatic compounds - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00362: Benzoate degradation - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00630: Glyoxylate and dicarboxylate metabolism - Pseudomonas aeruginosa PAO1	6.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00210: Phospholipid transport system	5.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00335: Sec (secretion) system	5.0	
-KEGG-Pathway-pae00340: Histidine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00208: Glycine betaine/proline transport system	5.0	
-KEGG-Module-M00208: Glycine betaine/proline transport system	KEGG-Pathway-pae01220: Degradation of aromatic compounds - Pseudomonas aeruginosa PAO1	5.0	
-KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	5.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Module-M00568: Catechol ortho-cleavage, catechol => 3-oxoadipate	5.0	
-KEGG-Module-M00237: Branched-chain amino acid transport system	KEGG-Pathway-pae00625: Chloroalkane and chloroalkene degradation - Pseudomonas aeruginosa PAO1	5.0	
-KEGG-Pathway-pae00330: Arginine and proline metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00680: Methane metabolism - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00335: Sec (secretion) system	4.0	
-KEGG-Pathway-pae00260: Glycine, serine and threonine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00625: Chloroalkane and chloroalkene degradation - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae01210: 2-Oxocarboxylic acid metabolism - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00361: Chlorocyclohexane and chlorobenzene degradation - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Pathway-pae00561: Glycerolipid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00193: Putative spermidine/putrescine transport system	4.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00380: Tryptophan metabolism - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Module-M00008: Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate	KEGG-Pathway-pae00010: Glycolysis / Gluconeogenesis - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Module-M00334: Type VI secretion system	KEGG-Pathway-pae00380: Tryptophan metabolism - Pseudomonas aeruginosa PAO1	4.0	
-KEGG-Pathway-pae00250: Alanine, aspartate and glutamate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00561: Glycerolipid metabolism - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Module-M00188: NitT/TauT family transport system	KEGG-Module-M00238: D-Methionine transport system	3.0	
-KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Pathway-pae00627: Aminobenzoate degradation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00364: Fluorobenzoate degradation - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Module-M00324: Dipeptide transport system	KEGG-Module-M00036: Leucine degradation, leucine => acetoacetate + acetyl-CoA	3.0	
-KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	3.0	
-KEGG-Pathway-pae00640: Propanoate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00193: Putative spermidine/putrescine transport system	3.0	
-KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Module-M00360: Aminoacyl-tRNA biosynthesis, prokaryotes	3.0	
-KEGG-Pathway-pae00920: Sulfur metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00238: D-Methionine transport system	3.0	
-KEGG-Module-M00223: Phosphonate transport system	KEGG-Module-M00126: Tetrahydrofolate biosynthesis, GTP => THF	3.0	
-KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Module-M00223: Phosphonate transport system	KEGG-Pathway-pae03070: Bacterial secretion system - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Pathway-pae00020: Citrate cycle (TCA cycle) - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Pathway-pae00360: Phenylalanine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00330: Arginine and proline metabolism - Pseudomonas aeruginosa PAO1	3.0	
-KEGG-Pathway-pae01503: Cationic antimicrobial peptide (CAMP) resistance - Pseudomonas aeruginosa PAO1	KEGG-Module-M00669: gamma-Hexachlorocyclohexane transport system	3.0	
-KEGG-Module-M00240: Iron complex transport system	KEGG-Module-M00190: Iron(III) transport system	3.0	
-KEGG-Module-M00236: Putative polar amino acid transport system	KEGG-Module-M00238: D-Methionine transport system	2.0	
-KEGG-Pathway-pae00190: Oxidative phosphorylation - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00970: Aminoacyl-tRNA biosynthesis - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Module-M00742: Aminoglycoside resistance, protease FtsH	2.0	
-KEGG-Module-M00156: Cytochrome c oxidase, cbb3-type	KEGG-Pathway-pae00400: Phenylalanine, tyrosine and tryptophan biosynthesis - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae00240: Pyrimidine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00360: Aminoacyl-tRNA biosynthesis, prokaryotes	2.0	
-KEGG-Pathway-pae00440: Phosphonate and phosphinate metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00126: Tetrahydrofolate biosynthesis, GTP => THF	2.0	
-KEGG-Module-M00360: Aminoacyl-tRNA biosynthesis, prokaryotes	KEGG-Module-M00009: Citrate cycle (TCA cycle, Krebs cycle)	2.0	
-KEGG-Pathway-pae00550: Peptidoglycan biosynthesis - Pseudomonas aeruginosa PAO1	KEGG-Module-M00144: NADH:quinone oxidoreductase, prokaryotes	2.0	
-KEGG-Module-M00360: Aminoacyl-tRNA biosynthesis, prokaryotes	KEGG-Module-M00669: gamma-Hexachlorocyclohexane transport system	2.0	
-KEGG-Pathway-pae00460: Cyanoamino acid metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00082: Fatty acid biosynthesis, initiation	2.0	
-KEGG-Module-M00126: Tetrahydrofolate biosynthesis, GTP => THF	KEGG-Pathway-pae00564: Glycerophospholipid metabolism - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00335: Sec (secretion) system	2.0	
-KEGG-Module-M00230: Glutamate/aspartate transport system	KEGG-Pathway-pae00250: Alanine, aspartate and glutamate metabolism - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae03010: Ribosome - Pseudomonas aeruginosa PAO1	KEGG-Module-M00157: F-type ATPase, prokaryotes and chloroplasts	2.0	
-KEGG-Pathway-pae00520: Amino sugar and nucleotide sugar metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00021: Cysteine biosynthesis, serine => cysteine	2.0	
-KEGG-Pathway-pae00330: Arginine and proline metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae00410: beta-Alanine metabolism - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae03018: RNA degradation - Pseudomonas aeruginosa PAO1	2.0	
-KEGG-Pathway-pae00261: Monobactam biosynthesis - Pseudomonas aeruginosa PAO1	KEGG-Pathway-pae02060: Phosphotransferase system (PTS) - Pseudomonas aeruginosa PAO1	1.0	
-KEGG-Module-M00034: Methionine salvage pathway	KEGG-Module-M00570: Isoleucine biosynthesis, threonine => 2-oxobutanoate => isoleucine	1.0	
-KEGG-Pathway-pae00230: Purine metabolism - Pseudomonas aeruginosa PAO1	KEGG-Module-M00300: Putrescine transport system	1.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	138.0	
+Ribosome, bacteria	Ribosome PA01	115.0	
+Tyrosine metabolism PA01	Valine, leucine and isoleucine degradation PA01	111.0	
+Aminobenzoate degradation PA01	Benzoate degradation PA01	79.0	
+Ribosome, bacteria	Oxidative phosphorylation PA01	65.0	
+Sulfur metabolism PA01	Putative polar amino acid transport system	61.0	
+Type VI secretion system	Cyanoamino acid metabolism PA01	59.0	
+Valine, leucine and isoleucine degradation PA01	Aminobenzoate degradation PA01	52.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Aminobenzoate degradation PA01	52.0	
+Zinc transport system	Macrolide resistance, MacAB-TolC transporter	49.0	
+Glycine, serine and threonine metabolism PA01	Glycine betaine/proline transport system	48.0	
+Oxidative phosphorylation PA01	Ribosome PA01	46.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Zinc transport system	43.0	
+Iron complex transport system	Zinc transport system	43.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Iron complex transport system	40.0	
+Tyrosine metabolism PA01	Type III secretion system	38.0	
+Glycine, serine and threonine metabolism PA01	Methane metabolism PA01	38.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Tyrosine metabolism PA01	37.0	
+Aminobenzoate degradation PA01	Degradation of aromatic compounds PA01	36.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Valine, leucine and isoleucine degradation PA01	34.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Aminobenzoate degradation PA01	33.0	
+Valine, leucine and isoleucine degradation PA01	Glyoxylate and dicarboxylate metabolism PA01	32.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	31.0	
+Phosphonate transport system	Phosphonate and phosphinate metabolism PA01	31.0	
+Type VI secretion system	Multidrug resistance, efflux pump MexGHI-OpmD	30.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Type VI secretion system	30.0	
+Glycine betaine/proline transport system	Methane metabolism PA01	29.0	
+Aminobenzoate degradation PA01	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	29.0	
+Tyrosine metabolism PA01	Glyoxylate and dicarboxylate metabolism PA01	28.0	
+Multidrug resistance, efflux pump MexGHI-OpmD	Valine, leucine and isoleucine degradation PA01	27.0	
+Ribosome, bacteria	Citrate cycle (TCA cycle) PA01	27.0	
+Oxidative phosphorylation PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	27.0	
+Valine, leucine and isoleucine degradation PA01	Bacterial chemotaxis PA01	26.0	
+Sulfur metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	26.0	
+Glycine, serine and threonine metabolism PA01	Branched-chain amino acid transport system	25.0	
+Valine, leucine and isoleucine degradation PA01	Arginine biosynthesis PA01	25.0	
+Tyrosine metabolism PA01	Branched-chain amino acid transport system	24.0	
+Ribosome, bacteria	Citrate cycle (TCA cycle, Krebs cycle)	24.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Cyanoamino acid metabolism PA01	24.0	
+Flagellar assembly PA01	Amino sugar and nucleotide sugar metabolism PA01	23.0	
+Phosphonate transport system	Glycerophospholipid metabolism PA01	23.0	
+Ribosome PA01	Citrate cycle (TCA cycle, Krebs cycle)	23.0	
+Ribosome PA01	Citrate cycle (TCA cycle) PA01	23.0	
+Valine, leucine and isoleucine degradation PA01	Branched-chain amino acid transport system	22.0	
+Phosphonate and phosphinate metabolism PA01	Glycerophospholipid metabolism PA01	22.0	
+Aminobenzoate degradation PA01	Styrene degradation PA01	22.0	
+Type II general secretion pathway	Phosphonate and phosphinate metabolism PA01	22.0	
+Sulfur metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	21.0	
+Phosphonate transport system	Phosphate transport system	21.0	
+Nitrogen metabolism PA01	Arginine biosynthesis PA01	21.0	
+Phosphate transport system	Phosphonate and phosphinate metabolism PA01	21.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Macrolide resistance, MacAB-TolC transporter	20.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Cysteine and methionine metabolism PA01	20.0	
+Bacterial chemotaxis PA01	Flagellar assembly PA01	20.0	
+Valine, leucine and isoleucine degradation PA01	Phenylalanine metabolism PA01	20.0	
+Valine, leucine and isoleucine degradation PA01	Styrene degradation PA01	20.0	
+Zinc transport system	Aminobenzoate degradation PA01	19.0	
+Sulfur metabolism PA01	NitT/TauT family transport system	19.0	
+Glycine, serine and threonine metabolism PA01	Aminobenzoate degradation PA01	19.0	
+Cyanoamino acid metabolism PA01	Nitrogen metabolism PA01	19.0	
+Tyrosine metabolism PA01	Glycine, serine and threonine metabolism PA01	19.0	
+Type II general secretion pathway	Phosphonate transport system	19.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Cysteine and methionine metabolism PA01	19.0	
+Pentose phosphate pathway PA01	Glycolysis / Gluconeogenesis PA01	18.0	
+Oxidative phosphorylation PA01	Citrate cycle (TCA cycle) PA01	18.0	
+Denitrification, nitrate => nitrogen	Nitrogen metabolism PA01	18.0	
+Iron complex transport system	Macrolide resistance, MacAB-TolC transporter	17.0	
+Tyrosine metabolism PA01	Arginine biosynthesis PA01	17.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Flagellar assembly PA01	17.0	
+Multidrug resistance, efflux pump MexGHI-OpmD	Cyanoamino acid metabolism PA01	17.0	
+Valine, leucine and isoleucine degradation PA01	Benzoate degradation PA01	16.0	
+Cyanoamino acid metabolism PA01	Arginine biosynthesis PA01	16.0	
+Type II general secretion pathway	Glycerophospholipid metabolism PA01	16.0	
+Zinc transport system	Glycine, serine and threonine metabolism PA01	16.0	
+Aminobenzoate degradation PA01	Branched-chain amino acid transport system	16.0	
+Ribosome, bacteria	Zinc transport system	16.0	
+Phosphate transport system	Glycerophospholipid metabolism PA01	16.0	
+Valine, leucine and isoleucine degradation PA01	Propanoate metabolism PA01	15.0	
+Denitrification, nitrate => nitrogen	Sulfur metabolism PA01	15.0	
+Styrene degradation PA01	Benzoate degradation PA01	15.0	
+Valine, leucine and isoleucine degradation PA01	Dipeptide transport system	15.0	
+Ribosome, bacteria	RNA degradation PA01	15.0	
+NitT/TauT family transport system	Putative polar amino acid transport system	15.0	
+Starch and sucrose metabolism PA01	Multidrug resistance, efflux pump MexGHI-OpmD	15.0	
+Type II general secretion pathway	Phosphate transport system	15.0	
+Aminobenzoate degradation PA01	Methane metabolism PA01	14.0	
+Citrate cycle (TCA cycle) PA01	Citrate cycle (TCA cycle, Krebs cycle)	14.0	
+Type III secretion system	Bacterial secretion system PA01	14.0	
+Ribosome PA01	RNA degradation PA01	14.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Phenylalanine metabolism PA01	13.0	
+Dipeptide transport system	Branched-chain amino acid transport system	13.0	
+Tyrosine metabolism PA01	Phenylalanine metabolism PA01	13.0	
+Arginine biosynthesis PA01	Bacterial chemotaxis PA01	13.0	
+Macrolide resistance, MacAB-TolC transporter	Aminobenzoate degradation PA01	12.0	
+Cyanoamino acid metabolism PA01	Cytochrome c oxidase, cbb3-type	12.0	
+Oxidative phosphorylation PA01	Citrate cycle (TCA cycle, Krebs cycle)	12.0	
+Tyrosine metabolism PA01	Dipeptide transport system	11.0	
+Tyrosine metabolism PA01	Propanoate metabolism PA01	11.0	
+Arginine biosynthesis PA01	Glyoxylate and dicarboxylate metabolism PA01	11.0	
+Macrolide resistance, MacAB-TolC transporter	Glycine, serine and threonine metabolism PA01	11.0	
+Ribosome, bacteria	Protein export PA01	11.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Phospholipid transport system	10.0	
+Arginine biosynthesis PA01	Cytochrome c oxidase, cbb3-type	10.0	
+Branched-chain amino acid transport system	Glycine betaine/proline transport system	10.0	
+Ribosome, bacteria	Sec (secretion) system	10.0	
+Oxidative phosphorylation PA01	Pyrimidine metabolism PA01	10.0	
+Ribosome PA01	Sec (secretion) system	9.0	
+Aminobenzoate degradation PA01	Butanoate metabolism PA01	9.0	
+Type VI secretion system	Bacterial secretion system PA01	9.0	
+Type III secretion system	Degradation of aromatic compounds PA01	9.0	
+Macrolide resistance, MacAB-TolC transporter	Type VI secretion system	9.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	beta-Alanine metabolism PA01	9.0	
+Oxidative phosphorylation PA01	RNA degradation PA01	9.0	
+Ribosome, bacteria	Pyrimidine metabolism PA01	9.0	
+Ribosome, bacteria	Purine metabolism PA01	9.0	
+Oxidative phosphorylation PA01	Propanoate metabolism PA01	9.0	
+Cyanoamino acid metabolism PA01	Bacterial chemotaxis PA01	8.0	
+Ribosome PA01	Pyrimidine metabolism PA01	8.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Methionine salvage pathway	8.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Iron(III) transport system	8.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Methionine salvage pathway	8.0	
+Branched-chain amino acid transport system	Glyoxylate and dicarboxylate metabolism PA01	8.0	
+Valine, leucine and isoleucine degradation PA01	Histidine metabolism PA01	8.0	
+Ribosome PA01	Protein export PA01	8.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Phospholipid transport system	8.0	
+Type III secretion system	Tryptophan biosynthesis, chorismate => tryptophan	8.0	
+Branched-chain amino acid transport system	Benzoate degradation PA01	8.0	
+Pentose phosphate pathway PA01	Glycerolipid metabolism PA01	8.0	
+Cyanoamino acid metabolism PA01	Tryptophan biosynthesis, chorismate => tryptophan	7.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Arginine and proline metabolism PA01	7.0	
+Aminobenzoate degradation PA01	beta-Alanine metabolism PA01	7.0	
+Type VI secretion system	Tryptophan biosynthesis, chorismate => tryptophan	7.0	
+Branched-chain amino acid transport system	Putative polar amino acid transport system	7.0	
+Branched-chain amino acid transport system	Glycolysis / Gluconeogenesis PA01	7.0	
+Type VI secretion system	Cytochrome c oxidase, cbb3-type	7.0	
+Type III secretion system	Homoprotocatechuate degradation, homoprotocatechuate => 2-oxohept-3-enedioate	7.0	
+Benzoate degradation PA01	Butanoate metabolism PA01	7.0	
+Oxidative phosphorylation PA01	Purine metabolism PA01	7.0	
+Valine, leucine and isoleucine degradation PA01	Glutamate/aspartate transport system	7.0	
+Branched-chain amino acid transport system	Propanoate metabolism PA01	7.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	beta-Alanine metabolism PA01	7.0	
+Degradation of aromatic compounds PA01	Methane metabolism PA01	7.0	
+Tyrosine metabolism PA01	Bacterial secretion system PA01	7.0	
+Branched-chain amino acid transport system	Glutamate/aspartate transport system	6.0	
+Porphyrin and chlorophyll metabolism PA01	Spermidine/putrescine transport system	6.0	
+Ribosome PA01	Purine metabolism PA01	6.0	
+Citrate cycle (TCA cycle, Krebs cycle)	RNA degradation PA01	6.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Arginine and proline metabolism PA01	6.0	
+Cyanoamino acid metabolism PA01	Phenylalanine, tyrosine and tryptophan biosynthesis PA01	6.0	
+Oxidative phosphorylation PA01	Protein export PA01	6.0	
+Degradation of aromatic compounds PA01	Benzoate degradation PA01	6.0	
+Phenylalanine metabolism PA01	Glyoxylate and dicarboxylate metabolism PA01	6.0	
+Sulfur metabolism PA01	Phospholipid transport system	5.0	
+Oxidative phosphorylation PA01	Sec (secretion) system	5.0	
+Histidine metabolism PA01	Glycine betaine/proline transport system	5.0	
+Glycine betaine/proline transport system	Degradation of aromatic compounds PA01	5.0	
+Phenylalanine metabolism PA01	Methane metabolism PA01	5.0	
+Aminobenzoate degradation PA01	Catechol ortho-cleavage, catechol => 3-oxoadipate	5.0	
+Branched-chain amino acid transport system	Chloroalkane and chloroalkene degradation PA01	5.0	
+Arginine and proline metabolism PA01	Methane metabolism PA01	4.0	
+Pyrimidine metabolism PA01	Sec (secretion) system	4.0	
+Glycine, serine and threonine metabolism PA01	Chloroalkane and chloroalkene degradation PA01	4.0	
+Sulfur metabolism PA01	2-Oxocarboxylic acid metabolism PA01	4.0	
+Aminobenzoate degradation PA01	Chlorocyclohexane and chlorobenzene degradation PA01	4.0	
+Glycerolipid metabolism PA01	Putative spermidine/putrescine transport system	4.0	
+Cyanoamino acid metabolism PA01	Tryptophan metabolism PA01	4.0	
+Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate	Glycolysis / Gluconeogenesis PA01	4.0	
+Type VI secretion system	Tryptophan metabolism PA01	4.0	
+Alanine, aspartate and glutamate metabolism PA01	Glycerolipid metabolism PA01	3.0	
+NitT/TauT family transport system	D-Methionine transport system	3.0	
+Glycerophospholipid metabolism PA01	Bacterial secretion system PA01	3.0	
+Aminobenzoate degradation PA01	Fluorobenzoate degradation PA01	3.0	
+Dipeptide transport system	Leucine degradation, leucine => acetoacetate + acetyl-CoA	3.0	
+Propanoate metabolism PA01	Citrate cycle (TCA cycle, Krebs cycle)	3.0	
+Propanoate metabolism PA01	Putative spermidine/putrescine transport system	3.0	
+Citrate cycle (TCA cycle) PA01	Purine metabolism PA01	3.0	
+Ribosome PA01	Aminoacyl-tRNA biosynthesis, prokaryotes	3.0	
+Sulfur metabolism PA01	D-Methionine transport system	3.0	
+Phosphonate transport system	Tetrahydrofolate biosynthesis, GTP => THF	3.0	
+Phosphonate and phosphinate metabolism PA01	Bacterial secretion system PA01	3.0	
+Phosphonate transport system	Bacterial secretion system PA01	3.0	
+Citrate cycle (TCA cycle) PA01	Pyrimidine metabolism PA01	3.0	
+Phenylalanine metabolism PA01	Arginine and proline metabolism PA01	3.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	gamma-Hexachlorocyclohexane transport system	3.0	
+Iron complex transport system	Iron(III) transport system	3.0	
+Putative polar amino acid transport system	D-Methionine transport system	2.0	
+Oxidative phosphorylation PA01	Aminoacyl-tRNA biosynthesis PA01	2.0	
+Ribosome PA01	Aminoglycoside resistance, protease FtsH	2.0	
+Cytochrome c oxidase, cbb3-type	Phenylalanine, tyrosine and tryptophan biosynthesis PA01	2.0	
+Pyrimidine metabolism PA01	Aminoacyl-tRNA biosynthesis, prokaryotes	2.0	
+Phosphonate and phosphinate metabolism PA01	Tetrahydrofolate biosynthesis, GTP => THF	2.0	
+Aminoacyl-tRNA biosynthesis, prokaryotes	Citrate cycle (TCA cycle, Krebs cycle)	2.0	
+Peptidoglycan biosynthesis PA01	NADH:quinone oxidoreductase, prokaryotes	2.0	
+Aminoacyl-tRNA biosynthesis, prokaryotes	gamma-Hexachlorocyclohexane transport system	2.0	
+Cyanoamino acid metabolism PA01	Fatty acid biosynthesis, initiation	2.0	
+Tetrahydrofolate biosynthesis, GTP => THF	Glycerophospholipid metabolism PA01	2.0	
+Purine metabolism PA01	Sec (secretion) system	2.0	
+Glutamate/aspartate transport system	Alanine, aspartate and glutamate metabolism PA01	2.0	
+Ribosome PA01	F-type ATPase, prokaryotes and chloroplasts	2.0	
+Amino sugar and nucleotide sugar metabolism PA01	Cysteine biosynthesis, serine => cysteine	2.0	
+Arginine and proline metabolism PA01	beta-Alanine metabolism PA01	2.0	
+Purine metabolism PA01	RNA degradation PA01	2.0	
+Monobactam biosynthesis PA01	Phosphotransferase system (PTS) PA01	1.0	
+Methionine salvage pathway	Isoleucine biosynthesis, threonine => 2-oxobutanoate => isoleucine	1.0	
+Purine metabolism PA01	Putrescine transport system	1.0	
