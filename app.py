@@ -28,6 +28,13 @@ def ppin_network():
                            title="ppin network",
                            filename="tgraph_aggregate_network.txt")
 
+@app.route("/ppin-network/10-eADAGE")
+def eADAGE_network():
+    sum_session_counter()
+    return render_template("index.html",
+                           title="10 different eADAGE models",
+                           filename="eADAGE-10-network.txt")
+
 #@app.route("/edge/inverse/<edge_pws>")
 #def edge_inverse(edge_pws):
 #    return get_edge_template(edge_pws, -1, mongo.db)
