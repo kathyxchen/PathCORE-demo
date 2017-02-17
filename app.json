@@ -1,5 +1,5 @@
 {
-    "name": "Testing",
+    "name": "PathCORE webserver",
     "image": "heroku/python",
     "keywords": ["python"]
 }

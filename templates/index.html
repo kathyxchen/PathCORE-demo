@@ -83,10 +83,10 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
   }
 
   function lineColor(etype) {
-    if (etype == 1) {
-        return "#6600FF";
-    } else {
+    if (etype == -1) {
         return "#FF9933";
+    } else {
+        return "#6600FF";
     }
   }
 
@@ -111,6 +111,9 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         var tgt = d3.select(this);
         var etype = tgt[0][0].__data__.Type;
         var weight = tgt[0][0].__data__.Weight;
+        if (!weight) {
+            var weight = tgt[0][0].__data__.weight;
+        }
         tgt.style("stroke", lineColor(etype)); 
         tgt.style("stroke-width", weightConv(weight));
       })

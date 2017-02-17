@@ -26,14 +26,23 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
         </p>
         </div>
     </div>
-    <div class="container">
+    <div class="container" id="most-expressed-samples">
     <h4>10 most expressed samples</h4>
     <div class="row" id="most_expressed_parent">
-        <div class="col-md-8" id="most_expressed">
+        <div class="col-md-2" id="most_comments">
+            <form>
+                <div class="form-group">
+                    <label for="exampleTextarea">Example textarea</label>
+                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col-md-6" id="most_expressed">
         </div>
     </div>
     </div>
-    <div class="container">
+    <div class="container" id="least-expressed-samples">
     <h4>10 least expressed samples</h4>
     <div class="row" id="least_expressed_parent">
         <div class="col-md-8" id="least_expressed">
@@ -217,13 +226,23 @@ function append_heatmap(div_id, data, color, min, max) {
     }
     var chart_height = cell_size * data.target_structures.length;
     var chart_width = cell_size * data.source_structures.length;
-
+    /*
     svg.attr("transform", "translate(" + 
         + ((width / 2) - (chart_width / 2)) + "," 
         + ((height / 4) - (chart_height / 4)) + ")");
-
+    */
     build_heatmap(data, chart_width, chart_height);
     build_legend(chart_width, chart_height);
+
+    bounding = svg.node().getBBox();
+    console.log(bounding);
+    svg.attr("transform", "translate(" +
+              bounding.x * -1 + "," +
+              bounding.y * -1 + ")"
+            );
+    
+    d3.select("svg").attr("width", bounding.width);
+    d3.select("svg").attr("height", bounding.height);
 }
 
 append_heatmap("#most_expressed", most_expressed_data, most_colorbar, most_expr_min, most_expr_max);
