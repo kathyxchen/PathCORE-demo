@@ -5,12 +5,14 @@ from flask import make_response
 from bson.json_util import dumps
 import os
 
-MONGO_URL = "mongodb://{0}:{1}@ds137267.mlab.com:37267/1kp-networkdb".format(
-        os.environ.get("MDB_USER"), os.environ.get("MDB_PW"))
+MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
+    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
+    os.environ.get("MLAB_URI"), os.environ.get("DB_NAME"))
 app = Flask(__name__, template_folder='../templates')
 
-app.config['MONGO_URI'] = MONGO_URL
+app.config['MONGO_URI'] = MONGODB_URL
 mongo = PyMongo(app)
+
 def output_json(obj, code, headers=None):
     resp = make_response(dumps(obj), code)
     resp.headers.extend(headers or {})
