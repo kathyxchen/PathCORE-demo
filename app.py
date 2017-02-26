@@ -1,11 +1,39 @@
 from flask_rest_service import app, mongo
 from bson.json_util import dumps
-from flask import render_template, request, session
-import pymongo
+from flask import render_template, request, session, after_this_request
 from pymongo import MongoClient
 import os
+from cStringIO import StringIO as IO
+import gzip
+import functools
 
 app.secret_key = os.environ.get("SESSION_SECRET")
+
+def gzipped(f):
+    @functools.wraps(f)
+    def view_func(*args, **kwargs):
+        @after_this_request
+        def zipper(response):
+            accept_encoding = request.headers.get('Accept-Encoding', '')
+            if 'gzip' not in accept_encoding.lower():
+                return response
+            response.direct_passthrough = False
+            if (response.status_code < 200 or
+                    response.status_code >= 300 or
+                    'Content-Encoding' in response.headers):
+                return response
+            gzip_buffer = IO()
+            gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer)
+            gzip_file.write(response.data)
+            gzip_file.close()
+
+            response.data = gzip_buffer.getvalue()
+            response.headers['Content-Encoding'] = 'gzip'
+            response.headers['Vary'] = 'Accept-Encoding'
+            response.headers['Content-Length'] = len(response.data)
+            return response
+        return f(*args, **kwargs)
+    return view_func
 
 def sum_session_counter():
     session["edge_info"] = None
@@ -23,7 +51,7 @@ db = client[os.environ.get("DB_NAME")]
 def pathcore_network():
     sum_session_counter()
     return render_template("index.html",
-                           title="ppin network",
+                           title="pathcore network",
                            filename="10eADAGE_aggregate_10K_network.txt")
 
 @app.route("/session/<sample>")
@@ -34,6 +62,7 @@ def session_sample_metadata(sample):
         return dumps(session["edge_info"]["experiment_metadata"][sample])
 
 @app.route("/edge/<edge_pws>")
+@gzipped
 def edge(edge_pws):
     return get_edge_template(edge_pws, mongo.db)
 
@@ -75,11 +104,11 @@ def edge_experiment_session(edge_pws, experiment):
     session["edge_info"]["experiment_metadata"] = metadata
     # 's' prefix for session
     sgenes, soddsratios, ssample_gene_vals = _sort_genes(
-        sample_gene_vals, session["edge_info"]["oddsratios"], gene_order)
+        sample_gene_vals, session["edge_info"]["odds_ratios"], gene_order)
     experiment_data = {"sample_values": ssample_gene_vals,
                        "genes": sgenes,
                        "samples": _sort_samples(ssample_gene_vals,
-                                                session["edge_info"]["oddsratios"],
+                                                session["edge_info"]["odds_ratios"],
                                                 sgenes),
                        "whitelist_samples": whitelist_samples,
                        "oddsratios": soddsratios}
@@ -142,29 +171,21 @@ def get_edge_template(edge_pws, db):
     least_metadata, least_experiments = get_sample_metadata(edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
     
-    pao1_names = list(edge_info["gene_names"])
-    rename_genes = db.genes.find({"gene": {"$in": pao1_names}},
-                                 {"expression": 0})
-    
-    for gene_info in rename_genes:
-        rename = get_gene_name(gene_info)
-        to_replace = edge_info["gene_names"].index(gene_info["gene"])
-        edge_info["gene_names"][to_replace] = rename
-    
     gene_oddsratio_map = {}
     for index, gene in enumerate(edge_info["gene_names"]):
-        gene_oddsratio_map[gene] = edge_info["oddsratios"][index]
-
+        gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
     session["counter"] += 1
     session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
-                            "genes": pao1_names,
-                            "renamed_genes": edge_info["gene_names"],
+                            "genes": edge_info["gene_names"],
                             "oddsratios": gene_oddsratio_map,
                             "edge_name": (str(pw1), str(pw2))}
+    import json, ast
+    del edge_info["_id"]
+    x = ast.literal_eval(json.dumps(edge_info))
     return render_template("edge_samples.html",
         edge_str=edge_to_string(session["edge_info"]["edge_name"]),
-        edge_info=dumps(edge_info))
+        edge_info=json.dumps(edge_info))
 
 def cleanup_annotation(annotation):
     """TODO: Move to a utility file"""
@@ -197,3 +218,5 @@ def get_sample_metadata(sample_names):
         metadata[sample] = dumps(info)
     return metadata, experiments
 
+if __name__ == "__main__":
+    app.run(debug=True,host="0.0.0.0")

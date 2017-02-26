@@ -19,7 +19,7 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div id="overview" class="container">
         <div class="row">
         <h2>{{edge_str}}</h2>
-        <h5><a href="{{ url_for('ppin_network') }}">Return to network</a></h5>
+        <h5><a href="{{ url_for('pathcore_network') }}">Return to network</a></h5>
         <p>
             If a gene-by-sample square has an experiment associated with it (on hover), you can click on
             that square to view the gene expression values for all samples from that experiment.
@@ -29,15 +29,6 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div class="container" id="most-expressed-samples">
     <h4>10 most expressed samples</h4>
     <div class="row" id="most_expressed_parent">
-        <div class="col-md-2" id="most_comments">
-            <form>
-                <div class="form-group">
-                    <label for="exampleTextarea">Example textarea</label>
-                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
         <div class="col-md-6" id="most_expressed">
         </div>
     </div>
@@ -51,19 +42,20 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     </div>
 </body>
 <script>
-var edge_information = JSON.parse({{ edge_info|tojson }});
+var edge_information = JSON.stringify({{ edge_info|safe }});
+edge_information = JSON.parse(edge_information);
 var most_expressed_data = 
     {"source_structures": edge_information["most_expressed_samples"],
      "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["most_expressed_objs"],
+     "both_data": edge_information["most_expressed_heatmap"],
      "meta": edge_information["most_metadata"],
-     "oddsratios": edge_information["oddsratios"]};
+     "oddsratios": edge_information["odds_ratios"]};
 var least_expressed_data =
     {"source_structures": edge_information["least_expressed_samples"],
      "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["least_expressed_objs"],
+     "both_data": edge_information["least_expressed_heatmap"],
      "meta": edge_information["least_metadata"],
-     "oddsratios": edge_information["oddsratios"]};
+     "oddsratios": edge_information["odds_ratios"]};
 
 var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
 var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));

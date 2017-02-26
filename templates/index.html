@@ -62,8 +62,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
   links.forEach(function(link) {
     link.source = nodeByName(link.PW1);
     link.target = nodeByName(link.PW2);
-    link.weight = parseInt(link.Weight);
-    link.type = parseInt(link.Type);
+    link.weight = parseInt(link.weight);
   });
 
   // Extract the array of nodes from the map by name.
@@ -82,12 +81,8 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
     }
   }
 
-  function lineColor(etype) {
-    if (etype == -1) {
-        return "#FF9933";
-    } else {
-        return "#6600FF";
-    }
+  function lineColor() {
+    return "#6600FF";
   }
 
   // Create the link lines.
@@ -99,7 +94,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         return weightConv(d.weight);
       })
       .style("stroke", function(d) {
-        return lineColor(d.type);
+        return lineColor();
       })
       .on("mouseover", function() {
         var tgt = d3.select(this);
@@ -110,25 +105,13 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
       .on("mouseout", function() {
         var tgt = d3.select(this);
         var etype = tgt[0][0].__data__.Type;
-        var weight = tgt[0][0].__data__.Weight;
-        if (!weight) {
-            var weight = tgt[0][0].__data__.weight;
-        }
-        tgt.style("stroke", lineColor(etype)); 
+        var weight = tgt[0][0].__data__.weight;
+        tgt.style("stroke", lineColor()); 
         tgt.style("stroke-width", weightConv(weight));
       })
       .on("click", function(d) {
         var xhr = new XMLHttpRequest();
-        var etype = parseInt(d.Type);
-        var append = "";
-        if (filename == "tgraph_remove_large_network.txt") {
-            append = "2";
-        }
-        if (etype == -1) {
-            window.location.href = append + "/edge/inverse/" + d.PW1 + "&" + d.PW2
-        } else {
-            window.location.href = append + "/edge/direct/" + d.PW1 + "&" + d.PW2
-        }
+        window.location.href = "/edge/" + d.PW1 + "&" + d.PW2
       });
   
   link.append("title").text(function(d) {
