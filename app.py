@@ -54,22 +54,18 @@ def pathcore_network():
                            title="pathcore network",
                            filename="10eADAGE_aggregate_10K_network.txt")
 
-@app.route("/session/<sample>")
-def session_sample_metadata(sample):
-    if sample not in session["edge_info"]["experiment_metadata"]:
-        return ""
-    else:
-        return dumps(session["edge_info"]["experiment_metadata"][sample])
-
 @app.route("/edge/<edge_pws>")
 @gzipped
 def edge(edge_pws):
     return get_edge_template(edge_pws, mongo.db)
 
 @app.route("/edge/<edge_pws>/experiment/<experiment>")
+@gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
+    
     if "edge_info" not in session or session["edge_info"]["edge_name"] != (pw1, pw2):
+        print "Retrieving edge page information..."
         get_edge_template(edge_pws, mongo.db)
     
     # retrieve all samples associated with an experiment.
@@ -86,35 +82,42 @@ def edge_experiment_session(edge_pws, experiment):
         sample_gene_vals[sample_name] = []
     
     # for each sample, get the expression value for each gene in the list
-    gene_data_iterator = mongo.db.genes.find(
-        {"gene": {"$in": session["edge_info"]["genes"]}}, {"expression": 0})
     gene_order = []
-    for gene_info in gene_data_iterator:
-        gene_order.append(get_gene_name(gene_info))
+    for gene_name in session["edge_info"]["genes"]:
+        gene_info = mongo.db.genes.find_one(
+            {"$or": [{"gene": gene_name}, {"common_name": gene_name}, {"pa14_name": gene_name}]})
+        if not gene_info:
+            print "ERROR: wrong query to find this gene {0}".format(gene_name)
+        gene_order.append(gene_name)
         expression_values = gene_info["expression"]
-        for sample, index in get_samples.iteritems():
+        for sample, index in get_samples.items():
             sample_gene_vals[sample].append(expression_values[index])
     
     whitelist_samples = {}
     edge_experiments = session["edge_info"]["experiments"]
     if experiment in edge_experiments["most"]:
         whitelist_samples["most"] = edge_experiments["most"][experiment]
+        heatmap_color = "R"
     if experiment in edge_experiments["least"]:
         whitelist_samples["least"] = edge_experiments["least"][experiment]
-    session["edge_info"]["experiment_metadata"] = metadata
-    # 's' prefix for session
+        heatmap_color = "B"
+
+    current_odds_ratios = session["edge_info"]["odds_ratios"]
+    current_edge_name = session["edge_info"]["edge_name"]
     sgenes, soddsratios, ssample_gene_vals = _sort_genes(
-        sample_gene_vals, session["edge_info"]["odds_ratios"], gene_order)
+        sample_gene_vals, current_odds_ratios, gene_order)
     experiment_data = {"sample_values": ssample_gene_vals,
                        "genes": sgenes,
                        "samples": _sort_samples(ssample_gene_vals,
-                                                session["edge_info"]["odds_ratios"],
+                                                current_odds_ratios,
                                                 sgenes),
                        "whitelist_samples": whitelist_samples,
-                       "oddsratios": soddsratios}
+                       "odds_ratios": soddsratios,
+                       "heatmap_color": heatmap_color,
+                       "metadata": metadata}
     return render_template("experiment.html",
-                           edge_str=edge_to_string(session["edge_info"]["edge_name"]),
-                           edge=session["edge_info"]["edge_name"],
+                           edge_str=edge_to_string(current_edge_name),
+                           edge=current_edge_name,
                            experiment_name=experiment,
                            experiment_information=dumps(experiment_data))
 
@@ -178,7 +181,7 @@ def get_edge_template(edge_pws, db):
     session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": edge_info["gene_names"],
-                            "oddsratios": gene_oddsratio_map,
+                            "odds_ratios": gene_oddsratio_map,
                             "edge_name": (str(pw1), str(pw2))}
     import json, ast
     del edge_info["_id"]

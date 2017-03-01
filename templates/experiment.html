@@ -19,9 +19,9 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div class="container">
         <div class="row">
         <h3>Experiment {{ experiment_name }}</h3>
-        <a href="{{ url_for('ppin_network') }}">Return to network</a>
+        <a href="{{ url_for('pathcore_network') }}">Return to network</a>
         <p>
-        <a href="{{ url_for('edge_direct', edge_pws=edge[0] + '&' + edge[1]) }}"> {{ edge_str }}</a>
+        <a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}"> {{ edge_str }}</a>
         <br />
         Samples highlighted in <span style="color: red;">red</span> are from the 'most expressed' list,
         whereas those in <span style="color: blue;">blue</span> are from the 'least expressed' list.
@@ -34,7 +34,8 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     </div>
 </body>
 <script type="text/javascript">
-var heatmap_information = JSON.parse({{ experiment_information|tojson }});
+var heatmap_information = JSON.stringify({{ experiment_information|safe }});
+heatmap_information = JSON.parse(heatmap_information);
 var sample_data = heatmap_information["sample_values"];
 var samples = heatmap_information["samples"];
 // additional sorting step because odds ratio ordering was based on
@@ -76,10 +77,15 @@ var data =
      "target_structures": heatmap_information["genes"],
      "both_data": build_indices,
      "whitelist": heatmap_information["whitelist_samples"],
-     "oddsratios": heatmap_information["oddsratios"]
+     "oddsratios": heatmap_information["odds_ratios"]
     };
 
-var colors = ["white", "yellow", "green", "black"];
+var colors = [];
+if (heatmap_information["heatmap_color"] == "R") {
+    colors = ["white", "yellow", "red", "black"];
+} else {
+    colors = ["white", "blue", "purple", "black"];
+}
 
 var colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
@@ -154,21 +160,19 @@ function append_heatmap(div_id, data, color, min, max) {
             .attr("height", cell_size)
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
-                $.get("/session/" + sample_name, function(metadata) {
-                    metadata = JSON.parse(metadata);
-                    var metadata_html = ""
-                    for (var key in metadata) {
-                        metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
-                    }
-                    var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
-                        data.target_structures[d.target_index] + "</p>" +
-                        "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
-                        Math.ceil(d.value * 1000.0) / 1000.0 +
-                        "<br />" + "<strong>odds ratio:</strong> " +
-                        Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
-                        "<p>" + metadata_html + "</p>";
-                    meta_container.html(build_html);
-                });
+                var metadata = heatmap_information["metadata"][sample_name];
+                var metadata_html = ""
+                for (var key in metadata) {
+                    metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
+                }
+                var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
+                    data.target_structures[d.target_index] + "</p>" +
+                    "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
+                    Math.ceil(d.value * 1000.0) / 1000.0 +
+                    "<br />" + "<strong>odds ratio:</strong> " +
+                    Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
+                    "<p>" + metadata_html + "</p>";
+                meta_container.html(build_html);
             });
         
         // Construct text labels for the y axis
