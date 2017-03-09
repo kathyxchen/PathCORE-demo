@@ -14,12 +14,28 @@ integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="ano
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+<style>
+.pw1 {
+   color: pink;
+}
+
+.pw2 {
+   color: green;
+}
+</style>
 </head>
 <body>
     <div id="overview" class="container">
         <div class="row">
-        <h2>{{edge_str}}</h2>
+            <h2><span class="pw1">{{pw1}}</span> <span class="pw2">{{pw2}}</span></h2>
         <h5><a href="{{ url_for('pathcore_network') }}">Return to network</a></h5>
+        <p>        
+            A summary expression score per sample was determined based on
+            the normalized expression values of the genes in the 2 pathway annotations,
+            where each expression value was weighted by its gene's odds ratio.
+            Displayed are the <a href="#most-expressed-samples">10 most expressed</a>
+            and <a href="#least-expressed-samples">10 least expressed</a> samples. 
+        </p>
         <p>
             If a gene-by-sample square has an experiment associated with it (on hover), you can click on
             that square to view the gene expression values for all samples from that experiment.
@@ -29,18 +45,19 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
     <div class="container" id="most-expressed-samples">
     <h4>10 most expressed samples</h4>
     <div class="row" id="most_expressed_parent">
-        <div class="col-md-6" id="most_expressed">
+        <div class="col-md-4" id="most_expressed">
         </div>
     </div>
     </div>
     <div class="container" id="least-expressed-samples">
     <h4>10 least expressed samples</h4>
     <div class="row" id="least_expressed_parent">
-        <div class="col-md-8" id="least_expressed">
+        <div class="col-md-4" id="least_expressed">
         </div>
     </div>
     </div>
 </body>
+
 <script>
 var edge_information = JSON.stringify({{ edge_info|safe }});
 edge_information = JSON.parse(edge_information);
@@ -57,14 +74,11 @@ var least_expressed_data =
      "meta": edge_information["least_metadata"],
      "oddsratios": edge_information["odds_ratios"]};
 
-var most_expr_min = Math.min.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
-var most_expr_max = Math.max.apply(Math, most_expressed_data["both_data"].map(function(d) { return d.value; }));
-
-var least_expr_min = Math.min.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
-var least_expr_max = Math.max.apply(Math, least_expressed_data["both_data"].map(function(d) { return d.value; }));
-
-var most_colors = ["white", "yellow", "red", "black"];
-var least_colors = ["white", "blue", "purple", "black"];
+function get_expression_minmax(data) {
+    var min_expression = Math.min.apply(Math, data.map(function(d) { return d.value; }));
+    var max_expression = Math.max.apply(Math, data.map(function(d) { return d.value; }));
+    return {"min": min_expression, "max": max_expression};
+}
 
 function colorbar(expression_min, expression_max, colors) {
     var difference = expression_max - expression_min;
@@ -72,8 +86,32 @@ function colorbar(expression_min, expression_max, colors) {
     return d3.scale.linear().domain(domain).range(colors);
 }
 
-var most_colorbar = colorbar(most_expr_min, most_expr_max, most_colors); 
-var least_colorbar = colorbar(least_expr_min, least_expr_max, least_colors);
+function index_sort(arr) {
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = [arr[i], i];
+    }
+    arr.sort(function(left, right) {
+        return left[0] < right[0] ? -1 : 1;
+    });
+    arr.sortIndices = [];
+    for (var j = 0; j < arr.length; j++) {
+        arr.sortIndices.push(arr[j][1]);
+            arr[j] = arr[j][0];
+    }
+    return arr;
+}
+
+// var sorted_genes = index_sort(target_structures);
+
+
+var most_expressed_minmax = get_expression_minmax(most_expressed_data["both_data"]);
+var least_expressed_minmax = get_expression_minmax(least_expressed_data["both_data"]);
+
+var most_colors = ["white", "yellow", "red", "black"];
+var least_colors = ["white", "blue", "purple", "black"];
+
+var most_colorbar = colorbar(most_expressed_minmax["min"], most_expressed_minmax["max"], most_colors); 
+var least_colorbar = colorbar(least_expressed_minmax["min"], least_expressed_minmax["max"], least_colors);
 
 function append_heatmap(div_id, data, color, min, max) {
     var width = 960, height = 800, 
@@ -84,13 +122,13 @@ function append_heatmap(div_id, data, color, min, max) {
         .attr("height", height)
         .append("g");
 
-    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4").appendTo($(div_id + "_parent"));
-    // Build the D3 components that display the heatmap color legend.
+    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-6").prependTo($(div_id + "_parent"));
+    
     function build_legend(chart_width, chart_height) {
         // Make an array of values, one for each pixel in the width of the legend.
         var legend_data = [];
         var num_elems = chart_width;
-        for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems * 1); }
+        for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems); }
 
         // This scale handles interpolation between projection volume values and 
         // legend position.
@@ -127,6 +165,18 @@ function append_heatmap(div_id, data, color, min, max) {
            .text("normalized expression value");
     }
 
+
+    var order = ["Sample", "Expression Value",
+                 "Experiment", "Description", "Strain", "Genotype", "Medium (biosynthesis/energy)",
+                 "Growth setting (planktonic, colony, biofilm)",
+                 "Growth setting (For planktonic-aerated, static)(For biofilms-flow cell, static)",
+                 "Treatment (drug/small molecule)", "Temperature",
+                 "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+                 "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
+                 "OD", "Nucleic Acid", "Variant phenotype (QS defective, mucoid, SCV, etc)",
+                 "Abx marker, auxotrophy",
+                 "Additional Notes (markers)", "EXPT SUMMARY",
+                 "Gene-to-edge odds ratio"];
     // Construct the heatmap and its axes. The data supplied to this method
     // is an array of source-target volume values.  
     function build_heatmap(data, chart_width, chart_height) {
@@ -146,10 +196,24 @@ function append_heatmap(div_id, data, color, min, max) {
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
                 var metadata = JSON.parse(data.meta[sample_name]);
-                var metadata_html = "";
-                for (var key in metadata) {
-                    metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
+                if (!metadata) {
+                    metadata = {};
                 }
+                metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
+                metadata["Gene-to-edge odds ratio"] = Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0;
+                var metadata_html = "<table class='table table-sm'><thead><tr><th style='width: 30%;'></th>"
+                + "<th style='width: 70%;'></th></tr></thead><tbody>"; 
+
+                for (var i = 0; i < order.length; i++) {
+                    var key = order[i];
+                    if (key in metadata) {
+                        metadata_html += "<tr><td style='line-height: 0.9;'><strong>" + key + "</strong></td>"
+                                           + "<td style='line-height: 0.9;'>" + metadata[key] + "</td></tr>";
+                    }
+                }
+                metadata_html += "</tbody>";
+
+                /*
                 var build_html = "";
                 build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
                     data.target_structures[d.target_index] + "</p>" +
@@ -158,7 +222,8 @@ function append_heatmap(div_id, data, color, min, max) {
                     "<br />" + "<strong>odds ratio:</strong> " +
                     Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
                     "<p>" + metadata_html + "</p>";
-                meta_container.html(build_html);
+                */
+                meta_container.html(metadata_html);
                 if (metadata_html.length != 0) {
                     d3.select(this)
                       .style("stroke", "black")
@@ -187,6 +252,14 @@ function append_heatmap(div_id, data, color, min, max) {
            .attr("y", function(d,i) { return i * cell_size + 17.5; })
            .attr("x", -5)
            .attr("text-anchor", "end")
+           .attr("fill", function(d, i) {
+                var owner = edge_information["ownership"][i];
+                if (owner == 0) {
+                    return "pink";
+                } else if (owner == 1) {
+                    return "green";
+                }
+           })
            .text(function(d) { return d; });
 
         // Construct text labels for the x axis
@@ -213,32 +286,30 @@ function append_heatmap(div_id, data, color, min, max) {
         // A title for the y axis.
         svg.append("text")
            .attr("text-anchor", "middle")
-           .attr("transform","translate(-" + (chart_width / 2) + "," + (chart_height / 2) +") rotate(90)")
+           .attr("transform","translate(-" + (chart_width / 3) + "," + (chart_height / 2) +") rotate(90)")
            .text("Genes");
     }
     var chart_height = cell_size * data.target_structures.length;
     var chart_width = cell_size * data.source_structures.length;
-    /*
-    svg.attr("transform", "translate(" + 
-        + ((width / 2) - (chart_width / 2)) + "," 
-        + ((height / 4) - (chart_height / 4)) + ")");
-    */
+    
     build_heatmap(data, chart_width, chart_height);
     build_legend(chart_width, chart_height);
 
     bounding = svg.node().getBBox();
-    console.log(bounding);
-    svg.attr("transform", "translate(" +
-              bounding.x * -1 + "," +
-              bounding.y * -1 + ")"
-            );
+    svg.attr("transform", "translate("
+                         + bounding.x * -1 + ","
+                         + bounding.y * -1 + ")");
     
     d3.select("svg").attr("width", bounding.width);
     d3.select("svg").attr("height", bounding.height);
 }
 
-append_heatmap("#most_expressed", most_expressed_data, most_colorbar, most_expr_min, most_expr_max);
-append_heatmap("#least_expressed", least_expressed_data, least_colorbar, least_expr_min, least_expr_max);
+append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
+               most_expressed_minmax["min"], most_expressed_minmax["max"]);
+append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
+               least_expressed_minmax["min"], least_expressed_minmax["max"]);
+
+console.log(most_expressed_data);
 
 </script>
 </html>

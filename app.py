@@ -54,6 +54,12 @@ def pathcore_network():
                            title="pathcore network",
                            filename="10eADAGE_aggregate_10K_network.txt")
 
+@app.route("/quickview")
+def pathcore_network_quickview():
+    sum_session_counter()
+    return render_template("quickview.html",
+                           title="Temporary network view")
+
 @app.route("/edge/<edge_pws>")
 @gzipped
 def edge(edge_pws):
@@ -177,17 +183,31 @@ def get_edge_template(edge_pws, db):
     gene_oddsratio_map = {}
     for index, gene in enumerate(edge_info["gene_names"]):
         gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
+    
+    pathway_owner_index = []
+    for ownership in edge_info["pathway_owner"]:
+        if ownership == "both": 
+            pathway_owner_index.append(-1)
+        elif ownership == pw1:
+            pathway_owner_index.append(0)
+        else:
+            pathway_owner_index.append(1)
+
+    edge_info["ownership"] = pathway_owner_index
+
     session["counter"] += 1
     session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": edge_info["gene_names"],
                             "odds_ratios": gene_oddsratio_map,
+                            "ownership": pathway_owner_index,
                             "edge_name": (str(pw1), str(pw2))}
     import json, ast
     del edge_info["_id"]
     x = ast.literal_eval(json.dumps(edge_info))
     return render_template("edge_samples.html",
-        edge_str=edge_to_string(session["edge_info"]["edge_name"]),
+        pw1=session["edge_info"]["edge_name"][0],
+        pw2=session["edge_info"]["edge_name"][1],
         edge_info=json.dumps(edge_info))
 
 def cleanup_annotation(annotation):
@@ -196,7 +216,6 @@ def cleanup_annotation(annotation):
     del annotation["_id"]
     del annotation["CEL file"]
     del annotation["sample_id"]
-    annotation.pop("Strain", None)
     # shortens the experiment summary
     if "EXPT SUMMARY" in annotation:
         summary_len = len(annotation["EXPT SUMMARY"])
