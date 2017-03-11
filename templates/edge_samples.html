@@ -154,20 +154,27 @@ copy_most = replace_with_alphabetical(copy_most);
 copy_least = replace_with_alphabetical(copy_least);
 
 $(".toggle-genes").click(function() {
-    $(this).text(function(i, text) {
+    $(".toggle-genes").text(function(i, text) {
+        
         $("#most_expressed svg").remove();
         $("#least_expressed svg").remove();
+        
+        var x, y;
         if (text == "Sort genes alphabetically") {
-            append_heatmap("#most_expressed", copy_most, most_colorbar,
+            x = append_heatmap("#most_expressed", copy_most, most_colorbar,
                    most_expressed_minmax["min"], most_expressed_minmax["max"]);
-            append_heatmap("#least_expressed", copy_least, least_colorbar,
+            y = append_heatmap("#least_expressed", copy_least, least_colorbar,
                    least_expressed_minmax["min"], least_expressed_minmax["max"]);
+            $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+            $("#least_expressed_parent .meta.sample-view").replaceWith(y);
             return "Sort genes by odds ratio"; 
         } else {
-            append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
+            x = append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
                    most_expressed_minmax["min"], most_expressed_minmax["max"]);
-            append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
+            y = append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
                    least_expressed_minmax["min"], least_expressed_minmax["max"]);
+            $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+            $("#least_expressed_parent .meta.sample-view").replaceWith(y);
             return "Sort genes alphabetically";
         }
     });
@@ -192,7 +199,8 @@ function append_heatmap(div_id, data, color, min, max) {
         .attr("height", height)
         .append("g");
 
-    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-6").prependTo($(div_id + "_parent"));
+    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-6");
+        //.prependTo($(div_id + "_parent"));
     meta_container.addClass("sample-view");
     function build_legend(chart_width, chart_height) {
         // Make an array of values, one for each pixel in the width of the legend.
@@ -372,13 +380,16 @@ function append_heatmap(div_id, data, color, min, max) {
     
     d3.select("svg").attr("width", bounding.width);
     d3.select("svg").attr("height", bounding.height);
+    return meta_container;
 }
 
-append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
+var mx = append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
                most_expressed_minmax["min"], most_expressed_minmax["max"]);
-append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
+var my = append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
                least_expressed_minmax["min"], least_expressed_minmax["max"]);
 
+mx.prependTo($("#most_expressed_parent"));
+my.prependTo($("#least_expressed_parent"));
 
 </script>
 </html>
