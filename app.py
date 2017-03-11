@@ -120,7 +120,8 @@ def edge_experiment_session(edge_pws, experiment):
                        "whitelist_samples": whitelist_samples,
                        "odds_ratios": soddsratios,
                        "heatmap_color": heatmap_color,
-                       "metadata": metadata}
+                       "metadata": metadata,
+                       "ownership": session["edge_info"]["ownership"]}
     return render_template("experiment.html",
                            edge_str=edge_to_string(current_edge_name),
                            edge=current_edge_name,

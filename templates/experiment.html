@@ -12,17 +12,25 @@ integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+<style>
+.pw1 {
+       color: pink;
+}
+.pw2 {
+       color: green;
+}
+</style>
 </head>
 <body>
     <div id="overview">
     </div>
     <div class="container">
         <div class="row">
-        <h3>Experiment {{ experiment_name }}</h3>
-        <a href="{{ url_for('pathcore_network') }}">Return to network</a>
+        <h2>Experiment {{ experiment_name }}</h2>
+        <h3><a href="{{ url_for('pathcore_network') }}">Return to network</a></h3>
+        <h3><a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}">
+            Return to <span class="pw1">{{edge[0]}}</span> <span class="pw2">{{edge[1]}}</span></a></h3> 
         <p>
-        <a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}"> {{ edge_str }}</a>
-        <br />
         Samples highlighted in <span style="color: red;">red</span> are from the 'most expressed' list,
         whereas those in <span style="color: blue;">blue</span> are from the 'least expressed' list.
         </p>
@@ -100,7 +108,8 @@ function append_heatmap(div_id, data, color, min, max) {
         .attr("height", height)
         .append("g");
 
-    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4").appendTo($(div_id + "_parent"));
+    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4")
+        .prependTo($(div_id + "_parent"));
     // Build the D3 components that display the heatmap color legend.
     function build_legend(chart_width, chart_height) {
         chart_width = Math.max(Math.min(chart_width, 500), 100)
@@ -142,6 +151,18 @@ function append_heatmap(div_id, data, color, min, max) {
            .text("normalized expression value");
     }
 
+    var order = ["Sample", "Expression Value",
+        "Experiment", "Description", "Strain", "Genotype", "Medium (biosynthesis/energy)",
+        "Growth setting (planktonic, colony, biofilm)", 
+        "Growth setting (For planktonic-aerated, static)(For biofilms-flow cell, static)",
+        "Treatment (drug/small molecule)", "Temperature",
+        "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+        "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
+        "OD", "Nucleic Acid", "Variant phenotype (QS defective, mucoid, SCV, etc)",
+        "Abx marker, auxotrophy",
+        "Additional Notes (markers)", "EXPT SUMMARY",
+        "Gene-to-edge odds ratio"];
+
     // Construct the heatmap and its axes. The data supplied to this method
     // is an array of source-target volume values.  
     function build_heatmap(data, chart_width, chart_height) {
@@ -161,6 +182,21 @@ function append_heatmap(div_id, data, color, min, max) {
             .on("mouseover", function(d) {
                 var sample_name = data.source_structures[d.source_index];
                 var metadata = heatmap_information["metadata"][sample_name];
+                metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
+                metadata["Gene-to-edge odds ratio"] = Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0;
+
+                var metadata_html = "<table class='table table-sm'><thead><tr><th style='width: 30%;'></th>"
+                + "<th style='width: 70%;'></th></tr></thead><tbody>";
+
+                for (var i = 0; i < order.length; i++) {
+                    var key = order[i];
+                    if (key in metadata) {
+                         metadata_html += "<tr><td style='line-height: 0.9;'><strong>" + key + "</strong></td>"
+                                            + "<td style='line-height: 0.9;'>" + metadata[key] + "</td></tr>";
+                    }
+                }
+                metadata_html += "</tbody>";
+                /*
                 var metadata_html = ""
                 for (var key in metadata) {
                     metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
@@ -173,6 +209,8 @@ function append_heatmap(div_id, data, color, min, max) {
                     Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
                     "<p>" + metadata_html + "</p>";
                 meta_container.html(build_html);
+                */
+                meta_container.html(metadata_html);
             });
         
         // Construct text labels for the y axis
@@ -184,7 +222,15 @@ function append_heatmap(div_id, data, color, min, max) {
            .attr("y", function(d,i) { return i * cell_size + 17.5; })
            .attr("x", -5)
            .attr("text-anchor", "end")
-           .text(function(d) { return d; });
+           .text(function(d) { return d; })
+           .attr("fill", function(d, i) {
+                   var owner = heatmap_information["ownership"][i];
+                   if (owner == 0) {
+                       return "pink";
+                   } else if (owner == 1) {
+                       return "green";
+                   }
+                });
 
         // Construct text labels for the x axis
         svg.append("g")
