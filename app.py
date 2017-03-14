@@ -60,12 +60,12 @@ def pathcore_network_quickview():
     return render_template("quickview.html",
                            title="Temporary network view")
 
-@app.route("/edge/<edge_pws>")
+@app.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
     return get_edge_template(edge_pws, mongo.db)
 
-@app.route("/edge/<edge_pws>/experiment/<experiment>")
+@app.route("/edge/<path:edge_pws>/experiment/<experiment>")
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
@@ -241,5 +241,5 @@ def get_sample_metadata(sample_names):
         metadata[sample] = dumps(info)
     return metadata, experiments
 
-if __name__ == "__main__":
-    app.run(debug=True,host="0.0.0.0")
+#if __name__ == "__main__":
+    #app.run(debug=True,host="0.0.0.0")
