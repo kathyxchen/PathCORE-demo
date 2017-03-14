@@ -1,3 +1,4 @@
+import json
 from flask_rest_service import app, mongo
 from bson.json_util import dumps
 from flask import render_template, request, session, after_this_request
@@ -8,6 +9,7 @@ import gzip
 import functools
 
 app.secret_key = os.environ.get("SESSION_SECRET")
+
 
 def gzipped(f):
     @functools.wraps(f)
@@ -35,6 +37,7 @@ def gzipped(f):
         return f(*args, **kwargs)
     return view_func
 
+
 def sum_session_counter():
     session["edge_info"] = None
     try:
@@ -47,6 +50,7 @@ client = MongoClient("mongodb://{0}:{1}@{2}/{3}".format(
     os.environ.get("MLAB_URI"), os.environ.get("DB_NAME")))
 db = client[os.environ.get("DB_NAME")]
 
+
 @app.route("/eADAGE")
 def pathcore_network():
     sum_session_counter()
@@ -54,51 +58,58 @@ def pathcore_network():
                            title="pathcore network",
                            filename="10eADAGE_aggregate_10K_network.txt")
 
+
 @app.route("/quickview")
 def pathcore_network_quickview():
     sum_session_counter()
     return render_template("quickview.html",
                            title="Temporary network view")
 
+
 @app.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
     return get_edge_template(edge_pws, mongo.db)
 
+
 @app.route("/edge/<path:edge_pws>/experiment/<experiment>")
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
-    
-    if "edge_info" not in session or session["edge_info"]["edge_name"] != (pw1, pw2):
+
+    if ("edge_info" not in session or
+            session["edge_info"]["edge_name"] != (pw1, pw2)):
         print "Retrieving edge page information..."
         get_edge_template(edge_pws, mongo.db)
-    
+
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
     sample_gene_vals = {}
-    
+
     # get all annotations associated with an experiment
-    annotations_iterator = mongo.db.sample_annotations.find({"Experiment": experiment})
+    annotations_iterator = mongo.db.sample_annotations.find(
+        {"Experiment": experiment})
     for annotation in annotations_iterator:
         sample_name = annotation["CEL file"]
         get_samples[sample_name] = annotation["sample_id"]
         metadata[sample_name] = cleanup_annotation(annotation)
         sample_gene_vals[sample_name] = []
-    
+
     # for each sample, get the expression value for each gene in the list
     gene_order = []
     for gene_name in session["edge_info"]["genes"]:
         gene_info = mongo.db.genes.find_one(
-            {"$or": [{"gene": gene_name}, {"common_name": gene_name}, {"pa14_name": gene_name}]})
+            {"$or": [{"gene": gene_name},
+                     {"common_name": gene_name},
+                     {"pa14_name": gene_name}]})
         if not gene_info:
             print "ERROR: wrong query to find this gene {0}".format(gene_name)
         gene_order.append(gene_name)
         expression_values = gene_info["expression"]
         for sample, index in get_samples.items():
             sample_gene_vals[sample].append(expression_values[index])
-    
+
     whitelist_samples = {}
     edge_experiments = session["edge_info"]["experiments"]
     if experiment in edge_experiments["most"]:
@@ -174,20 +185,22 @@ def edge_to_string(edge):
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
-    
-    most_metadata, most_experiments = get_sample_metadata(edge_info["most_expressed_samples"])
+
+    most_metadata, most_experiments = get_sample_metadata(
+        edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
-    
-    least_metadata, least_experiments = get_sample_metadata(edge_info["least_expressed_samples"])
+
+    least_metadata, least_experiments = get_sample_metadata(
+        edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
-    
+
     gene_oddsratio_map = {}
     for index, gene in enumerate(edge_info["gene_names"]):
         gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
-    
+
     pathway_owner_index = []
     for ownership in edge_info["pathway_owner"]:
-        if ownership == "both": 
+        if ownership == "both":
             pathway_owner_index.append(-1)
         elif ownership == pw1:
             pathway_owner_index.append(0)
@@ -203,13 +216,11 @@ def get_edge_template(edge_pws, db):
                             "odds_ratios": gene_oddsratio_map,
                             "ownership": pathway_owner_index,
                             "edge_name": (str(pw1), str(pw2))}
-    import json, ast
     del edge_info["_id"]
-    x = ast.literal_eval(json.dumps(edge_info))
     return render_template("edge_samples.html",
-        pw1=session["edge_info"]["edge_name"][0],
-        pw2=session["edge_info"]["edge_name"][1],
-        edge_info=json.dumps(edge_info))
+                           pw1=session["edge_info"]["edge_name"][0],
+                           pw2=session["edge_info"]["edge_name"][1],
+                           edge_info=json.dumps(edge_info))
 
 def cleanup_annotation(annotation):
     """TODO: Move to a utility file"""
