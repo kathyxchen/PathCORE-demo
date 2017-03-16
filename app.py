@@ -59,6 +59,13 @@ def pathcore_network():
                            filename="10eADAGE_aggregate_10K_network.txt")
 
 
+@app.route("/tcga")
+def tcga_network():
+    sum_session_counter()
+    return render_template("index.html",
+                           title="tcga pancancer PID pathways",
+                           filename="tcga_pid_network.txt")
+
 @app.route("/quickview")
 def pathcore_network_quickview():
     sum_session_counter()
@@ -252,5 +259,5 @@ def get_sample_metadata(sample_names):
         metadata[sample] = dumps(info)
     return metadata, experiments
 
-#if __name__ == "__main__":
-    #app.run(debug=True,host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True,host="0.0.0.0")

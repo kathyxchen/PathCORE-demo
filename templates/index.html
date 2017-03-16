@@ -31,13 +31,13 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="row" id="ppin">
-    </div>
+<div class="container-fluid" id="ppin">
+    <!--<div class="row" id="ppin">
+    </div>-->
 </div>
 <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
 <script>
-Math.seedrandom("ppin");
+Math.seedrandom("pc42_n");
 var width  = $("#ppin").width(),
     height = 1500;
 
@@ -46,8 +46,8 @@ var svg = d3.select("#ppin").append("svg")
     .attr("height", height);
 
 var force = d3.layout.force()
-    .distance(100)
-    .charge(-100)
+    .distance(80)
+    .charge(-80)
     .gravity(0.01)
     .size([width, height]);
 var filename = "{{ filename }}";
