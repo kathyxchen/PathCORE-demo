@@ -2,6 +2,7 @@ import json
 from flask_rest_service import app, mongo
 from bson.json_util import dumps
 from flask import render_template, request, session, after_this_request
+import flask_excel as excel
 from pymongo import MongoClient
 import os
 from cStringIO import StringIO as IO
@@ -66,6 +67,10 @@ def tcga_network():
                            title="tcga pancancer PID pathways",
                            filename="tcga_pid_network.txt")
 
+@app.route("/download", methods=["GET"])
+def export_edge_information():
+    return excel.make_response_from_array([[1,2], [3, 4]], "csv", file_name="export_data")
+
 @app.route("/quickview")
 def pathcore_network_quickview():
     sum_session_counter()
@@ -88,7 +93,6 @@ def edge_experiment_session(edge_pws, experiment):
             session["edge_info"]["edge_name"] != (pw1, pw2)):
         print "Retrieving edge page information..."
         get_edge_template(edge_pws, mongo.db)
-
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
@@ -229,6 +233,80 @@ def get_edge_template(edge_pws, db):
                            pw2=session["edge_info"]["edge_name"][1],
                            edge_info=json.dumps(edge_info))
 
+excel_fields = ["which heatmap", "sample", "gene", "normalized expression", "pathway", "odds ratio", "experiment",
+          "info: strain; genotype; medium; biotic interactor 1 (plant/human/bacteria); biotic interactor 2; treatment"]
+
+@app.route("/edge/<path:edge_pws>/download")
+@gzipped
+def edge_excel_file(edge_pws):
+    db = mongo.db
+    pw1, pw2 = edge_pws.split("&")
+    edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
+    
+    most_metadata, most_experiments = get_sample_metadata(
+        edge_info["most_expressed_samples"])
+    edge_info["most_metadata"] = most_metadata
+
+    least_metadata, least_experiments = get_sample_metadata(
+        edge_info["least_expressed_samples"])
+    edge_info["least_metadata"] = least_metadata
+
+    gene_oddsratio_map = {}
+    for index, gene in enumerate(edge_info["gene_names"]):
+        gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
+
+    session["counter"] += 1
+    list_of_rows = [excel_fields]
+    list_of_rows += build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map,
+            most_metadata, "most")
+    list_of_rows += build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map,
+            least_metadata, "least")
+    
+    make_excel = excel.make_response_from_array(list_of_rows, "csv",
+                                          file_name="{0}-{1}_edge_heatmap_data".format(
+                                              pw1.replace(",", ""), pw2.replace(",", "")))
+    return make_excel
+
+def build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map, metadata, which_heatmap_str):
+    rows = []
+    for cell in edge_info["{0}_expressed_heatmap".format(which_heatmap_str)]:
+        sample_index = cell["source_index"]
+        gene_index = cell["target_index"]
+        expression_value = cell["value"]
+        sample = edge_info["{0}_expressed_samples".format(which_heatmap_str)][sample_index]
+        gene = edge_info["gene_names"][gene_index]
+        pathway = edge_info["pathway_owner"][gene_index]
+        odds_ratio = gene_oddsratio_map[gene]
+        json_meta = json.loads(metadata[sample])
+        if json_meta:
+            experiment = json_meta["Experiment"]
+            info = build_info_col_excel_file(json_meta)
+            info = info.encode('ascii',errors='ignore')
+        else:
+            experiment = "N/A"
+            info = "N/A"
+        row = [which_heatmap_str, sample, gene, expression_value, pathway, odds_ratio, experiment, info]
+        rows.append(row)
+    rows.reverse()
+    return rows
+
+sample_metadata_info_fields = ["Strain", "Genotype", "Medium (biosynthesis/energy)",
+                               "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+                               "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
+                               "Treatment (drug/small molecule)"]
+
+def build_info_col_excel_file(metadata_dict):
+    info_col_values = []
+    for field in sample_metadata_info_fields:
+        if field in metadata_dict:
+            info_col_values.append(metadata_dict[field])
+        else:
+            info_col_values.append("N/A")
+    if len(set(info_col_values)) == 1:
+        return "N/A"
+    info_col_string = "; ".join(info_col_values)
+    return info_col_string
+
 def cleanup_annotation(annotation):
     """TODO: Move to a utility file"""
     # gets rid of some unnecessary fields
@@ -258,6 +336,13 @@ def get_sample_metadata(sample_names):
             info = cleanup_annotation(info)
         metadata[sample] = dumps(info)
     return metadata, experiments
+
+#def edge_gene_records(edge_info):
+#    filename = "_".join(edge_info["edge"])
+    
+#def gene_sample_info(gene_names, samples, metadata, pathway_owner, odds_ratios):
+
+
 
 #if __name__ == "__main__":
     #app.run(debug=True,host="0.0.0.0")

@@ -40,6 +40,10 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
             If a gene-by-sample square has an experiment associated with it (on hover), you can click on
             that square to view the gene expression values for all samples from that experiment.
         </p>
+        <h4><a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
+                Click here to download a .csv file of the data provided in the two heatmaps.
+            </a>
+        </h4>
         </div>
     </div>
     <div class="container" id="most-expressed-samples">
@@ -75,6 +79,9 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 <script>
 var edge_information = JSON.stringify({{ edge_info|safe }});
 edge_information = JSON.parse(edge_information);
+
+console.log(edge_information);
+
 var most_expressed_data = 
     {"source_structures": edge_information["most_expressed_samples"],
      "target_structures": edge_information["gene_names"],
@@ -148,6 +155,11 @@ function replace_with_alphabetical(copy_data) {
         "oddsratios": rearrange_by_indices(copy_data["oddsratios"], msorted_genes.sortIndices)
     };
     return copy_data;
+}
+
+function replace_with_groupby_experiments(copy_data) {
+    var msorted_genes = index_sort(copy_data["source_structures"]);
+
 }
 
 copy_most = replace_with_alphabetical(copy_most);
