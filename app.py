@@ -183,8 +183,8 @@ def _sort_genes(sample_gene_expr, gene_oddsratio_map, genes):
 def get_gene_name(gene_info):
     if "common_name" in gene_info:
         return gene_info["common_name"]
-    elif "pa14_name" in gene_info:
-        return gene_info["pa14_name"]
+    #elif "pa14_name" in gene_info:
+    #    return gene_info["pa14_name"]
     else:
         return gene_info["gene"]
 
