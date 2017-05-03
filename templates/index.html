@@ -2,8 +2,14 @@
 <head>
 <meta charset="utf-8">
 <style>
+html,
+body {
+    margin: 0;
+}
+
 .link {
   stroke: #000;
+  opacity: 0.5;
 }
 
 .node {
@@ -29,27 +35,109 @@ integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="ano
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 </head>
 <body>
-<div class="container-fluid" id="ppin">
-    <!--<div class="row" id="ppin">
-    </div>-->
+<div class="container">
+    <div class="row">
+        <p>Search for a pathway</p>
+        <input id="targetNode" name="targetNode" type="text" />
+        <button onclick="search_node()">Go</button>
+        <p class="err-message" style="display: none;">None found</p>
+    </div>
 </div>
-<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-<script>
-Math.seedrandom("45pc42_n");
-var width  = $("#ppin").width(),
-    height = 1400;
+<div id="pathcore"></div>
+</body>
 
-var svg = d3.select("#ppin").append("svg")
+<script>
+
+function search_node() {
+    var userInput = document.getElementById("targetNode").value.toLowerCase();
+    var classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
+    var nodeCircles = $(classes + " circle");
+    var nodes = $(classes);
+    if (nodes.length == 0) {
+        $(".err-message").show();
+    } else {
+        $(".err-message").hide();
+    }
+    $(".searching").each(function(index) {
+        $(this).attr("r", 6);
+        d3.select(this).style("fill", "black");
+        $(this).removeClass("searching");
+    });
+    $(".search-text").each(function(index) {
+        var textSelect = d3.select(this).select("text");
+        normalNode(textSelect);
+    });
+    nodeCircles.each(function(index) {
+        $(this).attr("r", 10);
+        $(this).addClass("searching");
+        d3.select(this).style("fill", "yellow");
+    });
+    var namesArr = [];
+    nodes.each(function(index) {
+        var textSelect = d3.select(this).select("text");
+        highlightNode(textSelect);
+        $(this).addClass("search-text");
+        console.log(d3.select(this));
+        namesArr.push(d3.select(this)[0][0].textContent);
+        this.parentNode.appendChild(this);
+    });
+    highlightEdges(namesArr); 
+}
+
+$("#targetNode").keypress(function(e) {
+    $(".err-message").hide();
+    if (e.which == 13) {
+        $("button").click();
+        return false;
+    }
+});
+
+Math.seedrandom("45pc42_n");
+
+var target = "#pathcore"
+var width  = $(target).width(),
+    height = 550;
+
+var svg = d3.select(target).append("svg")
     .attr("width", width)
     .attr("height", height);
-
+    
 var force = d3.layout.force()
-    .distance(80)
-    .charge(-80)
-    .gravity(0.01)
+    //.distance(30)
+    .charge(-180)
+    //.gravity(0.01)
     .size([width, height]);
+
+
+function highlightNode(textSelect) {
+  textSelect.style("font-size", "16px");
+  textSelect.style("font-weight", "bold");
+  textSelect.attr("fill", "white");
+}
+
+function normalNode(textSelect) {
+  textSelect.style("font-size", "12px");
+  textSelect.style("font-weight", "normal"); 
+  textSelect.attr("fill", "black");
+}
+
+function highlightEdges(names) {
+    var link = svg.selectAll(".link");
+    link.style("stroke", function(l) {
+        if (names.indexOf(l.source.name) != -1 || names.indexOf(l.target.name) != -1)
+            return "red";
+        else
+           return lineColor();
+    });
+}
+
+function lineColor() {
+    return "#6600FF";
+}
+
 var filename = "{{ filename }}";
 d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, links) {
 
@@ -57,7 +145,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
 
   var nodesByName = {};
   var links;
-
+  
   // Create nodes for each unique source and target.
   links.forEach(function(link) {
     link.source = nodeByName(link.PW1);
@@ -67,10 +155,11 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
 
   // Extract the array of nodes from the map by name.
   var nodes = d3.values(nodesByName);
-  
+
   force
     .nodes(nodes)
     .links(links)
+    .linkStrength(0.5)
     .start();
 
   function weightConv(weight) {
@@ -79,14 +168,10 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
     } else if (weight > 10) {
         return 3 + weight/6.0;
     } else {
-        return weight/2.0;
+        return weight/1.5;
     }
   }
-
-  function lineColor() {
-    return "#6600FF";
-  }
-
+  
   // Create the link lines.
   var link = svg.selectAll(".link")
       .data(links)
@@ -125,9 +210,10 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
       });
   
   link.append("title").text(function(d) {
-        return "weight: " + d.weight;
-      });
-  
+    return "weight: " + d.weight;
+  });
+ 
+
   var node_drag = d3.behavior.drag()
     .on("dragstart", dragstart)
     .on("drag", dragmove)
@@ -151,29 +237,24 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
     force.resume();
   }
 
-  function highlightNode(textSelect) {
-    textSelect.style("font-size", "20px");
-    textSelect.style("font-weight", "bold");
-    textSelect.attr("fill", "white");
-  }
 
-  function normalNode(textSelect) {
-    textSelect.style("font-size", "12px");
-    textSelect.style("font-weight", "normal");
-    textSelect.attr("fill", "black");
-  }
+
   
   // Create the node circles.
   var node = svg.selectAll(".node")
       .data(nodes)
     .enter().append("g")
-      .attr("class", "node")
+      .attr("class", function(d) {
+        var name = d.name.toLowerCase();
+        name = name.replace(/[^\w\s]|_/g, " ")
+                   .replace(/\s+/g, " ");
+        return "node " + name;
+      })
       .call(node_drag)
       .on("mouseover", function(d) {
-            d3.select(this).attr("r", 10).style("fill", "orange");
+            d3.select(this).attr("r", 9).style("fill", "orange");
             highlightNode(d3.select(this).select("text"));
             this.parentNode.appendChild(this);
-        
             link.style("stroke", function(l) {
                 if (d === l.source || d === l.target)
                     return "red";
@@ -182,57 +263,97 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
             });
         })
       .on("mouseout", function(d) {
-            d3.select(this).attr("r", 8).style("fill", "black");
+            d3.select(this).attr("r", 6).style("fill", "black");
             normalNode(d3.select(this).select("text"));
             link.style("stroke", lineColor());
         });
 
   node.append("circle")
-    .attr("r", 8)
+    .attr("r", 6);
 
   node.append("text")
     .attr("dx", 12)
     .attr("dy", ".35em")
     .text(function(d) { return d.name; });
-
-
   svg.selectAll("text")
      .call(wrap, 300);
 
   function wrap(text, width) {
     text.each(function() {
-                var text = d3.select(this),
-                    words = text.text().split(/\s+/).reverse(),
-                    word,
-                    line = [],
-                    lineNumber = 0,
-                    lineHeight = 0.8,
-                    y = text.attr("y"),
-                    dy = parseFloat(text.attr("dy")),
-                    tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-                while (word = words.pop()) {
-                    line.push(word);
-                    tspan.text(line.join(" "));
-                    if (tspan.node().getComputedTextLength() > width) {
-                        line.pop();
-                        tspan.text(line.join(" "));
-                        line = [word];
-                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy
-                            + "em").text(word);
-                    }
-                }
-            });
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 0.8,
+            y = text.attr("y"),
+            dy = parseFloat(text.attr("dy")),
+            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy
+                    + "em").text(word);
+            }
+        }
+    });
   }
 
+  function collide(alpha) {
+    var quadtree = d3.geom.quadtree(nodes);
+    return function(d) {
+        var r = d.radius + maxRadius + padding,
+            nx1 = d.x - r,
+            nx2 = d.x + r,
+            ny1 = d.y - r,
+            ny2 = d.y + r;
+        quadtree.visit(function(quad, x1, y1, x2, y2) {
+            if (quad.point && (quad.point !== d)) {
+                var x = d.x - quad.point.x,
+                    y = d.y - quad.point.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = d.radius + quad.point.radius + padding;
+                 if (l < r) {
+                    l = (l - r) / l * alpha;
+                    d.x -= x *= l;
+                    d.y -= y *= l;
+                    quad.point.x += x;
+                    quad.point.y += y;
+                }
+            }
+            return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+        });
+    };
+  }
+  var padding = 4.5,
+      maxRadius = 24;
   // Start the force layout.
-  force.on("tick", tick);
+  force.on("tick", tick_initial);
   
+  function tick_initial() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  }
+
   function tick() {
     link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  
+    if ( e.alpha * .99 < .005 && e.alpha > 0 ) {
+        selection.selectAll("circle.gene").each(function(g){
+                g.fixed = true;
+        });
+    }
   }
 
   function nodeByName(name) {
