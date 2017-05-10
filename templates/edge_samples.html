@@ -98,13 +98,17 @@ var most_expressed_data =
      "target_structures": edge_information["gene_names"],
      "both_data": edge_information["most_expressed_heatmap"],
      "meta": edge_information["most_metadata"],
-     "oddsratios": edge_information["odds_ratios"]};
+     "oddsratios": edge_information["odds_ratios"],
+     "ownership": edge_information["ownership"]
+    };
 var least_expressed_data =
     {"source_structures": edge_information["least_expressed_samples"],
      "target_structures": edge_information["gene_names"],
      "both_data": edge_information["least_expressed_heatmap"],
      "meta": edge_information["least_metadata"],
-     "oddsratios": edge_information["odds_ratios"]};
+     "oddsratios": edge_information["odds_ratios"],
+     "ownership": edge_information["ownership"]
+    };
 
 function get_expression_minmax(data) {
     var min_expression = Math.min.apply(Math, data.map(function(d) { return d.value; }));
@@ -174,7 +178,8 @@ function replace_with_alphabetical(copy_data) {
         "target_structures": msorted_genes,
         "both_data": rearrange_heatmap_indices(copy_data["both_data"], msorted_genes.sortIndices),
         "meta": copy_data["meta"],
-        "oddsratios": rearrange_by_indices(copy_data["oddsratios"], msorted_genes.sortIndices)
+        "oddsratios": rearrange_by_indices(copy_data["oddsratios"], msorted_genes.sortIndices),
+        "ownership": rearrange_by_indices(copy_data["ownership"], msorted_genes.sortIndices)
     };
     return copy_data;
 }
@@ -347,7 +352,7 @@ function append_heatmap(div_id, data, color, min, max) {
            .attr("x", -5)
            .attr("text-anchor", "end")
            .attr("fill", function(d, i) {
-                var owner = edge_information["ownership"][i];
+                var owner = data.ownership[i];
                 if (owner == 0) {
                     return "pink";
                 } else if (owner == 1) {
