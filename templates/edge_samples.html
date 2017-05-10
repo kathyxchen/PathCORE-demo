@@ -22,6 +22,10 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 .pw2 {
    color: green;
 }
+
+.both {
+    color: purple;
+}
 </style>
 </head>
 <body>
@@ -29,16 +33,23 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
         <div class="row">
             <h2><span class="pw1">{{pw1}}</span> <span class="pw2">{{pw2}}</span></h2>
         <h3><a href="{{ url_for('pathcore_network') }}">Return to network</a></h3>
+        <h3>Description</h3>
         <p>        
             A summary expression score per sample was determined based on
             the normalized expression values of the genes in the 2 pathway annotations,
-            where each expression value was weighted by its gene's odds ratio.
-            Displayed are the <a href="#most-expressed-samples">10 most expressed</a>
-            and <a href="#least-expressed-samples">10 least expressed</a> samples. 
+            where each expression value was weighted by the corresponding gene's odds ratio.
+            Displayed are the <a href="#most-expressed-samples">20 most expressed</a>
+            and <a href="#least-expressed-samples">20 least expressed</a> samples. 
         </p>
         <p>
             If a gene-by-sample square has an experiment associated with it (on hover), you can click on
             that square to view the gene expression values for all samples from that experiment.
+        </p>
+        <p>
+            When available, we provide the common name for a given PA gene locus tag. Genes in
+            <span class="pw1">pink</span> are annotated to <span class="pw1">{{pw1}}</span> in KEGG,
+            <span class="pw2">green</span> to <span class="pw2">{{pw2}}</span>,
+            and <span class="both">purple</span> to <span class="both">both</span>.
         </p>
         <h4><a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
                 Click here to download a .csv file of the data provided in the two heatmaps.
@@ -132,10 +143,21 @@ function rearrange_by_indices(arr, index_arr) {
 
 function rearrange_heatmap_indices(heatmap_data, index_arr) {
     var rearranged_heatmap_data = [];
+    var heatmap_cells_obj = {};
+    
     for (var i = 0; i < heatmap_data.length; i++) {
-        var heatmap_obj = heatmap_data[i];
-        var pos = heatmap_obj["target_index"];
-        heatmap_obj["target_index"] = index_arr[pos];
+        var cell = heatmap_data[i];
+        var key = cell.source_index + " " + cell.target_index;
+        heatmap_cells_obj[key] = cell.value;
+    }
+
+    for (var i = 0; i < heatmap_data.length; i++) {
+        var heatmap_obj = {};
+        heatmap_obj["source_index"] = heatmap_data[i]["source_index"];
+        var current_gene_pos = heatmap_data[i]["target_index"];
+        heatmap_obj["target_index"] = heatmap_data[i]["target_index"];
+        var value = heatmap_cells_obj[heatmap_obj.source_index + " " + index_arr[current_gene_pos]];
+        heatmap_obj["value"] = value;
         rearranged_heatmap_data.push(heatmap_obj);
     }
     return rearranged_heatmap_data;
@@ -155,11 +177,6 @@ function replace_with_alphabetical(copy_data) {
         "oddsratios": rearrange_by_indices(copy_data["oddsratios"], msorted_genes.sortIndices)
     };
     return copy_data;
-}
-
-function replace_with_groupby_experiments(copy_data) {
-    var msorted_genes = index_sort(copy_data["source_structures"]);
-
 }
 
 copy_most = replace_with_alphabetical(copy_most);
@@ -267,14 +284,12 @@ function append_heatmap(div_id, data, color, min, max) {
                  "Abx marker, auxotrophy",
                  "Additional Notes (markers)", "EXPT SUMMARY",
                  "Gene-to-edge odds ratio"];
-    // Construct the heatmap and its axes. The data supplied to this method
-    // is an array of source-target volume values.  
+    
     function build_heatmap(data, chart_width, chart_height) {
 
         // This group will hold all of the rectangles within the heatmap.
         var cell_group = svg.append("g");
 
-        // Make a rectangle for each source-target projection volume value.
         var rects = cell_group.selectAll(".cell")
             .data(data.both_data)
             .enter().append("rect")
@@ -302,17 +317,6 @@ function append_heatmap(div_id, data, color, min, max) {
                     }
                 }
                 metadata_html += "</tbody>";
-
-                /*
-                var build_html = "";
-                build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
-                    data.target_structures[d.target_index] + "</p>" +
-                    "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
-                    Math.ceil(d.value * 1000.0) / 1000.0 +
-                    "<br />" + "<strong>odds ratio:</strong> " +
-                    Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
-                    "<p>" + metadata_html + "</p>";
-                */
                 meta_container.html(metadata_html);
                 if (metadata_html.length != 0) {
                     d3.select(this)
@@ -348,6 +352,8 @@ function append_heatmap(div_id, data, color, min, max) {
                     return "pink";
                 } else if (owner == 1) {
                     return "green";
+                } else {
+                    return "purple";
                 }
            })
            .text(function(d) { return d; });
