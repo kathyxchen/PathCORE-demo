@@ -1,44 +1,30 @@
-<!DOCTYPE html>
-<head>
-<meta charset="utf-8">
-<style>
-html,
-body {
+{% extends "layout.html" %}
+{% block title %}eADAGE PAO1 KEGG network{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+  html, body {
     margin: 5px;
-}
+  }
 
-.link {
-  stroke: #000;
-  opacity: 0.5;
-}
+  .link {
+    stroke: #000;
+    opacity: 0.5;
+  }
 
-.node {
-  stroke: #fff;
-}
+  .node {
+    stroke: #fff;
+  }
 
-.node text {
-  pointer-events: none;
-  font: 14px sans-serif;
-  fill: white;
-  stroke: gray;
-}
-
-</style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-</head>
-<body>
+  .node text {
+    pointer-events: none;
+    font: 14px sans-serif;
+    fill: white;
+    stroke: gray;
+  }
+  </style>
+{% endblock %}
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-xs-2">
@@ -111,9 +97,7 @@ var svg = d3.select(target).append("svg")
     .attr("height", height);
     
 var force = d3.layout.force()
-    //.distance(30)
     .charge(-180)
-    //.gravity(0.01)
     .size([width, height]);
 
 
@@ -369,3 +353,4 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
 });
 
 </script>
+{% endblock %}
