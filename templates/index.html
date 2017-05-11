@@ -4,7 +4,7 @@
 <style>
 html,
 body {
-    margin: 0;
+    margin: 5px;
 }
 
 .link {
@@ -41,13 +41,17 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
 <body>
 <div class="container">
     <div class="row">
-        <p>Search for a pathway</p>
-        <input id="targetNode" name="targetNode" type="text" />
-        <button onclick="search_node()">Go</button>
-        <p class="err-message" style="display: none;">None found</p>
+        <div class="col-xs-2">
+            <p>Search for a pathway</p>
+            <input id="targetNode" name="targetNode" type="text" />
+            <button onclick="search_node()">Go</button>
+            <p class="err-message" style="display: none;">
+        </div>
+        <div class="col-xs-10">
+            <div id="pathcore"></div>
+        </div>
     </div>
 </div>
-<div id="pathcore"></div>
 </body>
 
 <script>
@@ -96,11 +100,11 @@ $("#targetNode").keypress(function(e) {
     }
 });
 
-Math.seedrandom("45pc42_n");
+Math.seedrandom("10pa4t5hcoRE");
 
 var target = "#pathcore"
-var width  = $(target).width(),
-    height = 550;
+var width  = 960,
+    height = Math.max($(window).height(), 500);
 
 var svg = d3.select(target).append("svg")
     .attr("width", width)
