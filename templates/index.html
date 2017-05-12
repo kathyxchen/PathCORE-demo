@@ -57,11 +57,11 @@ const target = "#pathcore"
 const width  = 960;
 const height = Math.max($(window).height(), 500);
 const svg = d3.select(target).append("svg")
-    .attr("width", width)
-    .attr("height", height);
+  .attr("width", width)
+  .attr("height", height);
 const force = d3.layout.force()
-    .charge(-180)
-    .size([width, height]);
+  .charge(-180)
+  .size([width, height]);
 
 const lineColor = "#6600FF";
 
@@ -69,90 +69,90 @@ const networkFilename = "{{ filename }}";
 const filepath = "{{ url_for('static', filename='data/' + filename) }}";
 
 function defaultNode(textSelect) {
-    textSelect.style("font-size", "14px");
-    textSelect.style("font-weight", "normal");
-    textSelect.style("fill", "white");
-    textSelect.style("stroke", "gray");
+  textSelect.style("font-size", "14px");
+  textSelect.style("font-weight", "normal");
+  textSelect.style("fill", "white");
+  textSelect.style("stroke", "gray");
 }
 
 function highlightNode(textSelect) {
-    textSelect.style("font-size", "18px");
-    textSelect.style("font-weight", "bold");
-    textSelect.style("fill", "black");
-    textSelect.style("stroke", "black");
+  textSelect.style("font-size", "18px");
+  textSelect.style("font-weight", "bold");
+  textSelect.style("fill", "black");
+  textSelect.style("stroke", "black");
 }
 
 function highlightEdges(names) {
-    const link = svg.selectAll(".link");
-    link.style("stroke", function(l) {
-        if (names.indexOf(l.source.name) != -1
-              || names.indexOf(l.target.name) != -1)
-            return "red";
-        else
-           return lineColor;
-    });
+  const link = svg.selectAll(".link");
+  link.style("stroke", function(l) {
+    if (names.indexOf(l.source.name) != -1
+        || names.indexOf(l.target.name) != -1)
+      return "red";
+    else
+      return lineColor;
+  });
 }
 
 function edgeWeightConversion(weight) {
-    if (weight > 50) {
-        return 4 + weight/10.0;
-    } else if (weight > 10) {
-        return 3 + weight/6.0;
-    } else {
-        return weight/1.5;
-    }
+  if (weight > 50) {
+    return 4 + weight/10.0;
+  } else if (weight > 10) {
+    return 3 + weight/6.0;
+  } else {
+    return weight/1.5;
+  }
 }
 
 function searchPathways() {
-    const userInput = document.getElementById("searchbar").value.toLowerCase();
-    const classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
-    const pathways = $(classes);
-    const pathwayNodes = $(classes + " circle");
-    
-    // reset view
-    $(".searching").each(function(index) {
-        d3.select(this).style("fill", "black");
-        $(this).attr("r", 6);
-        $(this).removeClass("searching");
-    });
-    $(".search-text").each(function(index) {
-        const textSelect = d3.select(this).select("text");
-        defaultNode(textSelect);
-    });
+  const userInput = document.getElementById("searchbar").value.toLowerCase();
+  const classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
+  const pathways = $(classes);
+  const pathwayNodes = $(classes + " circle");
+  
+  // reset view
+  $(".searching").each(function(index) {
+    d3.select(this).style("fill", "black");
+    $(this).attr("r", 6);
+    $(this).removeClass("searching");
+  });
+  $(".search-text").each(function(index) {
+    const textSelect = d3.select(this).select("text");
+    defaultNode(textSelect);
+  });
 
-    if (pathways.length == 0) {
-        $(".err-message").show();
-        return;
-    } 
-    $(".err-message").hide();
+  if (pathways.length == 0) {
+    $(".err-message").show();
+    return;
+  } 
+  $(".err-message").hide();
 
-    pathwayNodes.each(function(index) {
-        d3.select(this).style("fill", "yellow");
-        $(this).attr("r", 10);
-        $(this).addClass("searching");
-    });
-    
-    let pathwayNames = [];
-    pathways.each(function(index) {
-        const textSelect = d3.select(this).select("text");
-        highlightNode(textSelect);
-        $(this).addClass("search-text");
-        // the text label of the selected pathway node
-        pathwayNames.push(d3.select(this)[0][0].textContent);
-        // move this node to the front of the nodes collection
-        this.parentNode.appendChild(this);
-    });
+  pathwayNodes.each(function(index) {
+    d3.select(this).style("fill", "yellow");
+    $(this).attr("r", 10);
+    $(this).addClass("searching");
+  });
+  
+  let pathwayNames = [];
+  pathways.each(function(index) {
+    const textSelect = d3.select(this).select("text");
+    highlightNode(textSelect);
+    $(this).addClass("search-text");
+    // the text label of the selected pathway node
+    pathwayNames.push(d3.select(this)[0][0].textContent);
+    // move this node to the front of the nodes collection
+    this.parentNode.appendChild(this);
+  });
 
-    highlightEdges(pathwayNames); 
+  highlightEdges(pathwayNames); 
 }
 
 // event listener for the search bar
 $("#searchbar").keypress(function(e) {
-    $(".err-message").hide();
-    if (e.which == 13) {
-        $("button").click();
-        return false;
-    }
+  $(".err-message").hide();
+  if (e.which == 13) {
+    $("button").click();
+    return false;
+  }
 });
 
 d3.tsv(filepath, function(error, links) {
@@ -183,7 +183,25 @@ d3.tsv(filepath, function(error, links) {
   let node; // functions/attributes associated with each node
   let link; // functions/attributes associated with each link
   
-  var node_drag = d3.behavior.drag()
+  function dragstart(d, i) {
+    force.stop()
+  }
+
+  function dragmove(d, i) {
+    d.px += d3.event.dx;
+    d.py += d3.event.dy;
+    d.x += d3.event.dx;
+    d.y += d3.event.dy;
+    tick();
+  }
+
+  function dragend(d, i) {
+    d.fixed = true;
+    tick();
+    force.resume();
+  }
+  
+  const node_drag = d3.behavior.drag()
     .on("dragstart", dragstart)
     .on("drag", dragmove)
     .on("dragend", dragend)
@@ -195,7 +213,7 @@ d3.tsv(filepath, function(error, links) {
       .attr("class", function(d) {
         var name = d.name.toLowerCase();
         name = name.replace(/[^\w\s]|_/g, " ")
-                   .replace(/\s+/g, " ");
+          .replace(/\s+/g, " ");
         return "node " + name;
       })
       .call(node_drag)
@@ -241,11 +259,11 @@ d3.tsv(filepath, function(error, links) {
         target.style("stroke", "red");
         target.style("stroke-width", Math.max(lineWeight, 6));
         node.style("fill", function(l) {
-            if (l.name == targetData.pw0 || l.name == targetData.pw1) {
-                return "yellow";
-            } else {
-                return "black";
-            }
+          if (l.name == targetData.pw0 || l.name == targetData.pw1) {
+              return "yellow";
+          } else {
+              return "black";
+          }
         });
       })
       .on("mouseout", function() {
@@ -263,81 +281,40 @@ d3.tsv(filepath, function(error, links) {
     return "odds ratio: " + d.weight;
   });
  
-
-  function dragstart(d, i) {
-    force.stop()
-  }
-
-  function dragmove(d, i) {
-    d.px += d3.event.dx;
-    d.py += d3.event.dy;
-    d.x += d3.event.dx;
-    d.y += d3.event.dy;
-    tick();
-  }
-
-  function dragend(d, i) {
-    d.fixed = true;
-    tick();
-    force.resume();
-  }
-  
-  svg.selectAll("text")
-     .call(wrap, 350);
-
   function wrap(text, width) {
     text.each(function() {
-        var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 0.5,
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-        while (word = words.pop()) {
-            line.push(word);
+      const text = d3.select(this);
+      const words = text.text().split(/\s+/).reverse();
+      const lineNumber = 0;
+      const lineHeight = 0.5;
+      const y = text.attr("y");
+      const dy = parseFloat(text.attr("dy"));
+      let word;
+      let line = [];
+      let tspan = text.text(null)
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", y)
+        .attr("dy", dy + "em");
+      while (word = words.pop()) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
             tspan.text(line.join(" "));
-            if (tspan.node().getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(" "));
-                line = [word];
-                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy
-                    + "em").text(word);
-            }
-        }
+            line = [word];
+            tspan = text.append("tspan")
+              .attr("x", 0)
+              .attr("y", y)
+              .attr("dy", ++lineNumber * lineHeight + dy + "em")
+              .text(word);
+          }
+      }
     });
   }
 
-  function collide(alpha) {
-    var quadtree = d3.geom.quadtree(nodes);
-    return function(d) {
-        var r = d.radius + maxRadius + padding,
-            nx1 = d.x - r,
-            nx2 = d.x + r,
-            ny1 = d.y - r,
-            ny2 = d.y + r;
-        quadtree.visit(function(quad, x1, y1, x2, y2) {
-            if (quad.point && (quad.point !== d)) {
-                var x = d.x - quad.point.x,
-                    y = d.y - quad.point.y,
-                    l = Math.sqrt(x * x + y * y),
-                    r = d.radius + quad.point.radius + padding;
-                 if (l < r) {
-                    l = (l - r) / l * alpha;
-                    d.x -= x *= l;
-                    d.y -= y *= l;
-                    quad.point.x += x;
-                    quad.point.y += y;
-                }
-            }
-            return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-        });
-    };
-  }
-  var padding = 4.5,
-      maxRadius = 24;
+  svg.selectAll("text").call(wrap, 350);
+
   // Start the force layout.
   force.on("tick", tick_initial);
   
@@ -346,21 +323,16 @@ d3.tsv(filepath, function(error, links) {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    node.attr("transform", function(d) { 
+      return "translate(" + d.x + "," + d.y + ")"; 
+    });
   }
 
   function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-  
-    if ( e.alpha * .99 < .005 && e.alpha > 0 ) {
-        selection.selectAll("circle.gene").each(function(g){
-                g.fixed = true;
-        });
-    }
+    tick_initial();
+    selection.selectAll("circle.gene").each(function(g){
+      g.fixed = true;
+    });
   }
 });
 
