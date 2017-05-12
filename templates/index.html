@@ -66,7 +66,7 @@ const force = d3.layout.force()
 const lineColor = "#6600FF";
 
 const networkFilename = "{{ filename }}";
-const filepath = "{{ url_for('static', filename='data/' + networkFilename) }}";
+const filepath = "{{ url_for('static', filename='data/' + filename) }}";
 
 function defaultNode(textSelect) {
     textSelect.style("font-size", "14px");
@@ -93,7 +93,7 @@ function highlightEdges(names) {
     });
 }
 
-function edgeedgeWeightConversionersion(weight) {
+function edgeWeightConversion(weight) {
     if (weight > 50) {
         return 4 + weight/10.0;
     } else if (weight > 10) {
@@ -182,7 +182,12 @@ d3.tsv(filepath, function(error, links) {
   
   let node; // functions/attributes associated with each node
   let link; // functions/attributes associated with each link
-
+  
+  var node_drag = d3.behavior.drag()
+    .on("dragstart", dragstart)
+    .on("drag", dragmove)
+    .on("dragend", dragend)
+  
   // Create the node circles.
   node = svg.selectAll(".node")
     .data(nodes)
@@ -236,7 +241,7 @@ d3.tsv(filepath, function(error, links) {
         target.style("stroke", "red");
         target.style("stroke-width", Math.max(lineWeight, 6));
         node.style("fill", function(l) {
-            if (l.name == tgtData.PW1 || l.name == tgtData.PW2) {
+            if (l.name == targetData.pw0 || l.name == targetData.pw1) {
                 return "yellow";
             } else {
                 return "black";
@@ -246,7 +251,7 @@ d3.tsv(filepath, function(error, links) {
       .on("mouseout", function() {
         const target = d3.select(this);
         const weight = target[0][0].__data__.weight;
-        target.style("stroke", lineColor()); 
+        target.style("stroke", lineColor); 
         target.style("stroke-width", edgeWeightConversion(weight));
         node.style("fill", "black");  
       })
@@ -258,10 +263,6 @@ d3.tsv(filepath, function(error, links) {
     return "odds ratio: " + d.weight;
   });
  
-  var node_drag = d3.behavior.drag()
-    .on("dragstart", dragstart)
-    .on("drag", dragmove)
-    .on("dragend", dragend)
 
   function dragstart(d, i) {
     force.stop()

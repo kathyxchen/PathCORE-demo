@@ -1,4 +1,4 @@
-PW1	PW2	weight	features
+pw0	pw1	weight	features
 Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Cationic antimicrobial peptide (CAMP) resistance PA01	132.0	
 Ribosome, bacteria	Ribosome PA01	103.0	
 Aminobenzoate degradation PA01	Benzoate degradation PA01	69.0	
