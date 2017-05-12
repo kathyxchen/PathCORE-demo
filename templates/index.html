@@ -29,9 +29,15 @@
     <div class="row">
         <div class="col-xs-2">
             <p>Search for a pathway</p>
-            <input id="targetNode" name="targetNode" type="text" />
-            <button onclick="search_node()">Go</button>
+            <input id="searchbar" name="searchbar" type="text" />
+            <button onclick="searchPathways()">Go</button>
             <p class="err-message" style="display: none;">
+              Not found. We're still working on a better
+              search experience! For now, please search complete
+              words in a pathway name only, and replace punctuation
+              with spaces. (examples: "VI secretion" instead of "VI secret",
+              "Iron III" instead of "Iron(III)"). Thank you!
+            </p>
         </div>
         <div class="col-xs-10">
             <div id="pathcore"></div>
@@ -42,118 +48,52 @@
 
 <script>
 
-function search_node() {
-    var userInput = document.getElementById("targetNode").value.toLowerCase();
-    var classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
-    var nodeCircles = $(classes + " circle");
-    var nodes = $(classes);
-    if (nodes.length == 0) {
-        $(".err-message").show();
-    } else {
-        $(".err-message").hide();
-    }
-    $(".searching").each(function(index) {
-        $(this).attr("r", 6);
-        d3.select(this).style("fill", "black");
-        $(this).removeClass("searching");
-    });
-    $(".search-text").each(function(index) {
-        var textSelect = d3.select(this).select("text");
-        normalNode(textSelect);
-    });
-    nodeCircles.each(function(index) {
-        $(this).attr("r", 10);
-        $(this).addClass("searching");
-        d3.select(this).style("fill", "yellow");
-    });
-    var namesArr = [];
-    nodes.each(function(index) {
-        var textSelect = d3.select(this).select("text");
-        highlightNode(textSelect);
-        $(this).addClass("search-text");
-        console.log(d3.select(this));
-        namesArr.push(d3.select(this)[0][0].textContent);
-        this.parentNode.appendChild(this);
-    });
-    highlightEdges(namesArr); 
-}
-
-$("#targetNode").keypress(function(e) {
-    $(".err-message").hide();
-    if (e.which == 13) {
-        $("button").click();
-        return false;
-    }
-});
-
+/* initialize the random seed to make the PathCORE network layout
+ * load in the same way every time.
+ */
 Math.seedrandom("10pa4t5hcoRE");
 
-var target = "#pathcore"
-var width  = 960,
-    height = Math.max($(window).height(), 500);
-
-var svg = d3.select(target).append("svg")
+const target = "#pathcore"
+const width  = 960;
+const height = Math.max($(window).height(), 500);
+const svg = d3.select(target).append("svg")
     .attr("width", width)
     .attr("height", height);
-    
-var force = d3.layout.force()
+const force = d3.layout.force()
     .charge(-180)
     .size([width, height]);
 
+const lineColor = "#6600FF";
 
-function highlightNode(textSelect) {
-  textSelect.style("font-size", "18px");
-  textSelect.style("font-weight", "bold");
-  textSelect.style("fill", "black");
-  textSelect.style("stroke", "black");
+const networkFilename = "{{ filename }}";
+const filepath = "{{ url_for('static', filename='data/' + networkFilename) }}";
+
+function defaultNode(textSelect) {
+    textSelect.style("font-size", "14px");
+    textSelect.style("font-weight", "normal");
+    textSelect.style("fill", "white");
+    textSelect.style("stroke", "gray");
 }
 
-function normalNode(textSelect) {
-  textSelect.style("font-size", "14px");
-  textSelect.style("font-weight", "normal");
-  textSelect.style("fill", "white");
-  textSelect.style("stroke", "gray");
+function highlightNode(textSelect) {
+    textSelect.style("font-size", "18px");
+    textSelect.style("font-weight", "bold");
+    textSelect.style("fill", "black");
+    textSelect.style("stroke", "black");
 }
 
 function highlightEdges(names) {
-    var link = svg.selectAll(".link");
+    const link = svg.selectAll(".link");
     link.style("stroke", function(l) {
-        if (names.indexOf(l.source.name) != -1 || names.indexOf(l.target.name) != -1)
+        if (names.indexOf(l.source.name) != -1
+              || names.indexOf(l.target.name) != -1)
             return "red";
         else
-           return lineColor();
+           return lineColor;
     });
 }
 
-function lineColor() {
-    return "#6600FF";
-}
-
-var filename = "{{ filename }}";
-d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, links) {
-
-  if (error) throw error;
-
-  var nodesByName = {};
-  var links;
-  
-  // Create nodes for each unique source and target.
-  links.forEach(function(link) {
-    link.source = nodeByName(link.PW1);
-    link.target = nodeByName(link.PW2);
-    link.weight = parseInt(link.weight);
-  });
-
-  // Extract the array of nodes from the map by name.
-  var nodes = d3.values(nodesByName);
-
-  force
-    .nodes(nodes)
-    .links(links)
-    .linkStrength(0.5)
-    .start();
-
-  function weightConv(weight) {
+function edgeedgeWeightConversionersion(weight) {
     if (weight > 50) {
         return 4 + weight/10.0;
     } else if (weight > 10) {
@@ -161,25 +101,140 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
     } else {
         return weight/1.5;
     }
-  }
+}
+
+function searchPathways() {
+    const userInput = document.getElementById("searchbar").value.toLowerCase();
+    const classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
+    const pathways = $(classes);
+    const pathwayNodes = $(classes + " circle");
+    
+    // reset view
+    $(".searching").each(function(index) {
+        d3.select(this).style("fill", "black");
+        $(this).attr("r", 6);
+        $(this).removeClass("searching");
+    });
+    $(".search-text").each(function(index) {
+        const textSelect = d3.select(this).select("text");
+        defaultNode(textSelect);
+    });
+
+    if (pathways.length == 0) {
+        $(".err-message").show();
+        return;
+    } 
+    $(".err-message").hide();
+
+    pathwayNodes.each(function(index) {
+        d3.select(this).style("fill", "yellow");
+        $(this).attr("r", 10);
+        $(this).addClass("searching");
+    });
+    
+    let pathwayNames = [];
+    pathways.each(function(index) {
+        const textSelect = d3.select(this).select("text");
+        highlightNode(textSelect);
+        $(this).addClass("search-text");
+        // the text label of the selected pathway node
+        pathwayNames.push(d3.select(this)[0][0].textContent);
+        // move this node to the front of the nodes collection
+        this.parentNode.appendChild(this);
+    });
+
+    highlightEdges(pathwayNames); 
+}
+
+// event listener for the search bar
+$("#searchbar").keypress(function(e) {
+    $(".err-message").hide();
+    if (e.which == 13) {
+        $("button").click();
+        return false;
+    }
+});
+
+d3.tsv(filepath, function(error, links) {
+  if (error) throw error;
+
+  const nodesByName = {};
   
+  function nodeByName(name) {
+    return nodesByName[name] || (nodesByName[name] = {name: name});
+  }
+
+  // Create nodes for each unique source and target.
+  links.forEach(function(link) {
+    link.source = nodeByName(link.pw0);
+    link.target = nodeByName(link.pw1);
+    link.weight = parseInt(link.weight);
+  });
+
+  // Extract the array of nodes from the map by name.
+  const nodes = d3.values(nodesByName);
+
+  force
+    .nodes(nodes)
+    .links(links)
+    .linkStrength(0.5)
+    .start();
+  
+  let node; // functions/attributes associated with each node
+  let link; // functions/attributes associated with each link
+
+  // Create the node circles.
+  node = svg.selectAll(".node")
+    .data(nodes)
+    .enter().append("g")
+      .attr("class", function(d) {
+        var name = d.name.toLowerCase();
+        name = name.replace(/[^\w\s]|_/g, " ")
+                   .replace(/\s+/g, " ");
+        return "node " + name;
+      })
+      .call(node_drag)
+      .on("mouseover", function(d) {
+        const target = d3.select(this);
+        target.attr("r", 9).style("fill", "yellow");
+        highlightNode(target.select("text"));
+        this.parentNode.appendChild(this);
+        link.style("stroke", function(l) {
+          if (d === l.source || d === l.target)
+            return "red";
+          else
+            return lineColor;
+        });
+      })
+      .on("mouseout", function(d) {
+        const target = d3.select(this);
+        target.attr("r", 6).style("fill", "black");
+        defaultNode(target.select("text"));
+        link.style("stroke", lineColor);
+      });
+  node.append("circle").attr("r", 6);
+  node.append("text")
+    .attr("dx", 12)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+
   // Create the link lines.
-  var link = svg.selectAll(".link")
-      .data(links)
+  link = svg.selectAll(".link")
+    .data(links)
     .enter().append("line")
       .attr("class", "link")
       .attr("stroke-width", function(d) {
-        return weightConv(d.weight);
+        return edgeWeightConversion(d.weight);
       })
       .style("stroke", function(d) {
-        return lineColor();
+        return lineColor;
       })
       .on("mouseover", function() {
-        var tgt = d3.select(this);
-        tgt.style("stroke", "red");
-        var currWt = weightConv(tgt[0][0].__data__.weight);
-        tgt.style("stroke-width", Math.max(currWt, 6));
-        var tgtData = tgt[0][0].__data__;
+        const target = d3.select(this);
+        const targetData = target[0][0].__data__;
+        const lineWeight = edgeWeightConversion(targetData.weight);
+        target.style("stroke", "red");
+        target.style("stroke-width", Math.max(lineWeight, 6));
         node.style("fill", function(l) {
             if (l.name == tgtData.PW1 || l.name == tgtData.PW2) {
                 return "yellow";
@@ -189,22 +244,20 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
         });
       })
       .on("mouseout", function() {
-        var tgt = d3.select(this);
-        var weight = tgt[0][0].__data__.weight;
-        tgt.style("stroke", lineColor()); 
-        tgt.style("stroke-width", weightConv(weight));
+        const target = d3.select(this);
+        const weight = target[0][0].__data__.weight;
+        target.style("stroke", lineColor()); 
+        target.style("stroke-width", edgeWeightConversion(weight));
         node.style("fill", "black");  
       })
       .on("click", function(d) {
         var xhr = new XMLHttpRequest();
-        window.location.href = "/edge/" + d.PW1 + "&" + d.PW2
+        window.location.href = "/edge/" + d.pw0 + "&" + d.pw1;
       });
-  
   link.append("title").text(function(d) {
-    return "weight: " + d.weight;
+    return "odds ratio: " + d.weight;
   });
  
-
   var node_drag = d3.behavior.drag()
     .on("dragstart", dragstart)
     .on("drag", dragmove)
@@ -227,45 +280,7 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
     tick();
     force.resume();
   }
-
-
-
   
-  // Create the node circles.
-  var node = svg.selectAll(".node")
-      .data(nodes)
-    .enter().append("g")
-      .attr("class", function(d) {
-        var name = d.name.toLowerCase();
-        name = name.replace(/[^\w\s]|_/g, " ")
-                   .replace(/\s+/g, " ");
-        return "node " + name;
-      })
-      .call(node_drag)
-      .on("mouseover", function(d) {
-            d3.select(this).attr("r", 9).style("fill", "yellow");
-            highlightNode(d3.select(this).select("text"));
-            this.parentNode.appendChild(this);
-            link.style("stroke", function(l) {
-                if (d === l.source || d === l.target)
-                    return "red";
-                else
-                    return lineColor();
-            });
-        })
-      .on("mouseout", function(d) {
-            d3.select(this).attr("r", 6).style("fill", "black");
-            normalNode(d3.select(this).select("text"));
-            link.style("stroke", lineColor());
-        });
-
-  node.append("circle")
-    .attr("r", 6);
-
-  node.append("text")
-    .attr("dx", 12)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.name; });
   svg.selectAll("text")
      .call(wrap, 350);
 
@@ -345,10 +360,6 @@ d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, l
                 g.fixed = true;
         });
     }
-  }
-
-  function nodeByName(name) {
-    return nodesByName[name] || (nodesByName[name] = {name: name});
   }
 });
 
