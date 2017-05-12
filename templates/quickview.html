@@ -51,16 +51,27 @@
     </div>
 </div>
 <script type="text/javascript">
+    Math.seedrandom("10pa4t5hcoRE");
+    const target = "#pathcore";
+    const width  = 960;
+    const height = Math.max($(window).height() - 10, 500);
+    const svg = d3.select(target).append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    const force = d3.layout.force()
+      .charge(-180)
+      .size([width, height]);
     $(function () {
-        $("#upload").bind("click", function () {
+        $("#upload").on("click", function () {
             const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
             if (regex.test($("#fileUpload").val().toLowerCase())) {
                 if (typeof (FileReader) != "undefined") {
                     const reader = new FileReader();
-                    reader.onload = function (e) {
-                    		const tsvString = e.target.result;
-                    		const data = d3.tsv.parse(tsvString);
-                    		loadPathCORENetwork(data);
+                    reader.onload = function (e) {	
+                        const tsvString = e.target.result;
+                        console.log(tsvString);
+                    	const data = d3.tsv.parse(tsvString);
+                    	loadPathCORENetwork(data, force, svg);
                     	  /*
                         const rows = e.target.result.split("\n");
                         for (var i = 0; i < rows.length; i++) {
