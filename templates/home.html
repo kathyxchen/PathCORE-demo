@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}PathCORE network{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="container">
+<h2>PathCORE Web Interface</h2>
+<ul class="list-group">
+  <li class="list-group-item list-group-item-info">
+  	Go to the PAO1 KEGG network demo server.
+  	<p>Click here for more information about eADAGE.
+  	   Click here for more information about the PAO1 KEGG pathways.
+  	</p>
+  </li>
+  <li class="list-group-item list-group-item-warning">
+  	View the TCGA PID network described in our paper.
+  </li>
+  <li class="list-group-item list-group-item-warning">
+  	Upload and view your own PathCORE-generated network.
+  </li>
+</ul>
+</div>
+{% endblock %}
