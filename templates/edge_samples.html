@@ -1,37 +1,25 @@
-<head>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-<style>
-.pw1 {
+{% extends "layout.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+  .pw1 {
    color: pink;
-}
+  }
 
-.pw2 {
+  .pw2 {
    color: green;
-}
+  }
 
-.both {
+  .both {
     color: purple;
-}
-</style>
-</head>
-<body>
-    <div id="overview" class="container">
-        <div class="row">
-            <h2><span class="pw1">{{pw1}}</span> <span class="pw2">{{pw2}}</span></h2>
+  }
+  </style>
+{% endblock %}
+{% block content %}
+<div id="overview" class="container">
+    <div class="row">
+        <h2><span class="pw1">{{pw1}}</span> <span class="pw2">{{pw2}}</span></h2>
         <h3><a href="{{ url_for('pathcore_network') }}">Return to network</a></h3>
         <h3>Description</h3>
         <p>        
@@ -55,37 +43,38 @@ integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7T
                 Click here to download a .csv file of the data provided in the two heatmaps.
             </a>
         </h4>
-        </div>
     </div>
-    <div class="container" id="most-expressed-samples">
-    <h4>10 most expressed samples</h4>
-    <div class="row">
-        <div class="col-xs-6">
-        <div class="text-right">
-            <button type="button" class="btn btn-default toggle-genes">Sort genes alphabetically</button>
-        </div>
-        </div>
-    </div>
-    <div class="row" id="most_expressed_parent">
-        <div class="col-md-4 sample-view" id="most_expressed">
-        </div>
+</div>
+<div class="container" id="most-expressed-samples">
+<h4>10 most expressed samples</h4>
+<div class="row">
+    <div class="col-xs-6">
+    <div class="text-right">
+      <button type="button" class="btn btn-default toggle-genes">
+        Sort genes alphabetically
+      </button>
     </div>
     </div>
-    <div class="container" id="least-expressed-samples">
-    <h4>10 least expressed samples</h4>
-    <div class="row">
-        <div class="col-xs-6">
-        <div class="text-right">
-            <button type="button" class="btn btn-default toggle-genes">Sort genes alphabetically</button>
-        </div>
-        </div>
+</div>
+<div class="row" id="most_expressed_parent">
+    <div class="col-md-4 sample-view" id="most_expressed">
     </div>
-    <div class="row" id="least_expressed_parent">
-        <div class="col-md-4 sample-view" id="least_expressed">
-        </div>
+</div>
+</div>
+<div class="container" id="least-expressed-samples">
+<h4>10 least expressed samples</h4>
+<div class="row">
+    <div class="col-xs-6">
+    <div class="text-right">
+        <button type="button" class="btn btn-default toggle-genes">Sort genes alphabetically</button>
     </div>
     </div>
-</body>
+</div>
+<div class="row" id="least_expressed_parent">
+    <div class="col-md-4 sample-view" id="least_expressed">
+    </div>
+</div>
+</div>
 
 <script>
 var edge_information = JSON.stringify({{ edge_info|safe }});
@@ -339,7 +328,7 @@ function append_heatmap(div_id, data, color, min, max) {
                 var metadata = JSON.parse(data.meta[sample_name]);
                 var experiment = metadata["Experiment"];
                 var xhr = new XMLHttpRequest();
-                window.location.href = window.location.href + "/experiment/" + experiment;
+                window.location.href = window.location.href + "/experiment/" + experiment + div_id;
             });
 
         // Construct text labels for the y axis
