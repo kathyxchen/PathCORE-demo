@@ -69,6 +69,7 @@ def sum_session_counter():
 def home():
     return render_template("home.html")
 
+
 # PA eADAGE demo server
 @app.route("/eADAGE")
 def pathcore_network():
@@ -108,23 +109,25 @@ def edge(edge_pws):
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
-
+    experiment, tag = experiment.split("#")
     if ("edge_info" not in session or
             session["edge_info"]["edge_name"] != (pw1, pw2)):
         print("Retrieving edge page information...")
         get_edge_template(edge_pws, db)
+    
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
     sample_gene_vals = {}
 
     # get all annotations associated with an experiment
+    # TODO: note in docs that this is PA specific.
     annotations_iterator = db.sample_annotations.find(
         {"Experiment": experiment})
     for annotation in annotations_iterator:
         sample_name = annotation["CEL file"]
         get_samples[sample_name] = annotation["sample_id"]
-        metadata[sample_name] = cleanup_annotation(annotation)
+        metadata[sample_name] = _cleanup_annotation(annotation)
         sample_gene_vals[sample_name] = []
 
     # for each sample, get the expression value for each gene in the list
@@ -132,102 +135,104 @@ def edge_experiment_session(edge_pws, experiment):
     for gene_name in session["edge_info"]["genes"]:
         gene_info = db.genes.find_one(
             {"$or": [{"gene": gene_name},
-                     {"common_name": gene_name},
-                     {"pa14_name": gene_name}]})
-        if not gene_info:
-            print "ERROR: wrong query to find this gene {0}".format(gene_name)
+                     {"common_name": gene_name}]})
         gene_order.append(gene_name)
         expression_values = gene_info["expression"]
         for sample, index in get_samples.items():
             sample_gene_vals[sample].append(expression_values[index])
 
-    whitelist_samples = {}
+    samples_from = {}
     edge_experiments = session["edge_info"]["experiments"]
     if experiment in edge_experiments["most"]:
-        whitelist_samples["most"] = edge_experiments["most"][experiment]
-        heatmap_color = "R"
+        samples_from["most"] = edge_experiments["most"][experiment]
     if experiment in edge_experiments["least"]:
-        whitelist_samples["least"] = edge_experiments["least"][experiment]
-        heatmap_color = "B"
+        samples_from["least"] = edge_experiments["least"][experiment]
+    heatmap_color = "R" if "#most_expressed" == tag else "B"
 
     current_odds_ratios = session["edge_info"]["odds_ratios"]
     current_edge_name = session["edge_info"]["edge_name"]
-    sgenes, soddsratios, ssample_gene_vals = _sort_genes(
+    sorted_genes, sorted_odds_ratio, sorted_gene_vals = _sort_genes(
         sample_gene_vals, current_odds_ratios, gene_order)
-    experiment_data = {"sample_values": ssample_gene_vals,
-                       "genes": sgenes,
-                       "samples": _sort_samples(ssample_gene_vals,
+    experiment_data = {"sample_values": sorted_gene_vals,
+                       "genes": sorted_genes,
+                       "samples": _sort_samples(sorted_gene_vals,
                                                 current_odds_ratios,
-                                                sgenes),
-                       "whitelist_samples": whitelist_samples,
-                       "odds_ratios": soddsratios,
+                                                sorted_genes),
+                       "odds_ratios": sorted_odds_ratios,
+                       "whitelist_samples": samples_from,
                        "heatmap_color": heatmap_color,
                        "metadata": metadata,
                        "ownership": session["edge_info"]["ownership"]}
     return render_template("experiment.html",
-                           edge_str=edge_to_string(current_edge_name),
+                           edge_str=_edge_to_string(current_edge_name),
                            edge=current_edge_name,
                            experiment_name=experiment,
                            experiment_information=dumps(experiment_data))
 
-def _sort_samples(sample_gene_expr, gene_oddsratio_map, genes):
-    sample_scores = []
-    sum_oddsratio = float(sum(gene_oddsratio_map.values()))
-    for sample, gene_expr in sample_gene_expr.iteritems():
-        score = 0
-        for index, expression in enumerate(gene_expr):
-            oddsratio = gene_oddsratio_map[genes[index]]
-            score += (oddsratio/sum_oddsratio) * expression
-        sample_scores.append((sample, score))
-    sample_scores.sort(key=lambda tup: tup[1])
-    sample_scores.reverse()
-    return [tup[0] for tup in sample_scores]
 
-def _sort_genes(sample_gene_expr, gene_oddsratio_map, genes):
-    sorted_by_oddsratio = reversed(
-        sorted(gene_oddsratio_map.items(), key=lambda tup: tup[1]))
-    sorted_sample_gene_expr = {}
-    gene_indices = []
-    sorted_oddsratios = []
-    sorted_genes = []
-    for gene, oddsratio in sorted_by_oddsratio:
-        sorted_oddsratios.append(oddsratio)
-        sorted_genes.append(gene)
-        gene_indices.append(genes.index(gene))
-    for sample, gene_expr_list in sample_gene_expr.items():
-        sorted_sample_gene_expr[sample] = []
-        for index in gene_indices:
-            sorted_sample_gene_expr[sample].append(gene_expr_list[index])
-    return sorted_genes, sorted_oddsratios, sorted_sample_gene_expr
+@app.route("/edge/<path:edge_pws>/download")
+@gzipped
+def edge_excel_file(edge_pws):
+    pw1, pw2 = edge_pws.split("&")
+    edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
+    
+    most_metadata, most_experiments = _get_sample_metadata(
+        edge_info["most_expressed_samples"])
+    edge_info["most_metadata"] = most_metadata
 
-def get_gene_name(gene_info):
-    if "common_name" in gene_info:
-        return gene_info["common_name"]
-    #elif "pa14_name" in gene_info:
-    #    return gene_info["pa14_name"]
-    else:
-        return gene_info["gene"]
+    least_metadata, least_experiments = _get_sample_metadata(
+        edge_info["least_expressed_samples"])
+    edge_info["least_metadata"] = least_metadata
 
-def edge_to_string(edge):
-    pw1, pw2 = edge
-    to_str = "Edge [{0}, {1}]".format(pw1, pw2)
-    return to_str
+    gene_odds_ratio_map = {}
+    for index, gene in enumerate(edge_info["gene_names"]):
+        gene_odds_ratio_map[gene] = edge_info["odds_ratios"][index]
+
+    session["counter"] += 1
+    list_of_rows = [ALL_EXCEL_FILE_FIELDS]
+    list_of_rows += _build_heatmap_rows_excel_file(
+        edge_info, gene_odds_ratio_map, most_metadata, "most")
+    list_of_rows += _build_heatmap_rows_excel_file(
+        edge_info, gene_odds_ratio_map, least_metadata, "least")
+    
+    make_excel = excel.make_response_from_array(list_of_rows, "csv",
+                                          file_name="{0}-{1}_edge_heatmap_data".format(
+                                              pw1.replace(",", ""), pw2.replace(",", "")))
+    return make_excel
+
+
+ALL_EXCEL_FILE_FIELDS = [
+    "which_heatmap", "sample", "gene", "normalized_expression",
+    "pathway", "odds_ratio", "experiment",
+    "info (strain; genotype; medium; biotic interactor 1 "
+        "(plant/human/bacteria); biotic interactor 2; treatment"
+]
+
+
+SAMPLE_INFO_FIELDS = [
+    "Strain", "Genotype", "Medium (biosynthesis/energy)",
+    "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+    "Biotic interactor_level 2 (Lung, epithelial cells, "
+        "Staphylococcus aureus, etc)",
+    "Treatment (drug/small molecule)"
+]
+
 
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
 
-    most_metadata, most_experiments = get_sample_metadata(
+    most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
 
-    least_metadata, least_experiments = get_sample_metadata(
+    least_metadata, least_experiments = _get_sample_metadata(
         edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
 
-    gene_oddsratio_map = {}
+    gene_odds_ratio_map = {}
     for index, gene in enumerate(edge_info["gene_names"]):
-        gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
+        gene_odds_ratio_map[gene] = edge_info["odds_ratios"][index]
 
     pathway_owner_index = []
     for ownership in edge_info["pathway_owner"]:
@@ -244,7 +249,7 @@ def get_edge_template(edge_pws, db):
     session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": edge_info["gene_names"],
-                            "odds_ratios": gene_oddsratio_map,
+                            "odds_ratios": gene_odds_ratio_map,
                             "ownership": pathway_owner_index,
                             "edge_name": (str(pw1), str(pw2))}
     del edge_info["_id"]
@@ -253,81 +258,84 @@ def get_edge_template(edge_pws, db):
                            pw2=session["edge_info"]["edge_name"][1],
                            edge_info=json.dumps(edge_info))
 
-excel_fields = ["which heatmap", "sample", "gene", "normalized expression", "pathway", "odds ratio", "experiment",
-          "info: strain; genotype; medium; biotic interactor 1 (plant/human/bacteria); biotic interactor 2; treatment"]
 
-@app.route("/edge/<path:edge_pws>/download")
-@gzipped
-def edge_excel_file(edge_pws):
-    db = db
-    pw1, pw2 = edge_pws.split("&")
-    edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
-    
-    most_metadata, most_experiments = get_sample_metadata(
-        edge_info["most_expressed_samples"])
-    edge_info["most_metadata"] = most_metadata
+def _sort_samples(sample_gene_expr, gene_odds_ratio_map, genes):
+    sample_scores = []
+    sum_odds_ratio = float(sum(gene_odds_ratio_map.values()))
+    for sample, gene_expr in sample_gene_expr.iteritems():
+        score = 0
+        for index, expression in enumerate(gene_expr):
+            odds_ratio = gene_odds_ratio_map[genes[index]]
+            score += (odds_ratio/sum_odds_ratio) * expression
+        sample_scores.append((sample, score))
+    sample_scores.sort(key=lambda tup: tup[1])
+    sample_scores.reverse()
+    return [tup[0] for tup in sample_scores]
 
-    least_metadata, least_experiments = get_sample_metadata(
-        edge_info["least_expressed_samples"])
-    edge_info["least_metadata"] = least_metadata
 
-    gene_oddsratio_map = {}
-    for index, gene in enumerate(edge_info["gene_names"]):
-        gene_oddsratio_map[gene] = edge_info["odds_ratios"][index]
+def _sort_genes(sample_gene_expr, gene_odds_ratio_map, genes):
+    sorted_by_odds_ratio = reversed(
+        sorted(gene_odds_ratio_map.items(), key=lambda tup: tup[1]))
+    sorted_sample_gene_expr = {}
+    gene_indices = []
+    sorted_odds_ratios = []
+    sorted_genes = []
+    for gene, odds_ratio in sorted_by_odds_ratio:
+        sorted_odds_ratios.append(odds_ratio)
+        sorted_genes.append(gene)
+        gene_indices.append(genes.index(gene))
+    for sample, gene_expr_list in sample_gene_expr.items():
+        sorted_sample_gene_expr[sample] = []
+        for index in gene_indices:
+            sorted_sample_gene_expr[sample].append(gene_expr_list[index])
+    return sorted_genes, sorted_odds_ratios, sorted_sample_gene_expr
 
-    session["counter"] += 1
-    list_of_rows = [excel_fields]
-    list_of_rows += build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map,
-            most_metadata, "most")
-    list_of_rows += build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map,
-            least_metadata, "least")
-    
-    make_excel = excel.make_response_from_array(list_of_rows, "csv",
-                                          file_name="{0}-{1}_edge_heatmap_data".format(
-                                              pw1.replace(",", ""), pw2.replace(",", "")))
-    return make_excel
 
-def build_heatmap_rows_excel_file(edge_info, gene_oddsratio_map, metadata, which_heatmap_str):
+def _edge_to_string(edge):
+    pw1, pw2 = edge
+    to_str = "Edge [{0}, {1}]".format(pw1, pw2)
+    return to_str
+
+
+def _build_heatmap_rows_excel_file(edge_info, gene_odds_ratio_map, metadata, which_heatmap_str):
     rows = []
     for cell in edge_info["{0}_expressed_heatmap".format(which_heatmap_str)]:
         sample_index = cell["source_index"]
         gene_index = cell["target_index"]
         expression_value = cell["value"]
-        sample = edge_info["{0}_expressed_samples".format(which_heatmap_str)][sample_index]
+        sample = edge_info["{0}_expressed_samples".format(
+            which_heatmap_str)][sample_index]
         gene = edge_info["gene_names"][gene_index]
         pathway = edge_info["pathway_owner"][gene_index]
-        odds_ratio = gene_oddsratio_map[gene]
+        odds_ratio = gene_odds_ratio_map[gene]
         json_meta = json.loads(metadata[sample])
         if json_meta:
             experiment = json_meta["Experiment"]
-            info = build_info_col_excel_file(json_meta)
+            info = _build_sample_excel_file_field(json_meta)
             info = info.encode('ascii',errors='ignore')
         else:
             experiment = "N/A"
             info = "N/A"
-        row = [which_heatmap_str, sample, gene, expression_value, pathway, odds_ratio, experiment, info]
+        row = [which_heatmap_str, sample, gene, expression_value,
+               pathway, odds_ratio, experiment, info]
         rows.append(row)
     rows.reverse()
     return rows
 
-sample_metadata_info_fields = ["Strain", "Genotype", "Medium (biosynthesis/energy)",
-                               "Biotic interactor_level 1 (Plant, Human, Bacteria)",
-                               "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
-                               "Treatment (drug/small molecule)"]
 
-def build_info_col_excel_file(metadata_dict):
-    info_col_values = []
-    for field in sample_metadata_info_fields:
-        if field in metadata_dict:
-            info_col_values.append(metadata_dict[field])
-        else:
-            info_col_values.append("N/A")
-    if len(set(info_col_values)) == 1:
+def _build_sample_excel_file_field(metadata_dict):
+    include_in_field_value = []
+    for field in SAMPLE_INFO_FIELDS:
+        value = metadata[field] if field in metadata_dict else "N/A"
+        include_in_field_value.append(value)
+    unique_values = set(include_in_field_value)
+    if len(unique_values) == 1 and "N/A" in unique_values:
         return "N/A"
-    info_col_string = "; ".join(info_col_values)
-    return info_col_string
+    str_field_value = "; ".join(include_in_field_value)
+    return str_field_value
 
-def cleanup_annotation(annotation):
+
+def _cleanup_annotation(annotation):
     """TODO: Move to a utility file"""
     # gets rid of some unnecessary fields
     del annotation["_id"]
@@ -342,7 +350,8 @@ def cleanup_annotation(annotation):
             annotation["EXPT SUMMARY"] += "..."
     return annotation
 
-def get_sample_metadata(sample_names):
+
+def _get_sample_metadata(sample_names):
     metadata = {}
     experiments = {}
     for sample in sample_names:
@@ -353,15 +362,9 @@ def get_sample_metadata(sample_names):
                 if exp not in experiments:
                     experiments[exp] = []
                 experiments[exp].append(sample)
-            info = cleanup_annotation(info)
+            info = _cleanup_annotation(info)
         metadata[sample] = dumps(info)
     return metadata, experiments
-
-#def edge_gene_records(edge_info):
-#    filename = "_".join(edge_info["edge"])
-    
-#def gene_sample_info(gene_names, samples, metadata, pathway_owner, odds_ratios):
-
 
 
 #if __name__ == "__main__":
