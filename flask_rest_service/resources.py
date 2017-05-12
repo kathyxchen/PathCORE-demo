@@ -34,4 +34,4 @@ class Root(restful.Resource):
         }
 
 api.add_resource(Network, '/network')
-api.add_resource(Root, '/')
+api.add_resource(Root, '/check-db')

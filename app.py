@@ -65,6 +65,10 @@ def sum_session_counter():
         session["counter"] = 1
 
 
+@app.route("/")
+def home():
+    return render_template("home.html")
+
 # PA eADAGE demo server
 @app.route("/eADAGE")
 def pathcore_network():
