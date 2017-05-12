@@ -2,23 +2,6 @@
 {% block title %}Quickview{% endblock %}
 {% block head %}
   {{ super() }}
-	<!--<style type="text/css">
-	    table
-	    {
-	        border: 1px solid #ccc;
-	    }
-	    table th
-	    {
-	        background-color: #F7F7F7;
-	        color: #333;
-	        font-weight: bold;
-	    }
-	    table th, table td
-	    {
-	        padding: 5px;
-	        border-color: #ccc;
-	    }
-	</style>-->
 	<script src="{{ url_for('static', filename='js/pathcore.js') }}"></script>
 {% endblock %}
 {% block content %}
@@ -32,70 +15,39 @@
 		    <input type="file" id="fileUpload" />
 				<input type="button" id="upload" value="Upload" />
     </div>
-    <div class="row">
-        <div class="col-xs-2">
-            <p>Search for a pathway</p>
-            <input id="searchbar" name="searchbar" type="text" />
-            <button onclick="searchPathways()">Go</button>
-            <p class="err-message" style="display: none;">
-              Not found. We're still working on a better
-              search experience! For now, please search complete
-              words in a pathway name only, and replace punctuation
-              with spaces. (examples: "VI secretion" instead of "VI secret",
-              "Iron III" instead of "Iron(III)"). Thank you!
-            </p>
-        </div>
-        <div class="col-xs-10">
-            <div id="pathcore"></div>
-        </div>
-    </div>
+    {% include "network.html" %}
 </div>
 <script type="text/javascript">
-    Math.seedrandom("10pa4t5hcoRE");
-    const target = "#pathcore";
-    const width  = 960;
-    const height = Math.max($(window).height() - 10, 500);
-    const svg = d3.select(target).append("svg")
-      .attr("width", width)
-      .attr("height", height);
-    const force = d3.layout.force()
-      .charge(-180)
-      .size([width, height]);
-    $(function () {
-        $("#upload").on("click", function () {
-            const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
-            if (regex.test($("#fileUpload").val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {	
-                        const tsvString = e.target.result;
-                        console.log(tsvString);
-                    	const data = d3.tsv.parse(tsvString);
-                    	loadPathCORENetwork(data, force, svg);
-                    	  /*
-                        const rows = e.target.result.split("\n");
-                        for (var i = 0; i < rows.length; i++) {
-                            var row = $("<tr />");
-                            var cells = rows[i].split(",");
-                            for (var j = 0; j < cells.length; j++) {
-                                var cell = $("<td />");
-                                cell.html(cells[j]);
-                                row.append(cell);
-                            }
-                            table.append(row);
-                        }
-                        $("#dvCSV").html('');
-                        $("#dvCSV").append(table);
-                        */
-                    }
-                    reader.readAsText($("#fileUpload")[0].files[0]);
-                } else {
-                    alert("This browser does not support HTML5.");
+Math.seedrandom("10pa4t5hcoRE");
+const target = "#pathcore";
+const width  = 960;
+const height = Math.max($(window).height() - 10, 500);
+const svg = d3.select(target).append("svg")
+  .attr("width", width)
+  .attr("height", height);
+const force = d3.layout.force()
+  .charge(-180)
+  .size([width, height]);
+$(function () {
+    $("#upload").on("click", function () {
+        const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
+        if (regex.test($("#fileUpload").val().toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                const reader = new FileReader();
+                reader.onload = function (e) {	
+                    const tsvString = e.target.result;
+                    console.log(tsvString);
+                	const data = d3.tsv.parse(tsvString);
+                	loadPathCORENetwork(data, force, svg);
                 }
+                reader.readAsText($("#fileUpload")[0].files[0]);
             } else {
-                alert("Please upload a TSV file with columns [pw0, pw1, weight].");
+                alert("This browser does not support HTML5.");
             }
-        });
+        } else {
+            alert("Please upload a TSV file with columns [pw0, pw1, weight].");
+        }
     });
+});
 </script>
 {% endblock %}

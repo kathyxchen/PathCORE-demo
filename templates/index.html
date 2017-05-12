@@ -22,6 +22,7 @@
     stroke: gray;
   }
   </style>
+  <script src="{{ url_for('static', filename='js/pathcore.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -30,23 +31,7 @@
             <h3>{{title}}</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-2">
-            <p>Search for a pathway</p>
-            <input id="searchbar" name="searchbar" type="text" />
-            <button onclick="searchPathways()">Go</button>
-            <p class="err-message" style="display: none;">
-              Not found. We're still working on a better
-              search experience! For now, please search complete
-              words in a pathway name only, and replace punctuation
-              with spaces. (examples: "VI secretion" instead of "VI secret",
-              "Iron III" instead of "Iron(III)"). Thank you!
-            </p>
-        </div>
-        <div class="col-xs-10">
-            <div id="pathcore"></div>
-        </div>
-    </div>
+    {% include "network.html" %}
 </div>
 </body>
 
@@ -57,7 +42,7 @@
  */
 Math.seedrandom("10pa4t5hcoRE");
 
-const target = "#pathcore"
+const target = "#pathcore";
 const width  = 960;
 const height = Math.max($(window).height() - 10, 500);
 const svg = d3.select(target).append("svg")
@@ -71,7 +56,7 @@ const lineColor = "#6600FF";
 
 const networkFilename = "{{ filename }}";
 const filepath = "{{ url_for('static', filename='data/' + filename) }}";
-
+/*
 function defaultNode(textSelect) {
   textSelect.style("font-size", "14px");
   textSelect.style("font-weight", "normal");
@@ -158,10 +143,12 @@ $("#searchbar").keypress(function(e) {
     return false;
   }
 });
+*/
 
 d3.tsv(filepath, function(error, links) {
   if (error) throw error;
-
+  loadPathCORENetwork(links);
+/*
   const nodesByName = {};
   
   function nodeByName(name) {
@@ -338,6 +325,7 @@ d3.tsv(filepath, function(error, links) {
       g.fixed = true;
     });
   }
+  */
 });
 
 </script>

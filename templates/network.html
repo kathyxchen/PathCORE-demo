@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-xs-2">
+      <p>Search for a pathway</p>
+      <input id="searchbar" name="searchbar" type="text" />
+      <button onclick="searchPathways()">Go</button>
+      <p class="err-message" style="display: none;">
+        Not found. We're still working on a better
+        search experience! For now, please search complete
+        words in a pathway name only, and replace punctuation
+        with spaces. (examples: "VI secretion" instead of "VI secret",
+        "Iron III" instead of "Iron(III)"). Thank you!
+      </p>
+  </div>
+  <div class="col-xs-10">
+      <div id="pathcore"></div>
+  </div>
+</div>
