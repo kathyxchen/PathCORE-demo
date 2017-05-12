@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
-{% block title %}eADAGE PAO1 KEGG network{% endblock %}
+{% block title %}PathCORE network{% endblock %}
 {% block head %}
   {{ super() }}
   <style type="text/css">
   html, body {
-    margin: 5px;
   }
 
   .link {
@@ -26,6 +25,11 @@
 {% endblock %}
 {% block content %}
 <div class="container">
+    <div class="row">
+        <div class="container">
+            <h3>PAO1 KEGG network, built from 10 eADAGE models (each k=300 features)</h3>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-2">
             <p>Search for a pathway</p>
@@ -55,7 +59,7 @@ Math.seedrandom("10pa4t5hcoRE");
 
 const target = "#pathcore"
 const width  = 960;
-const height = Math.max($(window).height(), 500);
+const height = Math.max($(window).height() - 10, 500);
 const svg = d3.select(target).append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -285,12 +289,12 @@ d3.tsv(filepath, function(error, links) {
     text.each(function() {
       const text = d3.select(this);
       const words = text.text().split(/\s+/).reverse();
-      const lineNumber = 0;
       const lineHeight = 0.5;
       const y = text.attr("y");
       const dy = parseFloat(text.attr("dy"));
       let word;
       let line = [];
+      let lineNumber = 0;
       let tspan = text.text(null)
         .append("tspan")
         .attr("x", 0)
