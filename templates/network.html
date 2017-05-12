@@ -1,17 +1,22 @@
 <div class="row">
-  <div class="col-xs-2">
-      <p>Search for a pathway</p>
-      <input id="searchbar" name="searchbar" type="text" />
-      <button onclick="searchPathways()">Go</button>
-      <p class="err-message" style="display: none;">
-        Not found. We're still working on a better
-        search experience! For now, please search complete
-        words in a pathway name only, and replace punctuation
-        with spaces. (examples: "VI secretion" instead of "VI secret",
-        "Iron III" instead of "Iron(III)"). Thank you!
-      </p>
-  </div>
-  <div class="col-xs-10">
-      <div id="pathcore"></div>
-  </div>
+  <form class="form-inline">
+  <input class="form-control mb-4 mr-sm-4 mb-sm-4" id="searchbar" name="searchbar" type="text" placeholder="Search for a pathway" />
+  <button type="submit" class="btn btn-secondary" onclick="searchPathways()">Submit</button>
+  <br />  
+  <p class="err-message" style="display: none; font-size: 12px;">
+    Not found. We're still working on a better
+    search experience! For now, please search complete
+    words in a pathway name only, and replace punctuation
+    with spaces. 
+    <br />Examples: "VI secretion" instead of "VI secret",
+    "Iron III" instead of "Iron(III)".
+  </p>
+  </form>
+  <br />
 </div>
+<div class="row network-wrapper" style="overflow: hidden;">
+      <div id="pathcore"></div>
+</div>
+<script>
+$("form").submit(function(e) { e.preventDefault(); });
+</script>
