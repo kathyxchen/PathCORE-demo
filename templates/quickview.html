@@ -28,6 +28,16 @@ const svg = d3.select(target).append("svg")
 const force = d3.layout.force()
   .charge(-180)
   .size([width, height]);
+
+// event listener for the search bar
+$("#searchbar").keypress(function(e) {
+    $(".err-message").hide();
+    if (e.which == 13) {
+        $("button").click();
+        return false;
+    }
+});
+
 $(function () {
     $("#upload").on("click", function () {
         const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
@@ -36,7 +46,6 @@ $(function () {
                 const reader = new FileReader();
                 reader.onload = function (e) {	
                     const tsvString = e.target.result;
-                    console.log(tsvString);
                 	const data = d3.tsv.parse(tsvString);
                 	loadPathCORENetwork(data, force, svg);
                 }

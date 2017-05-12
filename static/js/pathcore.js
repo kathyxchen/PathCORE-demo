@@ -48,6 +48,7 @@ function edgeWeightConversion(weight) {
 function searchPathways() {
   const userInput = document.getElementById("searchbar").value.toLowerCase();
   const classes = "." + userInput.replace(new RegExp(" ", "g"), ".");
+  const link = svg.selectAll(".link");
   const pathways = $(classes);
   const pathwayNodes = $(classes + " circle");
   
@@ -61,8 +62,9 @@ function searchPathways() {
     const textSelect = d3.select(this).select("text");
     defaultNode(textSelect);
   });
+  link.style("stroke", lineColor);
 
-  if (pathways.length == 0) {
+  if (pathwayNodes.length == 0) {
     $(".err-message").show();
     return;
   } 
