@@ -1,15 +1,33 @@
-import json
-from flask_rest_service import app, mongo
-from bson.json_util import dumps
-from flask import render_template, request, session, after_this_request
-import flask_excel as excel
-from pymongo import MongoClient
-import os
 from cStringIO import StringIO as IO
 import gzip
 import functools
+import json
+import os
+
+from bson.json_util import dumps
+from flask import Flask
+from flask import make_response, after_this_request
+from flask import render_template, request, session
+import flask_excel as excel
+from pymongo import MongoClient
+
+
+MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
+    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
+    os.environ.get("MLAB_URI"), os.environ.get("DB_NAME"))
+app = Flask(__name__, template_folder="templates")
+app.config['MONGO_URI'] = MONGODB_URL
+
+client = MongoClient(MONGODB_URL)
+db = client[os.environ.get("DB_NAME")]
 
 app.secret_key = os.environ.get("SESSION_SECRET")
+
+
+def output_json(obj, code, headers=None):
+    resp = make_response(dumps(obj), code)
+    resp.headers.extend(headers or {})
+    return resp
 
 
 def gzipped(f):
@@ -46,30 +64,28 @@ def sum_session_counter():
     except KeyError:
         session["counter"] = 1
 
-client = MongoClient("mongodb://{0}:{1}@{2}/{3}".format(
-    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
-    os.environ.get("MLAB_URI"), os.environ.get("DB_NAME")))
-db = client[os.environ.get("DB_NAME")]
 
-
+# PA eADAGE demo server
 @app.route("/eADAGE")
 def pathcore_network():
     sum_session_counter()
     return render_template("index.html",
-                           title="pathcore network",
-                           filename="10eADAGE_aggregate_10K_network.txt")
+                           title="PAO1 KEGG network, built from 10 eADAGE "
+                                 "models (each k=300 features)",
+                           filename="10eADAGE_aggregate_10K_network.txt",
+                           view_only=False)
 
 
+# for viewing purposes only.
 @app.route("/tcga")
 def tcga_network():
     sum_session_counter()
     return render_template("index.html",
-                           title="tcga pancancer PID pathways",
-                           filename="tcga_pid_network.txt")
+                           title="TCGA PID network, built from 1 NMF model "
+                                 "(k=300)",
+                           filename="tcga_pid_network.txt",
+                           view_only=True)
 
-@app.route("/download", methods=["GET"])
-def export_edge_information():
-    return excel.make_response_from_array([[1,2], [3, 4]], "csv", file_name="export_data")
 
 @app.route("/quickview")
 def pathcore_network_quickview():
@@ -81,7 +97,7 @@ def pathcore_network_quickview():
 @app.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
-    return get_edge_template(edge_pws, mongo.db)
+    return get_edge_template(edge_pws, db)
 
 
 @app.route("/edge/<path:edge_pws>/experiment/<experiment>")
@@ -91,15 +107,15 @@ def edge_experiment_session(edge_pws, experiment):
 
     if ("edge_info" not in session or
             session["edge_info"]["edge_name"] != (pw1, pw2)):
-        print "Retrieving edge page information..."
-        get_edge_template(edge_pws, mongo.db)
+        print("Retrieving edge page information...")
+        get_edge_template(edge_pws, db)
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
     sample_gene_vals = {}
 
     # get all annotations associated with an experiment
-    annotations_iterator = mongo.db.sample_annotations.find(
+    annotations_iterator = db.sample_annotations.find(
         {"Experiment": experiment})
     for annotation in annotations_iterator:
         sample_name = annotation["CEL file"]
@@ -110,7 +126,7 @@ def edge_experiment_session(edge_pws, experiment):
     # for each sample, get the expression value for each gene in the list
     gene_order = []
     for gene_name in session["edge_info"]["genes"]:
-        gene_info = mongo.db.genes.find_one(
+        gene_info = db.genes.find_one(
             {"$or": [{"gene": gene_name},
                      {"common_name": gene_name},
                      {"pa14_name": gene_name}]})
@@ -239,7 +255,7 @@ excel_fields = ["which heatmap", "sample", "gene", "normalized expression", "pat
 @app.route("/edge/<path:edge_pws>/download")
 @gzipped
 def edge_excel_file(edge_pws):
-    db = mongo.db
+    db = db
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
     
@@ -326,7 +342,7 @@ def get_sample_metadata(sample_names):
     metadata = {}
     experiments = {}
     for sample in sample_names:
-        info = mongo.db.sample_annotations.find_one({"CEL file": sample})
+        info = db.sample_annotations.find_one({"CEL file": sample})
         if info:
             if "Experiment" in info:
                 exp = info["Experiment"]
