@@ -328,7 +328,7 @@ function append_heatmap(div_id, data, color, min, max) {
                 var metadata = JSON.parse(data.meta[sample_name]);
                 var experiment = metadata["Experiment"];
                 var xhr = new XMLHttpRequest();
-                window.location.href = window.location.href + "/experiment/" + experiment + div_id;
+                window.location.href = window.location.href + "/experiment/" + experiment + "&" + div_id.substring(1);
             });
 
         // Construct text labels for the y axis
@@ -404,4 +404,4 @@ mx.prependTo($("#most_expressed_parent"));
 my.prependTo($("#least_expressed_parent"));
 
 </script>
-</html>
+{% endblock %}
