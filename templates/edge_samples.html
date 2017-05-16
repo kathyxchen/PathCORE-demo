@@ -19,34 +19,58 @@
 {% block content %}
 <div id="overview" class="container">
     <div class="row">
-        <h2><span class="pw1">{{pw1}}</span> <span class="pw2">{{pw2}}</span></h2>
-        <h3><a href="{{ url_for('pathcore_network') }}">Return to network</a></h3>
-        <h3>Description</h3>
+        <h2>
+          <span class="pw1">{{pw1}}</span> 
+          <span class="pw2">{{pw2}}</span>
+        </h2>
+        <h3>
+          <a href="{{ url_for('pathcore_network') }}">Return to network</a>
+        </h3>
+        <h3 class="description">Description</h3>
+        <p>
+            For every gene annotated to one or both of {{pw1}} and {{pw2}},
+            we computed an odds ratio that measures how often we observe a
+            feature enriched for both the gene and the edge of interest.
+            This page displays a maximum of 20 genes that had an odds
+            ratio of above 1. 
+            We do this to highlight the genes that are most observed
+            with the current pathway co-occurrence relationship.
+        </p>
         <p>        
             A summary expression score per sample was determined based on
-            the normalized expression values of the genes in the 2 pathway annotations,
-            where each expression value was weighted by the corresponding gene's odds ratio.
-            Displayed are the <a href="#most-expressed-samples">20 most expressed</a>
-            and <a href="#least-expressed-samples">20 least expressed</a> samples. 
+            the normalized expression values of the selected genes,
+            where each expression value was weighted by the corresponding
+            gene's odds ratio.
+            Displayed are the <a href="#most-expressed-samples">
+              20 most expressed</a>
+            and <a href="#least-expressed-samples">
+              20 least expressed</a> samples. 
         </p>
         <p>
-            If a gene-by-sample square has an experiment associated with it (on hover), you can click on
-            that square to view the gene expression values for all samples from that experiment.
+            If a gene-by-sample square has an experiment associated with
+            it (the information shows up when you hover over the square),
+            you can <b>click through</b> to view an <b>experiment page</b>
+            that displays the selected genes' expression values for
+            all samples from that experiment.
         </p>
         <p>
-            When available, we provide the common name for a given PA gene locus tag. Genes in
-            <span class="pw1">pink</span> are annotated to <span class="pw1">{{pw1}}</span> in KEGG,
+            When available, we provide the common name for a given PA
+            gene locus tag. Genes in <span class="pw1">pink</span> are
+            annotated to <span class="pw1">{{pw1}}</span> in KEGG,
             <span class="pw2">green</span> to <span class="pw2">{{pw2}}</span>,
-            and <span class="both">purple</span> to <span class="both">both</span>.
+            and <span class="both">purple</span> to
+            <span class="both">both</span>.
         </p>
-        <h4><a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
-                Click here to download a .csv file of the data provided in the two heatmaps.
-            </a>
+        <h4>
+          <a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
+            Click here to download a .csv file of the data provided in the
+            two heatmaps.
+          </a>
         </h4>
     </div>
 </div>
 <div class="container" id="most-expressed-samples">
-<h4>10 most expressed samples</h4>
+<h4>20 most expressed samples</h4>
 <div class="row">
     <div class="col-xs-6">
     <div class="text-right">
@@ -62,11 +86,13 @@
 </div>
 </div>
 <div class="container" id="least-expressed-samples">
-<h4>10 least expressed samples</h4>
+<h4>20 least expressed samples</h4>
 <div class="row">
     <div class="col-xs-6">
     <div class="text-right">
-        <button type="button" class="btn btn-default toggle-genes">Sort genes alphabetically</button>
+        <button type="button" class="btn btn-default toggle-genes">
+          Sort genes alphabetically
+        </button>
     </div>
     </div>
 </div>
@@ -77,331 +103,367 @@
 </div>
 
 <script>
-var edge_information = JSON.stringify({{ edge_info|safe }});
-edge_information = JSON.parse(edge_information);
+const edgeInfo = JSON.parse(JSON.stringify({{ edge_info|safe }}));
+console.log(edgeInfo);  // TODO: remove. debugging only.
 
-console.log(edge_information);
-
-var most_expressed_data = 
-    {"source_structures": edge_information["most_expressed_samples"],
-     "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["most_expressed_heatmap"],
-     "meta": edge_information["most_metadata"],
-     "oddsratios": edge_information["odds_ratios"],
-     "ownership": edge_information["ownership"]
+const mostExpressedData = 
+    {"samplesX": edgeInfo["most_expressed_samples"],
+     "genesY": edgeInfo["gene_names"],
+     "heatmapData": edgeInfo["most_expressed_heatmap"],
+     "meta": edgeInfo["most_metadata"],
+     "oddsratios": edgeInfo["odds_ratios"],
+     "ownership": edgeInfo["ownership"]
     };
-var least_expressed_data =
-    {"source_structures": edge_information["least_expressed_samples"],
-     "target_structures": edge_information["gene_names"],
-     "both_data": edge_information["least_expressed_heatmap"],
-     "meta": edge_information["least_metadata"],
-     "oddsratios": edge_information["odds_ratios"],
-     "ownership": edge_information["ownership"]
+const leastExpressedData =
+    {"samplesX": edgeInfo["least_expressed_samples"],
+     "genesY": edgeInfo["gene_names"],
+     "heatmapData": edgeInfo["least_expressed_heatmap"],
+     "meta": edgeInfo["least_metadata"],
+     "oddsratios": edgeInfo["odds_ratios"],
+     "ownership": edgeInfo["ownership"]
     };
 
-function get_expression_minmax(data) {
-    var min_expression = Math.min.apply(Math, data.map(function(d) { return d.value; }));
-    var max_expression = Math.max.apply(Math, data.map(function(d) { return d.value; }));
-    return {"min": min_expression, "max": max_expression};
+
+const mostExprMinMax = expressionMinMax(mostExpressedData["heatmapData"]);
+const leastExprMinMax = expressionMinMax(leastExpressedData["heatmapData"]);
+
+const mostExprColors = ["white", "yellow", "red", "black"];
+const leastExprColors = ["white", "blue", "purple", "black"];
+
+const mostExprColorbar = colorbar(
+  mostExprMinMax["min"], mostExprMinMax["max"], mostExprColors); 
+const leastExprColorbar = colorbar(
+  leastExprMinMax["min"], leastExprMinMax["max"], leastExprColors);
+
+const copyMost = replaceWithAlphabetical(
+  jQuery.extend(true, {}, mostExpressedData));
+const copyLeast = replaceWithAlphabetical(
+  jQuery.extend(true, {}, leastExpressedData));
+
+const sampleMetadataRows = [
+  "Sample", "Expression Value", "Experiment", "Description",
+  "Strain", "Genotype", "Medium (biosynthesis/energy)",
+  "Growth setting (planktonic, colony, biofilm)",
+  "Growth setting (For planktonic-aerated, static)" +
+    "(For biofilms-flow cell, static)",
+  "Treatment (drug/small molecule)", "Temperature",
+  "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+  "Biotic interactor_level 2 (Lung, epithelial cells, " +
+    "Staphylococcus aureus, etc)",
+  "OD", "Nucleic Acid", "Variant phenotype (QS defective, mucoid, SCV, etc)",
+  "Abx marker, auxotrophy", "Additional Notes (markers)", "EXPT SUMMARY",
+  "Gene-to-edge odds ratio"
+];
+
+const mostExprHeatmap = createHeatmap("#most_expressed",
+  mostExpressedData, mostExprColorbar,
+  mostExprMinMax["min"], mostExprMinMax["max"]);
+const leastExprHeatmap = createHeatmap("#least_expressed",
+  leastExpressedData, leastExprColorbar,
+  leastExprMinMax["min"], leastExprMinMax["max"]);
+
+mostExprHeatmap.prependTo($("#most_expressed_parent"));
+leastExprHeatmap.prependTo($("#least_expressed_parent"));
+
+function expressionMinMax(data) {
+    const minExpression = Math.min.apply(
+      Math, data.map(function(d) { return d.value; }));
+    const maxExpression = Math.max.apply(
+      Math, data.map(function(d) { return d.value; }));
+    return {"min": minExpression, "max": maxExpression};
 }
 
-function colorbar(expression_min, expression_max, colors) {
-    var difference = expression_max - expression_min;
-    var domain = [expression_min, expression_min + difference/3.0, expression_max - difference/3.0, expression_max];
+function colorbar(minExpression, maxExpression, colors) {
+    const difference = maxExpression - minExpression;
+    const domain = [
+      minExpression,
+      minExpression + difference / 3.0,
+      maxExpression - difference / 3.0,
+      maxExpression];
     return d3.scale.linear().domain(domain).range(colors);
 }
 
-function index_sort(arr) {
-    for (var i = 0; i < arr.length; i++) {
-        arr[i] = [arr[i], i];
+function indexSort(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = [arr[i], i];
     }
     arr.sort(function(left, right) {
-        return left[0] < right[0] ? -1 : 1;
+      return left[0] < right[0] ? -1 : 1;
     });
-    arr.sortIndices = [];
-    for (var j = 0; j < arr.length; j++) {
-        arr.sortIndices.push(arr[j][1]);
-            arr[j] = arr[j][0];
+    arr.indicesSorted = [];
+    for (let j = 0; j < arr.length; j++) {
+      arr.indicesSorted.push(arr[j][1]);
+      arr[j] = arr[j][0];
     }
     return arr;
 }
 
-function rearrange_by_indices(arr, index_arr) {
-    var rearranged_arr = Array(arr.length);
-    for (var i = 0; i < arr.length; i++) {
-        rearranged_arr[i] = arr[index_arr[i]];
+function rearrangeByIndices(arr, indexArr) {
+    let rearrangedArr = Array(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+      rearrangedArr[i] = arr[indexArr[i]];
     }
-    return rearranged_arr;
+    return rearrangedArr;
 }
 
-function rearrange_heatmap_indices(heatmap_data, index_arr) {
-    var rearranged_heatmap_data = [];
-    var heatmap_cells_obj = {};
+function rearrangeHeatmapIndices(heatmapData, indexArr) {
+    let rearrangedHeatmapData = [];
+    let heatmapCells = {};
     
-    for (var i = 0; i < heatmap_data.length; i++) {
-        var cell = heatmap_data[i];
-        var key = cell.source_index + " " + cell.target_index;
-        heatmap_cells_obj[key] = cell.value;
+    for (let i = 0; i < heatmapData.length; i++) {
+      let cell = heatmapData[i];
+      let key = cell.source_index + " " + cell.target_index;
+      heatmapCells[key] = cell.value;
     }
 
-    for (var i = 0; i < heatmap_data.length; i++) {
-        var heatmap_obj = {};
-        heatmap_obj["source_index"] = heatmap_data[i]["source_index"];
-        var current_gene_pos = heatmap_data[i]["target_index"];
-        heatmap_obj["target_index"] = heatmap_data[i]["target_index"];
-        var value = heatmap_cells_obj[heatmap_obj.source_index + " " + index_arr[current_gene_pos]];
-        heatmap_obj["value"] = value;
-        rearranged_heatmap_data.push(heatmap_obj);
+    for (let i = 0; i < heatmapData.length; i++) {
+      let heatmapCell = {};
+      let currentGenePos = heatmapCell[i]["target_index"];
+
+      heatmapCell["source_index"] = heatmapCell[i]["source_index"];
+      heatmapCell["target_index"] = heatmapCell[i]["target_index"];
+      heatmapCell["value"] = heatmapCells[heatmapCell.source_index + " " +
+                                          indexArr[currentGenePos]];
+      rearrangedHeatmapData.push(heatmapCell);
     }
-    return rearranged_heatmap_data;
+
+    return rearrangedHeatmapData;
 }
 
-var copy_most = jQuery.extend(true, {}, most_expressed_data);
-var copy_least = jQuery.extend(true, {}, least_expressed_data);
-
-function replace_with_alphabetical(copy_data) {
-    var msorted_genes = index_sort(copy_data["target_structures"]);
-
-    copy_data = {
-        "source_structures": copy_data["source_structures"],
-        "target_structures": msorted_genes,
-        "both_data": rearrange_heatmap_indices(copy_data["both_data"], msorted_genes.sortIndices),
-        "meta": copy_data["meta"],
-        "oddsratios": rearrange_by_indices(copy_data["oddsratios"], msorted_genes.sortIndices),
-        "ownership": rearrange_by_indices(copy_data["ownership"], msorted_genes.sortIndices)
+function replaceWithAlphabetical(copyData) {
+    alphabeticalGenes = indexSort(copyData["genesY"]);
+    copyData = {
+        "samplesX": copyData["samplesX"],
+        "genesY": alphabeticalGenes,
+        "heatmapData": rearrangeHeatmapIndices(
+          copyData["heatmapData"], alphabeticalGenes.indicesSorted),
+        "meta": copyData["meta"],
+        "oddsratios": rearrangeByIndices(
+          copyData["oddsratios"], alphabeticalGenes.indicesSorted),
+        "ownership": rearrangeByIndices(
+          copyData["ownership"], alphabeticalGenes.indicesSorted)
     };
-    return copy_data;
+    return copyData;
 }
 
-copy_most = replace_with_alphabetical(copy_most);
-copy_least = replace_with_alphabetical(copy_least);
-
+/* listener for the button toggle
+ * (genes ordered by odds ratio or alphabetically)
+ */
 $(".toggle-genes").click(function() {
     $(".toggle-genes").text(function(i, text) {
-        
+        let x;
+        let y;
+        let returnButtonLabel;
+
         $("#most_expressed svg").remove();
         $("#least_expressed svg").remove();
         
-        var x, y;
         if (text == "Sort genes alphabetically") {
-            x = append_heatmap("#most_expressed", copy_most, most_colorbar,
-                   most_expressed_minmax["min"], most_expressed_minmax["max"]);
-            y = append_heatmap("#least_expressed", copy_least, least_colorbar,
-                   least_expressed_minmax["min"], least_expressed_minmax["max"]);
-            $("#most_expressed_parent .meta.sample-view").replaceWith(x);
-            $("#least_expressed_parent .meta.sample-view").replaceWith(y);
-            return "Sort genes by odds ratio"; 
+            x = createHeatmap("#most_expressed",
+              copyMost, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              copyLeast, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            //$("#most_expressed_parent .meta.sample-view").replaceWith(x);
+            //$("#least_expressed_parent .meta.sample-view").replaceWith(y);
+            returnButtonLabel = "Sort genes by odds ratio"; 
         } else {
-            x = append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
-                   most_expressed_minmax["min"], most_expressed_minmax["max"]);
-            y = append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
-                   least_expressed_minmax["min"], least_expressed_minmax["max"]);
-            $("#most_expressed_parent .meta.sample-view").replaceWith(x);
-            $("#least_expressed_parent .meta.sample-view").replaceWith(y);
-            return "Sort genes alphabetically";
+            x = createHeatmap("#most_expressed",
+              mostExpressedData, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              leastExpressedData, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            //$("#most_expressed_parent .meta.sample-view").replaceWith(x);
+            //$("#least_expressed_parent .meta.sample-view").replaceWith(y);
+            returnButtonLabel = "Sort genes alphabetically";
         }
+        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
+        return returnButtonLabel;
     });
 
 });
 
-var most_expressed_minmax = get_expression_minmax(most_expressed_data["both_data"]);
-var least_expressed_minmax = get_expression_minmax(least_expressed_data["both_data"]);
+function createHeatmap(divId, data, color, min, max) {
+  const width = 960;
+  const height = 800;
+  const cellSize = 25;
+  const labelSize = 100;
 
-var most_colors = ["white", "yellow", "red", "black"];
-var least_colors = ["white", "blue", "purple", "black"];
+  const heatmapHeight = cellSize * data.genesY.length;
+  const heatmapWidth = cellSize * data.samplesX.length;
 
-var most_colorbar = colorbar(most_expressed_minmax["min"], most_expressed_minmax["max"], most_colors); 
-var least_colorbar = colorbar(least_expressed_minmax["min"], least_expressed_minmax["max"], least_colors);
+  const svg = d3.select(divId).append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g");
 
-function append_heatmap(div_id, data, color, min, max) {
-    var width = 960, height = 800, 
-        cell_size = 25, label_size = 100;
+  const container = $("<div style='padding-top: 30px;'>")
+    .attr("class","meta col-md-6");
+    .addClass("sample-view");
 
-    var svg = d3.select(div_id).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g");
+  let bounding;
 
-    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-6");
-        //.prependTo($(div_id + "_parent"));
-    meta_container.addClass("sample-view");
-    function build_legend(chart_width, chart_height) {
-        // Make an array of values, one for each pixel in the width of the legend.
-        var legend_data = [];
-        var num_elems = chart_width;
-        for (var i = 0; i < num_elems; i++) { legend_data.push(i / num_elems); }
-
-        // This scale handles interpolation between projection volume values and 
-        // legend position.
-        var legend_scale = d3.scale.linear()
-            .domain([min,max])
-            .range([0,chart_width]);
-    
-        // This object will generate the tick values along the bottom of the legend.
-        var legend_axis = d3.svg.axis()
-            .scale(legend_scale)
-            .orient("bottom")
-            .tickValues(color.domain());
-
-        // Append the group that will hold all of the legend components.  A set of single-pixel
-        // rectangles are drawn across the legend and colored by their interpolated color value.
-        svg.append("g")
-           .attr("class", "legend axis")
-           .attr("transform", "translate(0,-100)")
-           .call(legend_axis)
-           .selectAll(".legend_cell")
-           .data(legend_data)
-           .enter().append("rect")
-           .attr("x", function(d,i) { return i; })
-           .attr("y", -cell_size)
-           .attr("width", 1)
-           .attr("height", cell_size)
-           .attr("fill", function(d) { return color(d); });
-
-        // A title for the legend.
-        svg.append("text")
-           .attr("x", chart_width / 2)
-           .attr("y", -65)
-           .attr("text-anchor", "middle")
-           .text("normalized expression value");
+  function heatmapLegend(heatmapWidth, heatmapHeight) {
+    let colorbarLegend = [];
+    for (var i = 0; i < heatmapWidth; i++) { 
+      colorbarLegend.push(i / heatmapWidth); 
     }
 
+    // handles interpolation between expression values and legend position
+    var legendScale = d3.scale.linear()
+      .domain([min,max])
+      .range([0,heatmapWidth]);
+  
+    // generates the tick values along the bottom of the legend
+    var legendAxis = d3.svg.axis()
+      .scale(legendScale)
+      .orient("bottom")
+      .tickValues(color.domain());
 
-    var order = ["Sample", "Expression Value",
-                 "Experiment", "Description", "Strain", "Genotype", "Medium (biosynthesis/energy)",
-                 "Growth setting (planktonic, colony, biofilm)",
-                 "Growth setting (For planktonic-aerated, static)(For biofilms-flow cell, static)",
-                 "Treatment (drug/small molecule)", "Temperature",
-                 "Biotic interactor_level 1 (Plant, Human, Bacteria)",
-                 "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
-                 "OD", "Nucleic Acid", "Variant phenotype (QS defective, mucoid, SCV, etc)",
-                 "Abx marker, auxotrophy",
-                 "Additional Notes (markers)", "EXPT SUMMARY",
-                 "Gene-to-edge odds ratio"];
-    
-    function build_heatmap(data, chart_width, chart_height) {
+    // a set of single-pixel rectangles are drawn across the legend and
+    // colored by their interpolated color value
+    svg.append("g")
+      .attr("class", "legend axis")
+      .attr("transform", "translate(0,-100)")
+      .call(legendAxis)
+      .selectAll(".legend_cell")
+      .data(colorbarLegend)
+      .enter().append("rect")
+      .attr("x", function(d,i) { return i; })
+      .attr("y", -cellSize)
+      .attr("width", 1)
+      .attr("height", cellSize)
+      .attr("fill", function(d) { return color(d); });
 
-        // This group will hold all of the rectangles within the heatmap.
-        var cell_group = svg.append("g");
+    // legend title
+    svg.append("text")
+       .attr("x", heatmapWidth / 2)
+       .attr("y", -65)
+       .attr("text-anchor", "middle")
+       .text("normalized expression value");
+  }
+  
+  function heatmap(data, heatmapWidth, heatmapHeight) {
+    // holds all of the rectangles in the heatmap
+    const cellGroup = svg.append("g");
+    const rects = cellGroup.selectAll(".cell")
+      .data(data.heatmapData)
+      .enter().append("rect")
+      .attr("x", function(d) { return d.source_index * cellSize; })
+      .attr("y", function(d) { return d.target_index * cellSize; })
+      .style("fill", function(d) { return color(d.value); })
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .on("mouseover", function(d) {
+        const sampleName = data.samplesX[d.source_index];
+        const metadata = JSON.parse(data.meta[sampleName]);
+        let metadataHtml;
 
-        var rects = cell_group.selectAll(".cell")
-            .data(data.both_data)
-            .enter().append("rect")
-            .attr("x", function(d) { return d.source_index * cell_size; })
-            .attr("y", function(d) { return d.target_index * cell_size; })
-            .style("fill", function(d) { return color(d.value); })
-            .attr("width", cell_size)
-            .attr("height", cell_size)
-            .on("mouseover", function(d) {
-                var sample_name = data.source_structures[d.source_index];
-                var metadata = JSON.parse(data.meta[sample_name]);
-                if (!metadata) {
-                    metadata = {};
-                }
-                metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
-                metadata["Gene-to-edge odds ratio"] = Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0;
-                var metadata_html = "<table class='table table-sm'><thead><tr><th style='width: 30%;'></th>"
-                + "<th style='width: 70%;'></th></tr></thead><tbody>"; 
+        if (!metadata) {
+            metadata = {};
+        }
+        metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
+        metadata["Gene-to-edge odds ratio"] = Math.ceil(
+          data.oddsratios[d.target_index] * 1000.0) / 1000.0;
+        metadataHtml = "<table class='table table-sm'>" +
+          "<thead><tr><th style='width: 30%;'></th>" + 
+          "<th style='width: 70%;'></th></tr></thead><tbody>"; 
 
-                for (var i = 0; i < order.length; i++) {
-                    var key = order[i];
-                    if (key in metadata) {
-                        metadata_html += "<tr><td style='line-height: 0.9;'><strong>" + key + "</strong></td>"
-                                           + "<td style='line-height: 0.9;'>" + metadata[key] + "</td></tr>";
-                    }
-                }
-                metadata_html += "</tbody>";
-                meta_container.html(metadata_html);
-                if (metadata_html.length != 0) {
-                    d3.select(this)
-                      .style("stroke", "black")
-                      .style("opacity", "0.6");
-                }
-            })
-            .on("mouseout", function(d) {
-                d3.select(this)
-                  .style("opacity", "1")
-                  .style("stroke", color(d.value));
-            })
-            .on("click", function(d) {
-                var sample_name = data.source_structures[d.source_index];
-                var metadata = JSON.parse(data.meta[sample_name]);
-                var experiment = metadata["Experiment"];
-                var xhr = new XMLHttpRequest();
-                window.location.href = window.location.href + "/experiment/" + experiment + div_id;
-            });
+        for (let i = 0; i < sampleMetadataRows.length; i++) {
+            const key = sampleMetadataRows[i];
+            if (key in metadata) {
+                metadataHtml += "<tr><td style='line-height: 0.9;'><strong>" +
+                  key + "</strong></td>" +
+                  "<td style='line-height: 0.9;'>" + 
+                  metadata[key] + 
+                  "</td></tr>";
+            }
+        }
+        metadataHtml += "</tbody>";
+        container.html(metadataHtml);
+        if (metadataHtml.length != 0) {
+          d3.select(this)
+            .style("stroke", "black")
+            .style("opacity", "0.6");
+        }
+      })
+      .on("mouseout", function(d) {
+        d3.select(this)
+          .style("opacity", "1")
+          .style("stroke", color(d.value));
+      })
+      .on("click", function(d) {
+        const sampleName = data.samplesX[d.source_index];
+        const metadata = JSON.parse(data.meta[sampleName]);
+        const experiment = metadata["Experiment"];
+        const xhr = new XMLHttpRequest();
+        window.location.href += "/experiment/" + experiment + divId;
+      });
 
-        // Construct text labels for the y axis
-        svg.append("g")
-           .attr("class", "y axis")
-           .selectAll("text")
-           .data(data.target_structures)
-           .enter().append("text")
-           .attr("y", function(d,i) { return i * cell_size + 17.5; })
-           .attr("x", -5)
-           .attr("text-anchor", "end")
-           .attr("fill", function(d, i) {
-                var owner = data.ownership[i];
-                if (owner == 0) {
-                    return "pink";
-                } else if (owner == 1) {
-                    return "green";
-                } else {
-                    return "purple";
-                }
-           })
-           .text(function(d) { return d; });
+    // construct text labels for the y axis
+    svg.append("g")
+      .attr("class", "y axis")
+      .selectAll("text")
+      .data(data.genesY)
+      .enter().append("text")
+      .attr("y", function(d,i) { return i * cellSize + 17.5; })
+      .attr("x", -5)
+      .attr("text-anchor", "end")
+      .attr("fill", function(d, i) {
+          const owner = data.ownership[i];
+          if (owner == 0) {
+              return "pink";
+          } else if (owner == 1) {
+              return "green";
+          } else {
+              return "purple";
+          }
+      })
+      .text(function(d) { return d; });
 
-        // Construct text labels for the x axis
-        svg.append("g")
-           .attr("class", "x axis")
-           .attr("transform", "translate(0,"+ chart_height +")")
-           .selectAll("text")
-           .data(data.source_structures)
-           .enter().append("text")
-           .attr("transform", function(d,i) { 
-                var x = (i * cell_size);
-                var y = 0;
-                return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
-           })
-           .text(function(d) { return d; });
+    // construct text labels for the x axis
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0,"+ heatmapHeight +")")
+      .selectAll("text")
+      .data(data.samplesX)
+      .enter().append("text")
+      .attr("transform", function(d,i) { 
+        var x = (i * cellSize);
+        var y = 0;
+        return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
+      })
+      .text(function(d) { return d; });
 
-        // A title for the x axis.
-        svg.append("text")
-           .attr("x", chart_width / 2)
-           .attr("y", -20)
-           .attr("text-anchor", "middle")
-           .text("Samples");
+    // title for the x axis
+    svg.append("text")
+     .attr("x", heatmapWidth / 2)
+     .attr("y", -20)
+     .attr("text-anchor", "middle")
+     .text("Samples");
 
-        // A title for the y axis.
-        svg.append("text")
-           .attr("text-anchor", "middle")
-           .attr("transform","translate(-" + (chart_width / 3) + "," + (chart_height / 2) +") rotate(90)")
-           .text("Genes");
-    }
-    var chart_height = cell_size * data.target_structures.length;
-    var chart_width = cell_size * data.source_structures.length;
-    
-    build_heatmap(data, chart_width, chart_height);
-    build_legend(chart_width, chart_height);
+    // title for the y axis
+    svg.append("text")
+     .attr("text-anchor", "middle")
+     .attr("transform","translate(-" + (heatmapWidth / 3) + "," +
+                       (heatmapHeight / 2) +") rotate(90)")
+     .text("Genes");
+  }
+  
+  heatmap(data, heatmapWidth, heatmapHeight);
+  heatmapLegend(heatmapWidth, heatmapHeight);
 
-    bounding = svg.node().getBBox();
-    svg.attr("transform", "translate("
-                         + bounding.x * -1 + ","
-                         + bounding.y * -1 + ")");
-    
-    d3.select("svg").attr("width", bounding.width);
-    d3.select("svg").attr("height", bounding.height);
-    return meta_container;
+  bounding = svg.node().getBBox();
+  svg.attr("transform", "translate("
+                       + bounding.x * -1 + ","
+                       + bounding.y * -1 + ")");
+  
+  d3.select("svg").attr("width", bounding.width);
+  d3.select("svg").attr("height", bounding.height);
+  return container;
 }
-
-var mx = append_heatmap("#most_expressed", most_expressed_data, most_colorbar,
-               most_expressed_minmax["min"], most_expressed_minmax["max"]);
-var my = append_heatmap("#least_expressed", least_expressed_data, least_colorbar,
-               least_expressed_minmax["min"], least_expressed_minmax["max"]);
-
-mx.prependTo($("#most_expressed_parent"));
-my.prependTo($("#least_expressed_parent"));
-
 </script>
 </html>
