@@ -109,12 +109,13 @@ def edge(edge_pws):
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
-    experiment, tag = experiment.split("#")
+    print(experiment)
+    experiment, tag = experiment.split("&")
     if ("edge_info" not in session or
             session["edge_info"]["edge_name"] != (pw1, pw2)):
         print("Retrieving edge page information...")
         get_edge_template(edge_pws, db)
-    
+
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
@@ -147,11 +148,11 @@ def edge_experiment_session(edge_pws, experiment):
         samples_from["most"] = edge_experiments["most"][experiment]
     if experiment in edge_experiments["least"]:
         samples_from["least"] = edge_experiments["least"][experiment]
-    heatmap_color = "R" if "#most_expressed" == tag else "B"
+    heatmap_color = "R" if "most_expressed" == tag else "B"
 
     current_odds_ratios = session["edge_info"]["odds_ratios"]
     current_edge_name = session["edge_info"]["edge_name"]
-    sorted_genes, sorted_odds_ratio, sorted_gene_vals = _sort_genes(
+    sorted_genes, sorted_odds_ratios, sorted_gene_vals = _sort_genes(
         sample_gene_vals, current_odds_ratios, gene_order)
     experiment_data = {"sample_values": sorted_gene_vals,
                        "genes": sorted_genes,
@@ -175,7 +176,7 @@ def edge_experiment_session(edge_pws, experiment):
 def edge_excel_file(edge_pws):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
-    
+
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
@@ -194,26 +195,27 @@ def edge_excel_file(edge_pws):
         edge_info, gene_odds_ratio_map, most_metadata, "most")
     list_of_rows += _build_heatmap_rows_excel_file(
         edge_info, gene_odds_ratio_map, least_metadata, "least")
-    
-    make_excel = excel.make_response_from_array(list_of_rows, "csv",
-                                          file_name="{0}-{1}_edge_heatmap_data".format(
-                                              pw1.replace(",", ""), pw2.replace(",", "")))
+
+    make_excel = excel.make_response_from_array(
+        list_of_rows, "csv",
+        file_name="{0}-{1}_edge_heatmap_data".format(
+            pw1.replace(",", ""), pw2.replace(",", "")))
     return make_excel
 
 
 ALL_EXCEL_FILE_FIELDS = [
     "which_heatmap", "sample", "gene", "normalized_expression",
     "pathway", "odds_ratio", "experiment",
-    "info (strain; genotype; medium; biotic interactor 1 "
-        "(plant/human/bacteria); biotic interactor 2; treatment"
+    ("info (strain; genotype; medium; biotic interactor 1 "
+        "(plant/human/bacteria); biotic interactor 2; treatment")
 ]
 
 
 SAMPLE_INFO_FIELDS = [
     "Strain", "Genotype", "Medium (biosynthesis/energy)",
     "Biotic interactor_level 1 (Plant, Human, Bacteria)",
-    "Biotic interactor_level 2 (Lung, epithelial cells, "
-        "Staphylococcus aureus, etc)",
+    ("Biotic interactor_level 2 (Lung, epithelial cells, "
+        "Staphylococcus aureus, etc)"),
     "Treatment (drug/small molecule)"
 ]
 
@@ -221,7 +223,7 @@ SAMPLE_INFO_FIELDS = [
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
-
+    print(pw1 + " " + pw2)
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
@@ -245,7 +247,7 @@ def get_edge_template(edge_pws, db):
 
     edge_info["ownership"] = pathway_owner_index
 
-    session["counter"] += 1
+    sum_session_counter()
     session["edge_info"] = {"experiments": {"most": most_experiments,
                                             "least": least_experiments},
                             "genes": edge_info["gene_names"],
@@ -297,7 +299,10 @@ def _edge_to_string(edge):
     return to_str
 
 
-def _build_heatmap_rows_excel_file(edge_info, gene_odds_ratio_map, metadata, which_heatmap_str):
+def _build_heatmap_rows_excel_file(edge_info,
+                                   gene_odds_ratio_map,
+                                   metadata,
+                                   which_heatmap_str):
     rows = []
     for cell in edge_info["{0}_expressed_heatmap".format(which_heatmap_str)]:
         sample_index = cell["source_index"]
@@ -312,7 +317,7 @@ def _build_heatmap_rows_excel_file(edge_info, gene_odds_ratio_map, metadata, whi
         if json_meta:
             experiment = json_meta["Experiment"]
             info = _build_sample_excel_file_field(json_meta)
-            info = info.encode('ascii',errors='ignore')
+            info = info.encode('ascii', errors='ignore')
         else:
             experiment = "N/A"
             info = "N/A"
@@ -326,7 +331,7 @@ def _build_heatmap_rows_excel_file(edge_info, gene_odds_ratio_map, metadata, whi
 def _build_sample_excel_file_field(metadata_dict):
     include_in_field_value = []
     for field in SAMPLE_INFO_FIELDS:
-        value = metadata[field] if field in metadata_dict else "N/A"
+        value = metadata_dict[field] if field in metadata_dict else "N/A"
         include_in_field_value.append(value)
     unique_values = set(include_in_field_value)
     if len(unique_values) == 1 and "N/A" in unique_values:
@@ -368,4 +373,4 @@ def _get_sample_metadata(sample_names):
 
 
 #if __name__ == "__main__":
-    #app.run(debug=True,host="0.0.0.0")
+    #app.run(debug=True, host="0.0.0.0")
