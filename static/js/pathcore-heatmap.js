@@ -13,7 +13,7 @@ const sampleMetadataRows = [
   "Gene-to-edge odds ratio"
 ];
 
-function heatmap(data, heatmapWidth, heatmapHeight) {
+function heatmap(svg, data, heatmapWidth, heatmapHeight, color) {
   // holds all of the rectangles in the heatmap
   const cellGroup = svg.append("g");
   const rects = cellGroup.selectAll(".cell")
@@ -134,8 +134,8 @@ function heatmap(data, heatmapWidth, heatmapHeight) {
    .text("Genes");
 }
 
-function heatmapLegend(heatmapWidth, heatmapHeight) {
-  const legendWidth = Math.max(Math.min(chart_width, 500), 100);
+function heatmapLegend(svg, heatmapWidth, heatmapHeight, color, min, max) {
+  const legendWidth = Math.max(Math.min(heatmapWidth, 500), 100);
   let colorbarLegend = [];
   for (var i = 0; i < legendWidth; i++) { 
     colorbarLegend.push(i / legendWidth); 

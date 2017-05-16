@@ -168,7 +168,7 @@ def edge_experiment_session(edge_pws, experiment):
                            edge_str=_edge_to_string(current_edge_name),
                            edge=current_edge_name,
                            experiment_name=experiment,
-                           experiment_information=dumps(experiment_data))
+                           experiment_info=dumps(experiment_data))
 
 
 @app.route("/edge/<path:edge_pws>/download")
@@ -372,5 +372,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")

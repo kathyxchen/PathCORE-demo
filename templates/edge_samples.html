@@ -306,7 +306,7 @@ function createHeatmap(divId, data, color, min, max) {
   let bounding;
 
   function heatmapLegend(heatmapWidth, heatmapHeight) {
-    const legendWidth = Math.max(Math.min(chart_width, 500), 100);
+    const legendWidth = Math.max(Math.min(heatmapWidth, 500), 100);
     let colorbarLegend = [];
     for (var i = 0; i < legendWidth; i++) { 
       colorbarLegend.push(i / legendWidth); 
