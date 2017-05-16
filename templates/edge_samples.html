@@ -218,10 +218,10 @@ function rearrangeHeatmapIndices(heatmapData, indexArr) {
 
     for (let i = 0; i < heatmapData.length; i++) {
       let heatmapCell = {};
-      let currentGenePos = heatmapCell[i]["target_index"];
+      let currentGenePos = heatmapData[i]["target_index"];
 
-      heatmapCell["source_index"] = heatmapCell[i]["source_index"];
-      heatmapCell["target_index"] = heatmapCell[i]["target_index"];
+      heatmapCell["source_index"] = heatmapData[i]["source_index"];
+      heatmapCell["target_index"] = heatmapData[i]["target_index"];
       heatmapCell["value"] = heatmapCells[heatmapCell.source_index + " " +
                                           indexArr[currentGenePos]];
       rearrangedHeatmapData.push(heatmapCell);
@@ -301,7 +301,7 @@ function createHeatmap(divId, data, color, min, max) {
     .append("g");
 
   const container = $("<div style='padding-top: 30px;'>")
-    .attr("class","meta col-md-6");
+    .attr("class","meta col-md-6")
     .addClass("sample-view");
 
   let bounding;
@@ -400,7 +400,8 @@ function createHeatmap(divId, data, color, min, max) {
         const metadata = JSON.parse(data.meta[sampleName]);
         const experiment = metadata["Experiment"];
         const xhr = new XMLHttpRequest();
-        window.location.href += "/experiment/" + experiment + divId;
+        window.location.href += "/experiment/" + experiment + "&" +
+          divId.substring(1);
       });
 
     // construct text labels for the y axis
