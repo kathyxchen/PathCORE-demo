@@ -69,6 +69,8 @@ let data;
 let colors;
 let colorbar;
 
+let heatmap;
+
 if (whitelisted.hasOwnProperty("most")) {
     finalSortedSamples = finalSortedSamples.concat(whitelisted["most"]);
 }
@@ -112,38 +114,7 @@ if (experimentInfo["heatmap_color"] == "R") {
 }
 colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
-createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
-
-function createHeatmap(divId, data, color, min, max) {
-  const width = 960;
-  const height = 800;
-  const cellSize = 25;
-  const labelSize = 100;
-
-  const heatmapHeight = cellSize * data.genesY.length;
-  const heatmapWidth = cellSize * data.samplesX.length;
-
-  const svg = d3.select(divId).append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g");
-
-  const container = $("<div style='padding-top: 30px;'>")
-    .attr("class","meta col-md-4")
-    .prependTo($(divId + "_parent"));
-
-  let bounding;
-
-  heatmapLegend(svg, heatmapWidth, heatmapHeight, color, min, max);
-  heatmap(svg, data, heatmapWidth, heatmapHeight, color);
-
-  bounding = svg.node().getBBox();
-  svg.attr("transform", "translate("
-                       + bounding.x * -1 + ","
-                       + bounding.y * -1 + ")");
-  d3.select("svg").attr("width", bounding.width);
-  d3.select("svg").attr("height", bounding.height);
-  return container;
-}
+heatmap = createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
+heatmap.prependTo($("#heatmap_parent"));
 </script>
 {% endblock %}
