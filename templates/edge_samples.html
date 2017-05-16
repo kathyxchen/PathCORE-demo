@@ -102,9 +102,8 @@
 </div>
 </div>
 
-<script>
+<script type="text/javascript">
 const edgeInfo = JSON.parse(JSON.stringify({{ edge_info|safe }}));
-console.log(edgeInfo);  // TODO: remove. debugging only.
 
 const mostExpressedData = 
     {"samplesX": edgeInfo["most_expressed_samples"],
@@ -307,15 +306,16 @@ function createHeatmap(divId, data, color, min, max) {
   let bounding;
 
   function heatmapLegend(heatmapWidth, heatmapHeight) {
+    const legendWidth = Math.max(Math.min(chart_width, 500), 100);
     let colorbarLegend = [];
-    for (var i = 0; i < heatmapWidth; i++) { 
-      colorbarLegend.push(i / heatmapWidth); 
+    for (var i = 0; i < legendWidth; i++) { 
+      colorbarLegend.push(i / legendWidth); 
     }
 
     // handles interpolation between expression values and legend position
     var legendScale = d3.scale.linear()
       .domain([min,max])
-      .range([0,heatmapWidth]);
+      .range([0,legendWidth]);
   
     // generates the tick values along the bottom of the legend
     var legendAxis = d3.svg.axis()
@@ -340,7 +340,7 @@ function createHeatmap(divId, data, color, min, max) {
 
     // legend title
     svg.append("text")
-       .attr("x", heatmapWidth / 2)
+       .attr("x", legendWidth / 2)
        .attr("y", -65)
        .attr("text-anchor", "middle")
        .text("normalized expression value");
@@ -437,7 +437,20 @@ function createHeatmap(divId, data, color, min, max) {
         var y = 0;
         return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
       })
-      .text(function(d) { return d; });
+      .text(function(d) { return d; })
+      .style("fill", function(d) {
+        if ("whitelist" in data) {
+          if (data.whitelist.hasOwnProperty("most") 
+              && $.inArray(d, data.whitelist.most) > -1) {
+              return "red";
+          }
+          if (data.whitelist.hasOwnProperty("least")
+              && $.inArray(d, data.whitelist.least) > -1) {
+              return "blue";
+          }
+        }
+        return 'black';
+      });
 
     // title for the x axis
     svg.append("text")

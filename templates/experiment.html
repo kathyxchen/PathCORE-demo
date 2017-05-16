@@ -1,289 +1,149 @@
-<head>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+{% extends "layout.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+{{ super() }}
+  <style>
+  .pw1 {
+   color: pink;
+  }
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  .pw2 {
+   color: green;
+  }
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-<style>
-.pw1 {
-       color: pink;
-}
-.pw2 {
-       color: green;
-}
-</style>
-</head>
-<body>
-    <div id="overview">
-    </div>
-    <div class="container">
-        <div class="row">
+  .both {
+    color: purple;
+  }
+  </style>
+  <script src="{{ url_for('static', filename='js/pathcore-heatmap.js') }}">
+  </script>
+{% endblock %}
+{% block content %}
+<div id="overview" class="container">
+    <div class="row">
         <h2>Experiment {{ experiment_name }}</h2>
-        <h3><a href="{{ url_for('pathcore_network') }}">Return to network</a></h3>
-        <h3><a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}">
-            Return to <span class="pw1">{{edge[0]}}</span> <span class="pw2">{{edge[1]}}</span></a></h3> 
+        <h3>
+          <a href="{{ url_for('pathcore_network') }}">Return to network</a>
+        </h3>
+        <h3>
+          <a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}">
+          Return to <span class="pw1">{{edge[0]}}</span> 
+                    <span class="pw2">{{edge[1]}}</span></a>
+        </h3> 
         <p>
-        Samples highlighted in <span style="color: red;">red</span> are from the 'most expressed' list,
-        whereas those in <span style="color: blue;">blue</span> are from the 'least expressed' list.
+          Samples highlighted in <span style="color: red;">red</span>
+          are from the 'most expressed' list, whereas those in
+          <span style="color: blue;">blue</span> are from the
+          'least expressed' list.
         </p>
         </div>
-        <div class="row" id="heatmap_parent">
-        <div class="col-md-8" id="heatmap" style="overflow-x: scroll;">
-        </div>
-        </div>
     </div>
-</body>
+</div>
+<div class="container" id="experiment-samples">
+<div class="row">
+    <div class="col-xs-6">
+    <div class="text-right">
+      <button type="button" class="btn btn-default toggle-genes">
+        Sort genes alphabetically
+      </button>
+    </div>
+    </div>
+</div>
+<div class="row" id="heatmap_parent">
+    <div class="col-md-8" id="heatmap" style="overflow-x: scroll;">
+    </div>
+</div>
+</div>
+
 <script type="text/javascript">
-var heatmap_information = JSON.stringify({{ experiment_information|safe }});
-heatmap_information = JSON.parse(heatmap_information);
-var sample_data = heatmap_information["sample_values"];
-var samples = heatmap_information["samples"];
-// additional sorting step because odds ratio ordering was based on
-// more genes than what we have now...
-var whitelisted = heatmap_information["whitelist_samples"];
-var final_sorted_samples = [];
-var least = [];
+const experimentInfo = JSON.parse(JSON.stringify({{ edge_info|safe }}));
+const sampleData = experimentInfo["sample_values"];
+const samples = experimentInfo["samples"];
+const whitelisted = experimentInfo["whitelist_samples"];
+let finalSortedSamples = [];
+let least = [];
+let heatmapCells = [];
+let sampleNames;
+let data;
+
+let colors;
+let colorbar;
+
 if (whitelisted.hasOwnProperty("most")) {
-    final_sorted_samples = final_sorted_samples.concat(whitelisted["most"]);
+    finalSortedSamples = finalSortedSamples.concat(whitelisted["most"]);
 }
 if (whitelisted.hasOwnProperty("least")) {
     least = whitelisted["least"];
 }
-for (var i = 0; i < samples.length; i++) {
-    if ($.inArray(samples[i], final_sorted_samples) == -1
-        && $.inArray(samples[i], least) == -1) {
-        final_sorted_samples.push(samples[i]);
-    }
+for (let i = 0; i < samples.length; i++) {
+  if ($.inArray(samples[i], finalSortedSamples) == -1
+      && $.inArray(samples[i], least) == -1) {
+    finalSortedSamples.push(samples[i]);
+  }
 }
-final_sorted_samples = final_sorted_samples.concat(least);
 
-var sample_names = final_sorted_samples;
-var build_indices = [];
-for (var i = 0; i < sample_names.length; i++) {
-    var sample = sample_names[i];
-    var expr_values = sample_data[sample];
-    for (var j = 0; j < expr_values.length; j++) {
-        value = expr_values[j];
-        var coordinate = {};
+finalSortedSamples = finalSortedSamples.concat(least);
+sampleNames = finalSortedSamples;
+
+for (let i = 0; i < sampleNames.length; i++) {
+    const sample = sampleNames[i];
+    const exprValues = sampleData[sample];
+    for (let j = 0; j < exprValues.length; j++) {
+        let coordinate = {};
         coordinate["source_index"] = i;
         coordinate["target_index"] = j;
-        coordinate["value"] = value;
-        build_indices.push(coordinate);
+        coordinate["value"] = exprValues[j];
+        heatmapCells.push(coordinate);
     }
 }
 
-var data = 
-    {"source_structures": sample_names,
-     "target_structures": heatmap_information["genes"],
-     "both_data": build_indices,
-     "whitelist": heatmap_information["whitelist_samples"],
-     "oddsratios": heatmap_information["odds_ratios"]
-    };
+data = {
+  "samplesX": sampleNames,
+  "genesY": experimentInfo["genes"],
+  "heatmapData": heatmapCells,
+  "whitelist": experimentInfo["whitelist_samples"],
+  "oddsratios": experimentInfo["odds_ratios"]
+};
 
-var colors = [];
-if (heatmap_information["heatmap_color"] == "R") {
+if (experimentInfo["heatmap_color"] == "R") {
     colors = ["white", "yellow", "red", "black"];
 } else {
     colors = ["white", "blue", "purple", "black"];
 }
+colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
-var colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
+createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
 
-function append_heatmap(div_id, data, color, min, max) {
-    var width = 960, height = 780, 
-        cell_size = 25, label_size = 100;
-    
-    var longest = data.source_structures.reduce(function (a, b) { return a.length > b.length ? a : b; });
+function createHeatmap(divId, data, color, min, max) {
+  const width = 960;
+  const height = 800;
+  const cellSize = 25;
+  const labelSize = 100;
 
-    var svg = d3.select(div_id).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g");
+  const heatmapHeight = cellSize * data.genesY.length;
+  const heatmapWidth = cellSize * data.samplesX.length;
 
-    var meta_container = $("<div style='padding-top: 30px;'>").attr("class","meta col-md-4")
-        .prependTo($(div_id + "_parent"));
-    // Build the D3 components that display the heatmap color legend.
-    function build_legend(chart_width, chart_height) {
-        chart_width = Math.max(Math.min(chart_width, 500), 100)
-        // Make an array of values, one for each pixel in the width of the legend.
-        var legend_data = [];
-        for (var i = 0; i < chart_width; i++) { legend_data.push(i / chart_width * 1); }
+  const svg = d3.select(divId).append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g");
 
-        // This scale handles interpolation between projection volume values and 
-        // legend position.
-        var legend_scale = d3.scale.linear()
-            .domain([min,max])
-            .range([0,chart_width]);
-        // This object will generate the tick values along the bottom of the legend.
-        var legend_axis = d3.svg.axis()
-            .scale(legend_scale)
-            .orient("bottom")
-            .tickValues(color.domain());
+  const container = $("<div style='padding-top: 30px;'>")
+    .attr("class","meta col-md-4")
+    .prependTo($(divId + "_parent"));
 
-        // Append the group that will hold all of the legend components.  A set of single-pixel
-        // rectangles are drawn across the legend and colored by their interpolated color value.
-        svg.append("g")
-           .attr("class", "legend axis")
-           .attr("transform", "translate(0,-100)")
-           .call(legend_axis)
-           .selectAll(".legend_cell")
-           .data(legend_data)
-           .enter().append("rect")
-           .attr("x", function(d,i) { return i; })
-           .attr("y", -cell_size)
-           .attr("width", 1)
-           .attr("height", cell_size)
-           .attr("fill", function(d) { return color(d); });
+  let bounding;
 
-        // A title for the legend.
-        svg.append("text")
-           .attr("x", chart_width / 2)
-           .attr("y", -65)
-           .attr("text-anchor", "middle")
-           .text("normalized expression value");
-    }
+  heatmapLegend(chart_width, chart_height);
+  heatmap(data, chart_width, chart_height);
 
-    var order = ["Sample", "Expression Value",
-        "Experiment", "Description", "Strain", "Genotype", "Medium (biosynthesis/energy)",
-        "Growth setting (planktonic, colony, biofilm)", 
-        "Growth setting (For planktonic-aerated, static)(For biofilms-flow cell, static)",
-        "Treatment (drug/small molecule)", "Temperature",
-        "Biotic interactor_level 1 (Plant, Human, Bacteria)",
-        "Biotic interactor_level 2 (Lung, epithelial cells, Staphylococcus aureus, etc)",
-        "OD", "Nucleic Acid", "Variant phenotype (QS defective, mucoid, SCV, etc)",
-        "Abx marker, auxotrophy",
-        "Additional Notes (markers)", "EXPT SUMMARY",
-        "Gene-to-edge odds ratio"];
-
-    // Construct the heatmap and its axes. The data supplied to this method
-    // is an array of source-target volume values.  
-    function build_heatmap(data, chart_width, chart_height) {
-
-        // This group will hold all of the rectangles within the heatmap.
-        var cell_group = svg.append("g");
-
-        // Make a rectangle for each source-target projection volume value.
-        var rects = cell_group.selectAll(".cell")
-            .data(data.both_data)
-            .enter().append("rect")
-            .attr("x", function(d) { return d.source_index * cell_size; })
-            .attr("y", function(d) { return d.target_index * cell_size; })
-            .style("fill", function(d) { return color(d.value); })
-            .attr("width", cell_size)
-            .attr("height", cell_size)
-            .on("mouseover", function(d) {
-                var sample_name = data.source_structures[d.source_index];
-                var metadata = heatmap_information["metadata"][sample_name];
-                metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
-                metadata["Gene-to-edge odds ratio"] = Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0;
-
-                var metadata_html = "<table class='table table-sm'><thead><tr><th style='width: 30%;'></th>"
-                + "<th style='width: 70%;'></th></tr></thead><tbody>";
-
-                for (var i = 0; i < order.length; i++) {
-                    var key = order[i];
-                    if (key in metadata) {
-                         metadata_html += "<tr><td style='line-height: 0.9;'><strong>" + key + "</strong></td>"
-                                            + "<td style='line-height: 0.9;'>" + metadata[key] + "</td></tr>";
-                    }
-                }
-                metadata_html += "</tbody>";
-                /*
-                var metadata_html = ""
-                for (var key in metadata) {
-                    metadata_html += "<strong>" + key + "</strong>: " + metadata[key] + "<br />";
-                }
-                var build_html = "<p class='font-weight-bold font-italic'>" + sample_name + "<br />" +
-                    data.target_structures[d.target_index] + "</p>" +
-                    "<p class='font-weight-normal'>" + "<strong>expression value:</strong> " +
-                    Math.ceil(d.value * 1000.0) / 1000.0 +
-                    "<br />" + "<strong>odds ratio:</strong> " +
-                    Math.ceil(data.oddsratios[d.target_index] * 1000.0) / 1000.0 + "</p>" +
-                    "<p>" + metadata_html + "</p>";
-                meta_container.html(build_html);
-                */
-                meta_container.html(metadata_html);
-            });
-        
-        // Construct text labels for the y axis
-        svg.append("g")
-           .attr("class", "y axis")
-           .selectAll("text")
-           .data(data.target_structures)
-           .enter().append("text")
-           .attr("y", function(d,i) { return i * cell_size + 17.5; })
-           .attr("x", -5)
-           .attr("text-anchor", "end")
-           .text(function(d) { return d; })
-           .attr("fill", function(d, i) {
-                   var owner = heatmap_information["ownership"][i];
-                   if (owner == 0) {
-                       return "pink";
-                   } else if (owner == 1) {
-                       return "green";
-                   }
-                });
-
-        // Construct text labels for the x axis
-        svg.append("g")
-           .attr("class", "x axis")
-           .attr("transform", "translate(0,"+ chart_height +")")
-           .selectAll("text")
-           .data(data.source_structures)
-           .enter().append("text")
-           .attr("transform", function(d,i) { 
-                var x = (i * cell_size);
-                var y = 0;
-                return "translate("+ (x + 8) + "," + (y + 5) + ") rotate(90)" ; 
-           })
-           .text(function(d) { return d; })
-           .style('fill', function(d) {
-                if (data.whitelist.hasOwnProperty("most") 
-                    && $.inArray(d, data.whitelist.most) > -1) {
-                    return 'red';
-                }
-                if (data.whitelist.hasOwnProperty("least")
-                    && $.inArray(d, data.whitelist.least) > -1) {
-                    return 'blue';
-                }
-                return 'black';
-           });
-
-        // A title for the x axis.
-        svg.append("text")
-           .attr("x", 50)
-           .attr("y", -20)
-           .attr("text-anchor", "middle")
-           .text("Samples");
-
-        // A title for the y axis.
-        svg.append("text")
-           .attr("text-anchor", "middle")
-           .attr("transform","translate(-110," + (chart_height / 2) +") rotate(90)")
-           .text("Genes");
-    }
-    var chart_height = cell_size * data.target_structures.length;
-    var chart_width = cell_size * data.source_structures.length;
-    build_heatmap(data, chart_width, chart_height);
-    build_legend(chart_width, chart_height);
-    bounding = svg.node().getBBox();
-    svg.attr("transform", "translate(" +
-             bounding.x * -1 + "," +
-             bounding.y * -1 + ")"
-            );
-    d3.select("svg").attr("width", bounding.width);
-    d3.select("svg").attr("height", bounding.height);
+  bounding = svg.node().getBBox();
+  svg.attr("transform", "translate("
+                       + bounding.x * -1 + ","
+                       + bounding.y * -1 + ")");
+  d3.select("svg").attr("width", bounding.width);
+  d3.select("svg").attr("height", bounding.height);
+  return container;
 }
-
-append_heatmap("#heatmap", data, colorbar, 0.0, 1.0);
-
 </script>
 </html>
