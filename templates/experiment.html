@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}{% endblock %}
+{% block title %}Experiment details{% endblock %}
 {% block head %}
 {{ super() }}
   <style>
@@ -50,7 +50,7 @@
     </div>
 </div>
 <div class="row" id="heatmap_parent">
-    <div class="col-md-8" id="heatmap" style="overflow-x: scroll;">
+    <div class="col-md-7 sample-view" id="heatmap" style="overflow-x: scroll;">
     </div>
 </div>
 </div>
@@ -103,9 +103,13 @@ data = {
   "samplesX": sampleNames,
   "genesY": experimentInfo["genes"],
   "heatmapData": heatmapCells,
+  "meta": experimentInfo["metadata"],
   "whitelist": experimentInfo["whitelist_samples"],
-  "oddsratios": experimentInfo["odds_ratios"]
+  "oddsratios": experimentInfo["odds_ratios"],
+  "ownership": experimentInfo["ownership"]
 };
+
+console.log(data);
 
 if (experimentInfo["heatmap_color"] == "R") {
     colors = ["white", "yellow", "red", "black"];

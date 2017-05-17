@@ -28,7 +28,7 @@ function createHeatmap(divId, data, color, min, max) {
     .append("g");
 
   const container = $("<div style='padding-top: 30px;'>")
-    .attr("class","meta col-md-6")
+    .attr("class","meta col-md-5")
     .addClass("sample-view");
 
   let bounding;
@@ -87,7 +87,13 @@ function createHeatmap(divId, data, color, min, max) {
       .attr("height", cellSize)
       .on("mouseover", function(d) {
         const sampleName = data.samplesX[d.source_index];
-        const metadata = JSON.parse(data.meta[sampleName]);
+        console.log(sampleName);
+        console.log(data.meta[sampleName]);
+        let metadata = data.meta[sampleName];
+        if (typeof(metadata) == "string") {
+            metadata = JSON.parse(metadata);
+        }
+        
         let metadataHtml;
 
         if (!metadata) {
@@ -190,15 +196,16 @@ function createHeatmap(divId, data, color, min, max) {
     // title for the y axis
     svg.append("text")
      .attr("text-anchor", "middle")
-     .attr("transform","translate(-" + (heatmapWidth / 3) + "," +
+     .attr("transform","translate(-150" + "," +
                        (heatmapHeight / 2) +") rotate(90)")
      .text("Genes");
   }
   
   heatmap(data, heatmapWidth, heatmapHeight);
   heatmapLegend(heatmapWidth, heatmapHeight);
-
+  
   bounding = svg.node().getBBox();
+  console.log(bounding.x)
   svg.attr("transform", "translate("
                        + bounding.x * -1 + ","
                        + bounding.y * -1 + ")");
