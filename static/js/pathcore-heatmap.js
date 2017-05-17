@@ -13,6 +13,41 @@ const sampleMetadataRows = [
   "Gene-to-edge odds ratio"
 ];
 
+/* listener for the button toggle
+ * (genes ordered by odds ratio or alphabetically)
+ */
+$(".toggle-genes").click(function() {
+    $(".toggle-genes").text(function(i, text) {
+        let x;
+        let y;
+        let returnButtonLabel;
+
+        $("#most_expressed svg").remove();
+        $("#least_expressed svg").remove();
+        text = text.trim();
+        if (text == "Sort genes alphabetically") {
+            x = createHeatmap("#most_expressed",
+              copyMost, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              copyLeast, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            returnButtonLabel = "Sort genes by odds ratio"; 
+        } else {
+            x = createHeatmap("#most_expressed",
+              mostExpressedData, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              leastExpressedData, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            returnButtonLabel = "Sort genes alphabetically";
+        }
+        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
+        return returnButtonLabel;
+    });
+});
+
 function createHeatmap(divId, data, color, min, max) {
   const width = 960;
   const height = 800;
@@ -87,8 +122,6 @@ function createHeatmap(divId, data, color, min, max) {
       .attr("height", cellSize)
       .on("mouseover", function(d) {
         const sampleName = data.samplesX[d.source_index];
-        console.log(sampleName);
-        console.log(data.meta[sampleName]);
         let metadata = data.meta[sampleName];
         if (typeof(metadata) == "string") {
             metadata = JSON.parse(metadata);
@@ -205,7 +238,6 @@ function createHeatmap(divId, data, color, min, max) {
   heatmapLegend(heatmapWidth, heatmapHeight);
   
   bounding = svg.node().getBBox();
-  console.log(bounding.x)
   svg.attr("transform", "translate("
                        + bounding.x * -1 + ","
                        + bounding.y * -1 + ")");

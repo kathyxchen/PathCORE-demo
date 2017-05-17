@@ -255,7 +255,7 @@ def get_edge_template(edge_pws, db):
                             "ownership": pathway_owner_index,
                             "edge_name": (str(pw1), str(pw2))}
     del edge_info["_id"]
-    return render_template("edge_samples.html",
+    return render_template("edge.html",
                            pw1=session["edge_info"]["edge_name"][0],
                            pw2=session["edge_info"]["edge_name"][1],
                            edge_info=json.dumps(edge_info))
