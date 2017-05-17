@@ -33,6 +33,10 @@
     padding: 5px;
     border-color: #ccc;
   }
+
+  .hide {
+    display: none;
+  }
   </style>
   <script src="{{ url_for('static', filename='js/pathcore.js') }}"></script>
 {% endblock %}
@@ -41,17 +45,18 @@
     <div class="row">
         <div class="container">
             <h3>{{title}}</h3>
-            <h4><b>Press Shift-L</b> to view the PathCORE network
+            <p>
+                <b>Press Shift-L</b> to view the PathCORE network
                 as a list of edges.
-            </h4>
-            <h4><b>Press Shift-N</b> to return to the PathCORE network.
-            </h4>
+                <b>Press Shift-N</b> to return to the PathCORE network.
+            </p>
         </div>
     </div>
-    {% include "network.html" %}
-    <div class="row list-view">
+    <div class="network-view">
+        {% include "network.html" %}
+    </div>
+    <div class="row list-view hide">
       <div class="container list-view-container">
-
       </div>
     </div>
 </div>
@@ -64,8 +69,8 @@
 Math.seedrandom("10pa4t5hcoRE");
 
 const target = "#pathcore";
-const width  = 960;
-const height = Math.max($(window).height() - 10, 500);
+const width  = 1200;
+const height = Math.max($(window).height() + 50, 500);
 const svg = d3.select(target).append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -88,14 +93,17 @@ d3.tsv(filepath, function(data) {
   // TODO: update PathCORE text with 
   // edge odds ratio description
   thead.append("<th>Odds ratio</th>");
-
+  table.append(thead);
   data.forEach(function(d) {
     const row = $("<tr />");
     const edge = "[" + d.pw0 + " - " + d.pw1 + "]";
-    const edgeUrl = edgeBaseUrl + d.pw0 + "&" + d.pw1;
-    const edgeData = "<a href=" + edgeUrl + ">" + edge "</a>"
+    const edgeUrl = (edgeBaseUrl + d.pw0 + "&" + d.pw1).replace(/ /g, '%20')
+      .replace(/=/g, '&#x3D;')
+      .replace(/>/g, '&gt;');
+    const edgeData = "<a href=" + edgeUrl + ">" + edge + "</a>";
     row.append("<td>" + edgeData + "</td>");
     row.append("<td>" + d.weight + "</td>");
+    table.append(row);
   });
 
   $(".list-view-container").html("");
@@ -112,17 +120,19 @@ $("#searchbar").keypress(function(e) {
 });
 
 // event listeners for network & list views
-$(document).keypress("l", function(e) {
+$(document).keypress(function(e) {
   if (e.shiftKey) {
-    $(".list-view").show();
-    $(".network-view").hide();
-  }
-});
-
-$(document).keypress("n", function(e) {
-  if (e.shiftKey) {
-    $(".list-view").hide();
-    $(".network-view").show();
+    const key = String.fromCharCode(e.keyCode);
+    console.log(key);
+    if (key == "L") {
+      console.log("??");
+      $(".list-view").removeClass("hide");
+      $(".network-view").addClass("hide");
+    }
+    if (key == "N") {
+      $(".list-view").addClass("hide");
+      $(".network-view").removeClass("hide");
+    }
   }
 });
 

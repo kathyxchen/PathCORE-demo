@@ -117,72 +117,15 @@ function loadPathCORENetwork(links, force, svg) {
   const nodes = d3.values(nodesByName);
 
   force
-    .nodes(nodes)
     .links(links)
+    .nodes(nodes)
     .linkStrength(0.5)
     .start();
   
-  let node; // functions/attributes associated with each node
   let link; // functions/attributes associated with each link
+  let node; // functions/attributes associated with each node
+  let node_drag;
   
-  function dragstart(d, i) {
-    force.stop()
-  }
-
-  function dragmove(d, i) {
-    d.px += d3.event.dx;
-    d.py += d3.event.dy;
-    d.x += d3.event.dx;
-    d.y += d3.event.dy;
-    tick();
-  }
-
-  function dragend(d, i) {
-    d.fixed = true;
-    tick();
-    force.resume();
-  }
-  
-  const node_drag = d3.behavior.drag()
-    .on("dragstart", dragstart)
-    .on("drag", dragmove)
-    .on("dragend", dragend)
-  
-  // Create the node circles.
-  node = svg.selectAll(".node")
-    .data(nodes)
-    .enter().append("g")
-      .attr("class", function(d) {
-        var name = d.name.toLowerCase();
-        name = name.replace(/[^\w\s]|_/g, " ")
-          .replace(/\s+/g, " ");
-        return "node " + name;
-      })
-      .call(node_drag)
-      .on("mouseover", function(d) {
-        const target = d3.select(this);
-        target.attr("r", 9).style("fill", "yellow");
-        highlightNode(target.select("text"));
-        this.parentNode.appendChild(this);
-        link.style("stroke", function(l) {
-          if (d === l.source || d === l.target)
-            return "red";
-          else
-            return lineColor;
-        });
-      })
-      .on("mouseout", function(d) {
-        const target = d3.select(this);
-        target.attr("r", 6).style("fill", "black");
-        defaultNode(target.select("text"));
-        link.style("stroke", lineColor);
-      });
-  node.append("circle").attr("r", 6);
-  node.append("text")
-    .attr("dx", 12)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.name; });
-
   // Create the link lines.
   link = svg.selectAll(".link")
     .data(links)
@@ -222,7 +165,65 @@ function loadPathCORENetwork(links, force, svg) {
   link.append("title").text(function(d) {
     return "odds ratio: " + d.weight;
   });
- 
+
+  function dragstart(d, i) {
+    force.stop()
+  }
+
+  function dragmove(d, i) {
+    d.px += d3.event.dx;
+    d.py += d3.event.dy;
+    d.x += d3.event.dx;
+    d.y += d3.event.dy;
+    tick();
+  }
+
+  function dragend(d, i) {
+    d.fixed = true;
+    tick();
+    force.resume();
+  }
+  
+  node_drag = d3.behavior.drag()
+    .on("dragstart", dragstart)
+    .on("drag", dragmove)
+    .on("dragend", dragend)
+  
+  // Create the node circles.
+  node = svg.selectAll(".node")
+    .data(nodes)
+    .enter().append("g")
+      .attr("class", function(d) {
+        var name = d.name.toLowerCase();
+        name = name.replace(/[^\w\s]|_/g, " ")
+          .replace(/\s+/g, " ");
+        return "node " + name;
+      })
+      .call(node_drag)
+      .on("mouseover", function(d) {
+        const target = d3.select(this);
+        target.attr("r", 9).style("fill", "yellow");
+        highlightNode(target.select("text"));
+        this.parentNode.appendChild(this);
+        link.style("stroke", function(l) {
+          if (d === l.source || d === l.target)
+            return "red";
+          else
+            return lineColor;
+        });
+      })
+      .on("mouseout", function(d) {
+        const target = d3.select(this);
+        target.attr("r", 6).style("fill", "black");
+        defaultNode(target.select("text"));
+        link.style("stroke", lineColor);
+      });
+  node.append("circle").attr("r", 6);
+  node.append("text")
+    .attr("dx", 12)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+
   function wrap(text, width) {
     text.each(function() {
       const text = d3.select(this);
@@ -254,7 +255,7 @@ function loadPathCORENetwork(links, force, svg) {
       }
     });
   }
-
+  
   svg.selectAll("text").call(wrap, 350);
 
   // Start the force layout.

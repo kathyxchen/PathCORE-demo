@@ -6,7 +6,7 @@ import os
 
 from bson.json_util import dumps
 from flask import Flask
-from flask import make_response, after_this_request
+from flask import redirect, make_response, after_this_request, url_for
 from flask import render_template, request, session
 import flask_excel as excel
 from pymongo import MongoClient
@@ -65,11 +65,6 @@ def sum_session_counter():
         session["counter"] = 1
 
 
-@app.route("/db")
-def db():
-    return {"status": "OK", "mongo": str(db)}
-
-
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -87,9 +82,8 @@ def pathcore_network():
 
 
 @app.route("/eADAGE/file")
-def pathcore_network():
-    return url_for(
-        "static", "data/10eADAGE_aggregate_10K_network.txt")
+def pathcore_network_file():
+    return redirect(url_for("static", filename="data/10eADAGE_aggregate_10K_network.txt"))
 
 
 # for viewing purposes only.
