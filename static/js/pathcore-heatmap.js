@@ -166,7 +166,7 @@ function createHeatmap(divId, data, color, min, max) {
         const sampleName = data.samplesX[d.source_index];
         const metadata = JSON.parse(data.meta[sampleName]);
         const experiment = metadata["Experiment"];
-        const xhr = new XMLHttpRequest();
+        //const xhr = new XMLHttpRequest();
         window.location.href += "/experiment/" + experiment + "&" +
           divId.substring(1);
       });

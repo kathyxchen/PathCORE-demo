@@ -65,6 +65,11 @@ def sum_session_counter():
         session["counter"] = 1
 
 
+@app.route("/db")
+def db():
+    return {"status": "OK", "mongo": str(db)}
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -79,6 +84,12 @@ def pathcore_network():
                                  "models (each k=300 features)",
                            filename="10eADAGE_aggregate_10K_network.txt",
                            view_only=False)
+
+
+@app.route("/eADAGE/file")
+def pathcore_network():
+    return url_for(
+        "static", "data/10eADAGE_aggregate_10K_network.txt")
 
 
 # for viewing purposes only.
