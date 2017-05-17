@@ -24,8 +24,7 @@
         <h3>Experiment {{ experiment_name }}</h3>
         <h4>
           <a href="{{ url_for('pathcore_network') }}">PathCORE network</a>
-        </h4>
-        <h4>
+          &nbsp; / &nbsp;
           <a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}">
           [<span class="pw1">{{edge[0]}}</span> -
            <span class="pw2">{{edge[1]}}</span>] page</a>

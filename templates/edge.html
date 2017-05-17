@@ -21,14 +21,14 @@
 {% block content %}
 <div id="overview" class="container">
     <div class="row">
-        <h2>
+        <h3>
           <span class="pw1">{{pw1}}</span> 
           <span class="pw2">{{pw2}}</span>
-        </h2>
-        <h3>
-          <a href="{{ url_for('pathcore_network') }}">Return to network</a>
         </h3>
-        <h3 class="description">Description</h3>
+        <h4>
+          <a href="{{ url_for('pathcore_network') }}">PathCORE network</a>
+        </h4>
+        <h4 class="description"><b>Description</b></h4>
         <p>
             For every gene annotated to one or both of {{pw1}} and {{pw2}},
             we computed an odds ratio that measures how often we observe a
