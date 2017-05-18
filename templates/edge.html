@@ -197,8 +197,8 @@ $(".toggle-genes").click(function() {
               leastExprMinMax["min"], leastExprMinMax["max"]);
             returnButtonLabel = "Sort genes alphabetically";
         }
-        $("#most_expressed_parent .sample-view").replaceWith(x);
-        $("#least_expressed_parent .sample-view").replaceWith(y);
+        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
         return returnButtonLabel;
     });
 });
