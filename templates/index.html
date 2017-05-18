@@ -44,7 +44,10 @@
 <div class="container">
     <div class="row">
         <div class="container">
-            <h3>{{title}}</h3>
+            <h4><a href="{{ url_for('home') }}">Home</a>
+                &nbsp; / &nbsp;
+                {{title}}
+            </h4>
             <p>
                 <b>Press Shift-L</b> to view the PathCORE network
                 as a list of edges.
@@ -85,6 +88,8 @@ const currentUrl = window.location.href;
 const baseUrl = currentUrl.substring(0, currentUrl.indexOf("eADAGE"));
 const edgeBaseUrl = baseUrl + "edge/";
 
+const viewOnly = "{{view_only}}" == "True";
+
 // create the edges table HTML
 d3.tsv(filepath, function(data) {
   const table = $("<table />");
@@ -100,7 +105,12 @@ d3.tsv(filepath, function(data) {
     const edgeUrl = (edgeBaseUrl + d.pw0 + "&" + d.pw1).replace(/ /g, '%20')
       .replace(/=/g, '&#x3D;')
       .replace(/>/g, '&gt;');
-    const edgeData = "<a href=" + edgeUrl + ">" + edge + "</a>";
+    let edgeData;
+    if (viewOnly) {
+      edgeData = edge;
+    } else {
+      edgeData = "<a href=" + edgeUrl + ">" + edge + "</a>";
+    }
     row.append("<td>" + edgeData + "</td>");
     row.append("<td>" + d.weight + "</td>");
     table.append(row);
@@ -125,7 +135,6 @@ $(document).keypress(function(e) {
     const key = String.fromCharCode(e.keyCode);
     console.log(key);
     if (key == "L") {
-      console.log("??");
       $(".list-view").removeClass("hide");
       $(".network-view").addClass("hide");
     }
@@ -138,7 +147,7 @@ $(document).keypress(function(e) {
 
 d3.tsv(filepath, function(error, links) {
   if (error) throw error;
-  loadPathCORENetwork(links, force, svg);
+  loadPathCORENetwork(links, force, svg, viewOnly);
 });
 
 </script>

@@ -1,14 +1,12 @@
-/*const target = "#pathcore"
-const width  = 960;
-const height = Math.max($(window).height() - 10, 500);
-const svg = d3.select(target).append("svg")
-  .attr("width", width)
-  .attr("height", height);
-const force = d3.layout.force()
-  .charge(-180)
-  .size([width, height]);
-*/
 const lineColor = "#6600FF";
+
+function hoverLineColor(viewOnly) {
+  if (viewOnly) {
+    return "#1DA1F2";
+  } else {
+    return "red";
+  }
+}
 
 function defaultNode(textSelect) {
   textSelect.style("font-size", "14px");
@@ -29,7 +27,7 @@ function highlightEdges(names) {
   link.style("stroke", function(l) {
     if (names.indexOf(l.source.name) != -1
         || names.indexOf(l.target.name) != -1)
-      return "red";
+      return hoverLineColor(viewOnly);
     else
       return lineColor;
   });
@@ -99,7 +97,7 @@ $("#searchbar").keypress(function(e) {
   }
 });
 
-function loadPathCORENetwork(links, force, svg) {
+function loadPathCORENetwork(links, force, svg, viewOnly) {
   const nodesByName = {};
   
   function nodeByName(name) {
@@ -141,7 +139,7 @@ function loadPathCORENetwork(links, force, svg) {
         const target = d3.select(this);
         const targetData = target[0][0].__data__;
         const lineWeight = edgeWeightConversion(targetData.weight);
-        target.style("stroke", "red");
+        target.style("stroke", hoverLineColor(viewOnly));
         target.style("stroke-width", Math.max(lineWeight, 6));
         node.style("fill", function(l) {
           if (l.name == targetData.pw0 || l.name == targetData.pw1) {
@@ -159,6 +157,9 @@ function loadPathCORENetwork(links, force, svg) {
         node.style("fill", "black");  
       })
       .on("click", function(d) {
+        if (viewOnly) {
+            return;
+        }
         var xhr = new XMLHttpRequest();
         window.location.href = "/edge/" + d.pw0 + "&" + d.pw1;
       });
@@ -207,7 +208,7 @@ function loadPathCORENetwork(links, force, svg) {
         this.parentNode.appendChild(this);
         link.style("stroke", function(l) {
           if (d === l.source || d === l.target)
-            return "red";
+            return hoverLineColor(viewOnly);
           else
             return lineColor;
         });
@@ -273,7 +274,7 @@ function loadPathCORENetwork(links, force, svg) {
 
   function tick() {
     tick_initial();
-    selection.selectAll("circle.gene").each(function(g){
+    svg.selectAll("circle").each(function(g){
       g.fixed = true;
     });
   }
