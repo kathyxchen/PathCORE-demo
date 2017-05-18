@@ -64,6 +64,7 @@ let least = [];
 let heatmapCells = [];
 let sampleNames;
 let data;
+let copy;
 
 let colors;
 let colorbar;
@@ -108,6 +109,9 @@ data = {
   "ownership": experimentInfo["ownership"]
 };
 
+copy = replaceWithAlphabetical(
+  jQuery.extend(true, {}, data));
+
 if (experimentInfo["heatmap_color"] == "R") {
     colors = ["white", "yellow", "red", "black"];
 } else {
@@ -117,5 +121,31 @@ colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
 
 heatmap = createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
 heatmap.prependTo($("#heatmap_parent"));
+
+/* listener for the button toggle
+ * (genes ordered by odds ratio or alphabetically)
+ */
+$(".toggle-genes").click(function() {
+    $(".toggle-genes").text(function(i, text) {
+        let x;
+        let y;
+        let returnButtonLabel;
+
+        $("#heatmap svg").remove();
+        text = text.trim();
+        if (text == "Sort genes alphabetically") {
+            x = createHeatmap("#heatmap",
+              copy, colorbar, 0.0, 1.0);
+            returnButtonLabel = "Sort genes by odds ratio"; 
+        } else {
+            x = createHeatmap("#heatmap",
+              data, colorbar, 0.0, 1.0);
+            returnButtonLabel = "Sort genes alphabetically";
+        }
+        $("#heatmap_parent .sample-view").replaceWith(x);
+        return returnButtonLabel;
+    });
+});
+
 </script>
 {% endblock %}

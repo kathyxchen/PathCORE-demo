@@ -13,40 +13,6 @@ const sampleMetadataRows = [
   "Gene-to-edge odds ratio"
 ];
 
-/* listener for the button toggle
- * (genes ordered by odds ratio or alphabetically)
- */
-$(".toggle-genes").click(function() {
-    $(".toggle-genes").text(function(i, text) {
-        let x;
-        let y;
-        let returnButtonLabel;
-
-        $("#most_expressed svg").remove();
-        $("#least_expressed svg").remove();
-        text = text.trim();
-        if (text == "Sort genes alphabetically") {
-            x = createHeatmap("#most_expressed",
-              copyMost, mostExprColorbar,
-              mostExprMinMax["min"], mostExprMinMax["max"]);
-            y = createHeatmap("#least_expressed",
-              copyLeast, leastExprColorbar,
-              leastExprMinMax["min"], leastExprMinMax["max"]);
-            returnButtonLabel = "Sort genes by odds ratio"; 
-        } else {
-            x = createHeatmap("#most_expressed",
-              mostExpressedData, mostExprColorbar,
-              mostExprMinMax["min"], mostExprMinMax["max"]);
-            y = createHeatmap("#least_expressed",
-              leastExpressedData, leastExprColorbar,
-              leastExprMinMax["min"], leastExprMinMax["max"]);
-            returnButtonLabel = "Sort genes alphabetically";
-        }
-        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
-        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
-        return returnButtonLabel;
-    });
-});
 
 function createHeatmap(divId, data, color, min, max) {
   const width = 960;
@@ -245,4 +211,67 @@ function createHeatmap(divId, data, color, min, max) {
   d3.select("svg").attr("width", bounding.width);
   d3.select("svg").attr("height", bounding.height);
   return container;
+}
+
+function indexSort(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = [arr[i], i];
+    }
+    arr.sort(function(left, right) {
+      return left[0] < right[0] ? -1 : 1;
+    });
+    arr.indicesSorted = [];
+    for (let j = 0; j < arr.length; j++) {
+      arr.indicesSorted.push(arr[j][1]);
+      arr[j] = arr[j][0];
+    }
+    return arr;
+}
+
+function rearrangeByIndices(arr, indexArr) {
+    let rearrangedArr = Array(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+      rearrangedArr[i] = arr[indexArr[i]];
+    }
+    return rearrangedArr;
+}
+
+function rearrangeHeatmapIndices(heatmapData, indexArr) {
+    let rearrangedHeatmapData = [];
+    let heatmapCells = {};
+    
+    for (let i = 0; i < heatmapData.length; i++) {
+      let cell = heatmapData[i];
+      let key = cell.source_index + " " + cell.target_index;
+      heatmapCells[key] = cell.value;
+    }
+
+    for (let i = 0; i < heatmapData.length; i++) {
+      let heatmapCell = {};
+      let currentGenePos = heatmapData[i]["target_index"];
+
+      heatmapCell["source_index"] = heatmapData[i]["source_index"];
+      heatmapCell["target_index"] = heatmapData[i]["target_index"];
+      heatmapCell["value"] = heatmapCells[heatmapCell.source_index + " " +
+                                          indexArr[currentGenePos]];
+      rearrangedHeatmapData.push(heatmapCell);
+    }
+
+    return rearrangedHeatmapData;
+}
+
+function replaceWithAlphabetical(copyData) {
+    alphabeticalGenes = indexSort(copyData["genesY"]);
+    copyData = {
+        "samplesX": copyData["samplesX"],
+        "genesY": alphabeticalGenes,
+        "heatmapData": rearrangeHeatmapIndices(
+          copyData["heatmapData"], alphabeticalGenes.indicesSorted),
+        "meta": copyData["meta"],
+        "oddsratios": rearrangeByIndices(
+          copyData["oddsratios"], alphabeticalGenes.indicesSorted),
+        "ownership": rearrangeByIndices(
+          copyData["ownership"], alphabeticalGenes.indicesSorted)
+    };
+    return copyData;
 }
