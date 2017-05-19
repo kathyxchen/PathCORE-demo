@@ -16,6 +16,22 @@
             border: 1px solid black;
             overflow-y: scroll;
         }
+        
+        .link {
+            stroke: #000;
+            opacity: 0.5;
+        }
+
+        .node {
+            stroke: #fff;
+        }
+
+        .node text {
+            pointer-events: none;
+            font: 14px, sans-serif;
+            fill: white;
+            stroke: gray;
+        }
         </style>
 		
         <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js') }}">

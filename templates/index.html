@@ -3,22 +3,6 @@
 {% block head %}
   {{ super() }}
   <style type="text/css">
-  .link {
-    stroke: #000;
-    opacity: 0.5;
-  }
-
-  .node {
-    stroke: #fff;
-  }
-
-  .node text {
-    pointer-events: none;
-    font: 14px sans-serif;
-    fill: white;
-    stroke: gray;
-  }
-
   table {
     border: 1px solid #ccc;
   }
@@ -72,8 +56,8 @@
 Math.seedrandom("10pa4t5hcoRE");
 
 const target = "#pathcore";
-const width  = 1200;
-const height = Math.max($(window).height() + 50, 500);
+const width  = Math.max($(".container").width(), 960);
+const height = Math.max($(window).height() + 100, 500);
 const svg = d3.select(target).append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -95,8 +79,6 @@ d3.tsv(filepath, function(data) {
   const table = $("<table />");
   const thead = $("<thead />");
   thead.append("<th>Edge</th>");
-  // TODO: update PathCORE text with 
-  // edge odds ratio description
   thead.append("<th>Odds ratio</th>");
   table.append(thead);
   data.forEach(function(d) {
