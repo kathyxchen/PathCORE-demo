@@ -30,12 +30,16 @@ Math.seedrandom("10pa4t5hcoRE");
 const target = "#pathcore";
 const width  = Math.max($(".container").width(), 960);
 const height = Math.max($(window).height() + 100, 500);
-const svg = d3.select(target).append("svg")
-  .attr("width", width)
-  .attr("height", height);
-const force = d3.layout.force()
-  .charge(-180)
-  .size([width, height]);
+
+function createNetworkSVG(data) {
+  const svg = d3.select(target).append("svg")
+    .attr("width", width)
+    .attr("height", height);
+  const force = d3.layout.force()
+    .charge(-180)
+    .size([width, height]);
+  loadPathCORENetwork(data, force, svg, true);
+}
 
 // event listener for the search bar
 $("#searchbar").keypress(function(e) {
@@ -56,7 +60,8 @@ $(function () {
                 reader.onload = function (e) {	
                     const tsvString = e.target.result;
                 	const data = d3.tsv.parse(tsvString);
-                	loadPathCORENetwork(data, force, svg, true);
+                	$(".container").find("svg").remove();
+                    createNetworkSVG(data);
                 }
                 reader.readAsText(file.files[0]);
             } else {
