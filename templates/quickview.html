@@ -31,12 +31,15 @@ const target = "#pathcore";
 const width  = Math.max($(".container").width(), 960);
 const height = Math.max($(window).height() + 100, 500);
 
+let svg;
+
 function createNetworkSVG(data) {
-  const svg = d3.select(target).append("svg")
+  svg = d3.select(target).append("svg")
     .attr("width", width)
     .attr("height", height);
   const force = d3.layout.force()
     .charge(-180)
+    .linkDistance(30)
     .size([width, height]);
   loadPathCORENetwork(data, force, svg, true);
 }
