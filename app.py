@@ -77,13 +77,14 @@ def pathcore_network():
     return render_template("index.html",
                            title="PAO1 KEGG network, built from 10 eADAGE "
                                  "models (each k=300 features)",
-                           filename="10eADAGE_aggregate_10K_network.txt",
+                           filename="PAO1_KEGG_10_eADAGE_network.tsv",
                            view_only=False)
 
 
 @app.route("/eADAGE/file")
 def pathcore_network_file():
-    return redirect(url_for("static", filename="data/10eADAGE_aggregate_10K_network.txt"))
+    return redirect(url_for("static",
+        filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
 
 
 # for viewing purposes only.
@@ -93,7 +94,7 @@ def tcga_network():
     return render_template("index.html",
                            title="TCGA PID network, built from 1 NMF model "
                                  "(k=300)",
-                           filename="tcga_pid_network.txt",
+                           filename="TCGA_PID_NMF_network.tsv",
                            view_only=True)
 
 
@@ -127,7 +128,6 @@ def edge_experiment_session(edge_pws, experiment):
     sample_gene_vals = {}
 
     # get all annotations associated with an experiment
-    # TODO: note in docs that this is PA specific.
     annotations_iterator = db.sample_annotations.find(
         {"Experiment": experiment})
     for annotation in annotations_iterator:
@@ -377,5 +377,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")

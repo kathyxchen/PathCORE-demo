@@ -34,12 +34,12 @@ function highlightEdges(names) {
 }
 
 function edgeWeightConversion(weight) {
-  if (weight > 50) {
-    return 4 + weight/10.0;
-  } else if (weight > 10) {
-    return 3 + weight/6.0;
+  if (weight > 10) {
+    return 4 + weight/8.0;
+  } else if (weight > 4) {
+    return 3 + weight/3.0;
   } else {
-    return weight/1.5;
+    return weight/1.25;
   }
 }
 
