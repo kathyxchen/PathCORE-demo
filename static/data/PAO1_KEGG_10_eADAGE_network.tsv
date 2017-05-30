@@ -1,200 +1,180 @@
 pw0	pw1	weight
-Phosphonate and phosphinate metabolism PAO1	Phosphonate transport system	25.785046728971963
-Macrolide resistance, MacAB-TolC transporter	Zinc transport system	23.1814759895061
-Glycine betaine/proline transport system	Glycine, serine and threonine metabolism PAO1	20.23719578641482
-Iron complex transport system	Zinc transport system	18.569436997319034
-Citrate cycle (TCA cycle, Krebs cycle)	Ribosome PAO1	17.994241842610364
-Phosphate transport system	Phosphonate transport system	17.69767441860465
-Phosphate transport system	Phosphonate and phosphinate metabolism PAO1	17.36884368308351
-Glycine betaine/proline transport system	Methane metabolism PAO1	16.786168088582322
-Putative polar amino acid transport system	Sulfur metabolism PAO1	15.71675582212136
-Glycerophospholipid metabolism PAO1	Phosphonate and phosphinate metabolism PAO1	14.177215189873419
-Glycerophospholipid metabolism PAO1	Phosphonate transport system	14.118421052631579
-Ribosome PAO1	Ribosome, bacteria	13.370973368996394
-Aminobenzoate degradation PAO1	Benzoate degradation PAO1	12.194725759550787
-Phosphonate and phosphinate metabolism PAO1	Type II general secretion pathway	11.989047097480833
-Glycine, serine and threonine metabolism PAO1	Methane metabolism PAO1	11.937819905213269
-Glycerophospholipid metabolism PAO1	Phosphate transport system	11.563279857397506
-NitT/TauT family transport system	Sulfur metabolism PAO1	11.416987590928542
-NitT/TauT family transport system	Putative polar amino acid transport system	10.949920085242407
-Citrate cycle (TCA cycle) PAO1	Ribosome PAO1	10.814719271623673
-Phosphonate transport system	Type II general secretion pathway	10.258064516129032
-Cyanoamino acid metabolism PAO1	Quorum sensing PAO1	10.206357102423796
-Iron complex transport system	Macrolide resistance, MacAB-TolC transporter	10.205460174500423
-Citrate cycle (TCA cycle, Krebs cycle)	Ribosome, bacteria	10.032752613240419
-Glycolysis / Gluconeogenesis PAO1	Pentose phosphate pathway PAO1	9.92202843324051
-Bacterial secretion system PAO1	Type III secretion system	9.605153670648235
-Cyanoamino acid metabolism PAO1	Phenazine biosynthesis PAO1	9.536876496085917
-Phosphate transport system	Type II general secretion pathway	9.530988274706868
-RNA degradation PAO1	Ribosome PAO1	9.36
-Citrate cycle (TCA cycle) PAO1	Citrate cycle (TCA cycle, Krebs cycle)	8.793157076205288
-Denitrification, nitrate => nitrogen	Nitrogen metabolism PAO1	8.239533651298357
-Oxidative phosphorylation PAO1	Ribosome PAO1	7.927035830618893
-Benzoate degradation PAO1	Styrene degradation PAO1	7.851965549586424
-Glycerophospholipid metabolism PAO1	Type II general secretion pathway	7.663003663003662
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	7.554465257582896
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Iron complex transport system	7.539229671897289
-Phenazine biosynthesis PAO1	Pyocyanine biosynthesis, chorismate => pyocyanine	7.199207790064366
-Cyanoamino acid metabolism PAO1	Type VI secretion system	6.9913211186113795
-Homoprotocatechuate degradation, homoprotocatechuate => 2-oxohept-3-enedioate	Type III secretion system	6.887370405278039
-Degradation of aromatic compounds PAO1	Homoprotocatechuate degradation, homoprotocatechuate => 2-oxohept-3-enedioate	6.666666666666667
-Aminobenzoate degradation PAO1	Degradation of aromatic compounds PAO1	6.606897019429656
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Phospholipid transport system	6.564643799472296
-Bacterial chemotaxis PAO1	Flagellar assembly PAO1	6.497827267789245
-Benzoate degradation PAO1	Butanoate metabolism PAO1	6.366185897435898
-Tyrosine metabolism PAO1	Valine, leucine and isoleucine degradation PAO1	5.988895356647115
-RNA degradation PAO1	Ribosome, bacteria	5.726758607004663
-Citrate cycle (TCA cycle) PAO1	Ribosome, bacteria	5.620043432799807
-Phenylalanine metabolism PAO1	Valine, leucine and isoleucine degradation PAO1	5.491223181944831
-Bacterial secretion system PAO1	Glycerophospholipid metabolism PAO1	5.482954545454546
-Bacterial secretion system PAO1	Phosphate transport system	5.325162220620044
-Bacterial secretion system PAO1	Phosphonate transport system	5.315436241610738
-Aminobenzoate degradation PAO1	Chlorocyclohexane and chlorobenzene degradation PAO1	5.289762095696338
-Bacterial secretion system PAO1	Phosphonate and phosphinate metabolism PAO1	5.111602209944751
-Quorum sensing PAO1	Vanadium resistance, efflux pump MexGHI-OpmD	5.067435877446012
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Iron(III) transport system	4.993127147766323
-Propanoate metabolism PAO1	Valine, leucine and isoleucine degradation PAO1	4.909747292418772
-Quorum sensing PAO1	Type VI secretion system	4.869055497778198
-Phenazine biosynthesis PAO1	Quorum sensing PAO1	4.812043858342595
-Degradation of aromatic compounds PAO1	Type III secretion system	4.79757085020243
-Amino sugar and nucleotide sugar metabolism PAO1	Flagellar assembly PAO1	4.7372304199772985
-Degradation of aromatic compounds PAO1	Glycine betaine/proline transport system	4.7110091743119265
-Citrate cycle (TCA cycle) PAO1	Oxidative phosphorylation PAO1	4.676070528967254
-Aminobenzoate degradation PAO1	Butanoate metabolism PAO1	4.449874686716792
-Oxidative phosphorylation PAO1	Ribosome, bacteria	4.435588431985369
-Citrate cycle (TCA cycle, Krebs cycle)	Oxidative phosphorylation PAO1	4.421802354337719
-Oxidative phosphorylation PAO1	Protein export PAO1	4.396761133603239
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Zinc transport system	4.382210264563206
-Degradation of aromatic compounds PAO1	Methane metabolism PAO1	4.363536063991174
-Starch and sucrose metabolism PAO1	Vanadium resistance, efflux pump MexGHI-OpmD	4.346522201799361
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Macrolide resistance, MacAB-TolC transporter	4.311011768999179
-Citrate cycle (TCA cycle) PAO1	RNA degradation PAO1	4.292790313703907
-Iron complex transport system	Ribosome, bacteria	4.15075641306731
-Aminoacyl-tRNA biosynthesis, prokaryotes	Oxidative phosphorylation PAO1	4.0996828273674675
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Cysteine and methionine metabolism PAO1	4.084361678258919
-Glycine betaine/proline transport system	Histidine metabolism PAO1	3.9529742765273315
-Protein export PAO1	Ribosome, bacteria	3.9387956564659423
-Purine metabolism PAO1	Ribosome, bacteria	3.9328576062277003
-Aminoacyl-tRNA biosynthesis, prokaryotes	Pyrimidine metabolism PAO1	3.912087912087912
-Glyoxylate and dicarboxylate metabolism PAO1	Valine, leucine and isoleucine degradation PAO1	3.8855041702789155
-Quorum sensing PAO1	Tryptophan metabolism PAO1	3.874933190807055
-Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	Ribosome, bacteria	3.7676488643339474
-Bacterial secretion system PAO1	Type II general secretion pathway	3.759440559440559
-Oxidative phosphorylation PAO1	RNA degradation PAO1	3.7593309372408075
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Cysteine and methionine metabolism PAO1	3.706921517520996
-Denitrification, nitrate => nitrogen	Sulfur metabolism PAO1	3.7048290830168207
-Dipeptide transport system	Valine, leucine and isoleucine degradation PAO1	3.696750902527076
-Phenazine biosynthesis PAO1	Type VI secretion system	3.6838407895413194
-Citrate cycle (TCA cycle, Krebs cycle)	RNA degradation PAO1	3.6657060518731988
-Styrene degradation PAO1	Valine, leucine and isoleucine degradation PAO1	3.6598493257445153
-Glycine, serine and threonine metabolism PAO1	Zinc transport system	3.6526092974029143
-Arginine and proline metabolism PAO1	Methane metabolism PAO1	3.619371282922685
-Oxidative phosphorylation PAO1	Pyrimidine metabolism PAO1	3.589611725379275
-Aminoacyl-tRNA biosynthesis, prokaryotes	Ribosome, bacteria	3.5610226724553784
-Bacterial chemotaxis PAO1	Valine, leucine and isoleucine degradation PAO1	3.532642993644727
-Pyrimidine metabolism PAO1	Ribosome PAO1	3.5294117647058822
-Sulfur metabolism PAO1	Valine, leucine and isoleucine biosynthesis PAO1	3.482375207002602
-F-type ATPase, prokaryotes and chloroplasts	Ribosome, bacteria	3.4698521046643918
-Aminoacyl-tRNA biosynthesis, prokaryotes	Ribosome PAO1	3.449587824984147
-Histidine metabolism PAO1	Valine, leucine and isoleucine degradation PAO1	3.443517064705396
-Glyoxylate and dicarboxylate metabolism PAO1	Phenylalanine metabolism PAO1	3.3939577956581144
-Dipeptide transport system	Glycine, serine and threonine metabolism PAO1	3.374367052998762
-Arginine biosynthesis PAO1	Bacterial chemotaxis PAO1	3.3719196079823877
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Dipeptide transport system	3.3646949231485794
-Glycine, serine and threonine metabolism PAO1	Macrolide resistance, MacAB-TolC transporter	3.3445409200073897
-Bacterial secretion system PAO1	Type VI secretion system	3.3369823893384103
-Phospholipid transport system	Sulfur metabolism PAO1	3.3095749248604553
-Phenylalanine metabolism PAO1	Propanoate metabolism PAO1	3.295618885580604
-Cyanoamino acid metabolism PAO1	Tryptophan metabolism PAO1	3.26578073089701
-Propanoate metabolism PAO1	Tyrosine metabolism PAO1	3.2486702127659575
-Phenazine biosynthesis PAO1	Type III secretion system	3.1684841443772607
-Type III secretion system	Tyrosine metabolism PAO1	3.106637553034741
-Phenylalanine metabolism PAO1	Tyrosine metabolism PAO1	3.0570412737671973
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Phospholipid transport system	3.05429723859758
-Ribosome, bacteria	Zinc transport system	3.0303663608434865
-Pyrimidine metabolism PAO1	Ribosome, bacteria	3.0118077498752704
-D-Methionine transport system	NitT/TauT family transport system	3.0
-Flagellar assembly PAO1	Glutamate/aspartate transport system	2.995663486556808
-Denitrification, nitrate => nitrogen	Putative polar amino acid transport system	2.9786982248520713
-Degradation of aromatic compounds PAO1	Glycine, serine and threonine metabolism PAO1	2.97330298013245
-Phenazine biosynthesis PAO1	Vanadium resistance, efflux pump MexGHI-OpmD	2.970962075023251
-Oxidative phosphorylation PAO1	Propanoate metabolism PAO1	2.955122950819672
-Benzoate degradation PAO1	Valine, leucine and isoleucine degradation PAO1	2.907889623008162
-D-Methionine transport system	Sulfur metabolism PAO1	2.9066147859922182
-Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate	Glycolysis / Gluconeogenesis PAO1	2.8946515397082657
-Tryptophan metabolism PAO1	Type VI secretion system	2.8808290155440415
-Iron complex transport system	Iron(III) transport system	2.8722222222222222
-Aminoacyl-tRNA biosynthesis, prokaryotes	RNA degradation PAO1	2.8594594594594596
-Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate	Glycerolipid metabolism PAO1	2.8587717025136046
-Glutamate/aspartate transport system	Valine, leucine and isoleucine degradation PAO1	2.8566995456056743
-F-type ATPase, prokaryotes and chloroplasts	Ribosome PAO1	2.850828729281768
-Alanine, aspartate and glutamate metabolism PAO1	Glycerolipid metabolism PAO1	2.8464
-Amino sugar and nucleotide sugar metabolism PAO1	Histidine metabolism PAO1	2.839532412327311
-Purine metabolism PAO1	Ribosome PAO1	2.819095477386935
-Methane metabolism PAO1	Ribosome PAO1	2.8065888513144976
-Cobalamin biosynthesis, cobinamide => cobalamin	Spermidine/putrescine transport system	2.7944325481798717
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Phenylalanine metabolism PAO1	2.772327044025157
-Aminobenzoate degradation PAO1	Valine, leucine and isoleucine degradation PAO1	2.762695115342521
-Aminobenzoate degradation PAO1	Macrolide resistance, MacAB-TolC transporter	2.7295239842245254
-Cyanoamino acid metabolism PAO1	Vanadium resistance, efflux pump MexGHI-OpmD	2.7225188112152674
-Cationic antimicrobial peptide (CAMP) resistance PAO1	gamma-Hexachlorocyclohexane transport system	2.707762557077625
-Protein export PAO1	Ribosome PAO1	2.705882352941176
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Histidine degradation, histidine => N-formiminoglutamate => glutamate	2.689367616400278
-Aminobenzoate degradation PAO1	Catechol ortho-cleavage, catechol => 3-oxoadipate	2.6581285938316777
-Putative polar amino acid transport system	Valine, leucine and isoleucine biosynthesis PAO1	2.6285714285714286
-Arginine biosynthesis PAO1	Glyoxylate and dicarboxylate metabolism PAO1	2.5847183884418867
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	gamma-Hexachlorocyclohexane transport system	2.5578267885960195
-Oxidative phosphorylation PAO1	Purine metabolism PAO1	2.545286506469501
-Aminobenzoate degradation PAO1	Styrene degradation PAO1	2.4292973257485273
-Type VI secretion system	Vanadium resistance, efflux pump MexGHI-OpmD	2.37382598823408
-Aminobenzoate degradation PAO1	Methane metabolism PAO1	2.274687042757275
-Glyoxylate and dicarboxylate metabolism PAO1	Tyrosine metabolism PAO1	2.2125729457643057
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Cyanoamino acid metabolism PAO1	2.1081797373810383
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Flagellar assembly PAO1	2.1081233017895626
-Glyoxylate and dicarboxylate metabolism PAO1	Nitrogen metabolism PAO1	2.0919468007121167
-Aminobenzoate degradation PAO1	Biosynthesis of siderophore group nonribosomal peptides PAO1	2.0881275036222617
-Arginine biosynthesis PAO1	Valine, leucine and isoleucine degradation PAO1	2.0678246484698097
-Cyanoamino acid metabolism PAO1	Nitrogen metabolism PAO1	2.055526625921561
-Aminobenzoate degradation PAO1	Zinc transport system	2.015786793413682
-Valine, leucine and isoleucine degradation PAO1	Vanadium resistance, efflux pump MexGHI-OpmD	2.002823026742456
-F-type ATPase, prokaryotes and chloroplasts	RNA degradation PAO1	2.0
-Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	Polyketide sugar unit biosynthesis PAO1	2.0
-Pyrimidine metabolism PAO1	Sec (secretion) system	2.0
-Phenazine biosynthesis PAO1	Tyrosine metabolism PAO1	1.9803488460659608
-Aminoglycoside resistance, protease FtsH	Ribosome PAO1	1.9781420765027322
-Citrate cycle (TCA cycle, Krebs cycle)	F-type ATPase, prokaryotes and chloroplasts	1.9764705882352942
-Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	RNA degradation PAO1	1.9735973597359737
-Aminoacyl-tRNA biosynthesis, prokaryotes	gamma-Hexachlorocyclohexane transport system	1.9722222222222223
-Fatty acid biosynthesis PAO1	Fatty acid metabolism PAO1	1.9620853080568719
-D-Methionine transport system	Putative polar amino acid transport system	1.9617834394904459
-Glycine, serine and threonine metabolism PAO1	Tyrosine metabolism PAO1	1.9593207688001493
-Histidine degradation, histidine => N-formiminoglutamate => glutamate	beta-Alanine metabolism PAO1	1.9507389162561575
-Aminoacyl-tRNA biosynthesis, prokaryotes	Fatty acid biosynthesis PAO1	1.9448621553884713
-Monobactam biosynthesis PAO1	Zinc transport system	1.94300518134715
-Oxidative phosphorylation PAO1	Vitamin B6 metabolism PAO1	1.9359534206695779
-Citrate cycle (TCA cycle) PAO1	Purine metabolism PAO1	1.935114503816794
-Ribosome, bacteria	dTDP-L-rhamnose biosynthesis	1.9298642533936652
-Polyketide sugar unit biosynthesis PAO1	Ribosome, bacteria	1.9292786421499293
-Aminoacyl-tRNA biosynthesis PAO1	Oxidative phosphorylation PAO1	1.9291736930860035
-Aminobenzoate degradation PAO1	Fluorobenzoate degradation PAO1	1.9262086513994914
-Gluconeogenesis, oxaloacetate => fructose-6P	Ribosome, bacteria	1.9245714285714286
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Sulfur metabolism PAO1	1.9145168238165893
-Propanoate metabolism PAO1	Pyrimidine metabolism PAO1	1.8950819672131147
-Aminobenzoate degradation PAO1	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	1.8374604135366792
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Sulfur metabolism PAO1	1.827151470856934
-Glycine, serine and threonine metabolism PAO1	Type VI secretion system	1.7839902615119843
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Quorum sensing PAO1	1.7049600698351643
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	1.6867371347958537
-Aminobenzoate degradation PAO1	Cationic antimicrobial peptide (CAMP) resistance PAO1	1.6401060601918924
-Biosynthesis of siderophore group nonribosomal peptides PAO1	Type VI secretion system	1.634895203217474
-Quorum sensing PAO1	Type III secretion system	1.5975994331995056
-Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Type VI secretion system	1.57103825136612
-Cationic antimicrobial peptide (CAMP) resistance PAO1	Quorum sensing PAO1	1.566749107512562
-Quorum sensing PAO1	Tyrosine metabolism PAO1	1.5577692743990605
-Aminoacyl-tRNA biosynthesis PAO1	RNA degradation PAO1	1.0
-Phenylalanine, tyrosine and tryptophan biosynthesis PAO1	Riboflavin biosynthesis, GTP => riboflavin/FMN/FAD	1.0
-Branched-chain amino acid transport system	Geraniol degradation PAO1	1.0
-Multidrug resistance, efflux pump TriABC-TolC	Propanoate metabolism PAO1	1.0
-Purine metabolism PAO1	Putrescine transport system	1.0
-Citrate cycle (TCA cycle, Krebs cycle)	Glycolysis, core module involving three-carbon compounds	1.0
-Aminoacyl-tRNA biosynthesis PAO1	Pyrimidine metabolism PAO1	1.0
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Cationic antimicrobial peptide (CAMP) resistance PA01	132.0	
+Ribosome, bacteria	Ribosome PA01	103.0	
+Aminobenzoate degradation PA01	Benzoate degradation PA01	69.0	
+Ribosome, bacteria	Oxidative phosphorylation PA01	58.0	
+Cyanoamino acid metabolism PA01	Type VI secretion system	52.0	
+Glycine, serine and threonine metabolism PA01	Glycine betaine/proline transport system	45.0	
+Zinc transport system	Macrolide resistance, MacAB-TolC transporter	43.0	
+Ribosome PA01	Oxidative phosphorylation PA01	43.0	
+Zinc transport system	Iron complex transport system	41.0	
+Aminobenzoate degradation PA01	Valine, leucine and isoleucine degradation PA01	40.0	
+Zinc transport system	Biosynthesis of siderophore group nonribosomal peptides PA01	39.0	
+Tyrosine metabolism PA01	Type III secretion system	38.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Iron complex transport system	37.0	
+Glycine, serine and threonine metabolism PA01	Methane metabolism PA01	36.0	
+Valine, leucine and isoleucine degradation PA01	Tyrosine metabolism PA01	32.6666666667	
+Aminobenzoate degradation PA01	Degradation of aromatic compounds PA01	31.0	
+Aminobenzoate degradation PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	30.0	
+Sulfur metabolism PA01	Putative polar amino acid transport system	29.5	
+Valine, leucine and isoleucine degradation PA01	Glyoxylate and dicarboxylate metabolism PA01	29.0	
+Methane metabolism PA01	Glycine betaine/proline transport system	28.0	
+Phosphonate transport system	Phosphonate and phosphinate metabolism PA01	27.0	
+Ribosome PA01	Citrate cycle (TCA cycle, Krebs cycle)	26.0	
+Ribosome, bacteria	Citrate cycle (TCA cycle, Krebs cycle)	26.0	
+Ribosome, bacteria	Citrate cycle (TCA cycle) PA01	24.0	
+Valine, leucine and isoleucine degradation PA01	Bacterial chemotaxis PA01	24.0	
+Tyrosine metabolism PA01	Glyoxylate and dicarboxylate metabolism PA01	23.0	
+Amino sugar and nucleotide sugar metabolism PA01	Flagellar assembly PA01	23.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Cysteine and methionine metabolism PA01	22.0	
+Ribosome PA01	Citrate cycle (TCA cycle) PA01	21.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Cyanoamino acid metabolism PA01	21.0	
+Nitrogen metabolism PA01	Arginine biosynthesis PA01	20.0	
+Phosphonate transport system	Glycerophospholipid metabolism PA01	20.0	
+Bacterial chemotaxis PA01	Flagellar assembly PA01	20.0	
+Nitrogen metabolism PA01	Denitrification, nitrate => nitrogen	20.0	
+Valine, leucine and isoleucine degradation PA01	Styrene degradation PA01	19.0	
+Tyrosine metabolism PA01	Branched-chain amino acid transport system	19.0	
+Phosphonate and phosphinate metabolism PA01	Type II general secretion pathway	19.0	
+Valine, leucine and isoleucine degradation PA01	Arginine biosynthesis PA01	19.0	
+Glycine, serine and threonine metabolism PA01	Branched-chain amino acid transport system	18.0	
+Phosphonate and phosphinate metabolism PA01	Phosphate transport system	18.0	
+Glycerophospholipid metabolism PA01	Phosphonate and phosphinate metabolism PA01	18.0	
+Zinc transport system	Aminobenzoate degradation PA01	18.0	
+Phosphonate transport system	Phosphate transport system	18.0	
+Cyanoamino acid metabolism PA01	Arginine biosynthesis PA01	17.0	
+Pentose phosphate pathway PA01	Glycolysis / Gluconeogenesis PA01	17.0	
+Aminobenzoate degradation PA01	Styrene degradation PA01	17.0	
+Aminobenzoate degradation PA01	Biosynthesis of siderophore group nonribosomal peptides PA01	16.3333333333	
+Oxidative phosphorylation PA01	Citrate cycle (TCA cycle, Krebs cycle)	16.0	
+Sulfur metabolism PA01	NitT/TauT family transport system	16.0	
+Nitrogen metabolism PA01	Cyanoamino acid metabolism PA01	16.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Cysteine and methionine metabolism PA01	16.0	
+Valine, leucine and isoleucine degradation PA01	Phenylalanine metabolism PA01	16.0	
+Glycerophospholipid metabolism PA01	Phosphate transport system	15.0	
+Phosphonate transport system	Type II general secretion pathway	15.0	
+Macrolide resistance, MacAB-TolC transporter	Biosynthesis of siderophore group nonribosomal peptides PA01	15.0	
+Valine, leucine and isoleucine degradation PA01	Branched-chain amino acid transport system	15.0	
+Aminobenzoate degradation PA01	Branched-chain amino acid transport system	15.0	
+Macrolide resistance, MacAB-TolC transporter	Iron complex transport system	14.0	
+Citrate cycle (TCA cycle) PA01	Oxidative phosphorylation PA01	14.0	
+Zinc transport system	Glycine, serine and threonine metabolism PA01	14.0	
+Type VI secretion system	Multidrug resistance, efflux pump MexGHI-OpmD	14.0	
+Cyanoamino acid metabolism PA01	Multidrug resistance, efflux pump MexGHI-OpmD	14.0	
+Glycerophospholipid metabolism PA01	Type II general secretion pathway	14.0	
+Ribosome PA01	RNA degradation PA01	14.0	
+Multidrug resistance, efflux pump MexGHI-OpmD	Starch and sucrose metabolism PA01	14.0	
+Putative polar amino acid transport system	NitT/TauT family transport system	14.0	
+Ribosome, bacteria	RNA degradation PA01	14.0	
+Citrate cycle (TCA cycle) PA01	Citrate cycle (TCA cycle, Krebs cycle)	14.0	
+Valine, leucine and isoleucine degradation PA01	Propanoate metabolism PA01	13.0	
+Type III secretion system	Bacterial secretion system PA01	13.0	
+Nitrogen metabolism PA01	Methane metabolism PA01	13.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Phenylalanine metabolism PA01	12.0	
+Glyoxylate and dicarboxylate metabolism PA01	Arginine biosynthesis PA01	12.0	
+Styrene degradation PA01	Benzoate degradation PA01	12.0	
+Valine, leucine and isoleucine degradation PA01	Multidrug resistance, efflux pump MexGHI-OpmD	11.5	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Tryptophan biosynthesis, chorismate => tryptophan	11.0	
+Arginine biosynthesis PA01	Bacterial chemotaxis PA01	11.0	
+Valine, leucine and isoleucine degradation PA01	Dipeptide transport system	11.0	
+Tyrosine metabolism PA01	Propanoate metabolism PA01	11.0	
+Type III secretion system	Homoprotocatechuate degradation, homoprotocatechuate => 2-oxohept-3-enedioate	11.0	
+Branched-chain amino acid transport system	Methane metabolism PA01	10.0	
+Phosphate transport system	Type II general secretion pathway	10.0	
+Macrolide resistance, MacAB-TolC transporter	Aminobenzoate degradation PA01	10.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Methionine salvage pathway	10.0	
+Aminobenzoate degradation PA01	Dipeptide transport system	10.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Methionine salvage pathway	10.0	
+Sulfur metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	10.0	
+Biosynthesis of siderophore group nonribosomal peptides PA01	Iron(III) transport system	10.0	
+Branched-chain amino acid transport system	Glycine betaine/proline transport system	9.0	
+Ribosome, bacteria	Protein export PA01	9.0	
+Macrolide resistance, MacAB-TolC transporter	Glycine, serine and threonine metabolism PA01	9.0	
+Dipeptide transport system	Branched-chain amino acid transport system	9.0	
+Dipeptide transport system	Cationic antimicrobial peptide (CAMP) resistance PA01	9.0	
+Arginine and proline metabolism PA01	Cationic antimicrobial peptide (CAMP) resistance PA01	9.0	
+Valine, leucine and isoleucine degradation PA01	Histidine metabolism PA01	8.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	Phospholipid transport system	8.0	
+Branched-chain amino acid transport system	Glyoxylate and dicarboxylate metabolism PA01	8.0	
+Glycerolipid metabolism PA01	Pentose phosphate pathway PA01	8.0	
+Methane metabolism PA01	Degradation of aromatic compounds PA01	8.0	
+Glycine, serine and threonine metabolism PA01	Degradation of aromatic compounds PA01	8.0	
+Cyanoamino acid metabolism PA01	Phenylalanine, tyrosine and tryptophan biosynthesis PA01	8.0	
+Branched-chain amino acid transport system	Benzoate degradation PA01	8.0	
+Ribosome, bacteria	Sec (secretion) system	8.0	
+Ribosome, bacteria	Purine metabolism PA01	8.0	
+Type VI secretion system	Bacterial secretion system PA01	7.0	
+Type VI secretion system	Tryptophan biosynthesis, chorismate => tryptophan	7.0	
+Putative polar amino acid transport system	Branched-chain amino acid transport system	7.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Arginine and proline metabolism PA01	7.0	
+Aminobenzoate degradation PA01	Butanoate metabolism PA01	7.0	
+Oxidative phosphorylation PA01	Pyrimidine metabolism PA01	7.0	
+Oxidative phosphorylation PA01	RNA degradation PA01	7.0	
+Oxidative phosphorylation PA01	Purine metabolism PA01	7.0	
+Arginine biosynthesis PA01	Cytochrome c oxidase, cbb3-type	7.0	
+Aminobenzoate degradation PA01	Chlorocyclohexane and chlorobenzene degradation PA01	7.0	
+Glycine betaine/proline transport system	Degradation of aromatic compounds PA01	7.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	beta-Alanine metabolism PA01	7.0	
+Ribosome PA01	Purine metabolism PA01	6.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	gamma-Hexachlorocyclohexane transport system	6.0	
+Ribosome, bacteria	Pyrimidine metabolism PA01	6.0	
+Sulfur metabolism PA01	2-Oxocarboxylic acid metabolism PA01	6.0	
+Cyanoamino acid metabolism PA01	Cytochrome c oxidase, cbb3-type	6.0	
+Ribosome PA01	Sec (secretion) system	6.0	
+Cationic antimicrobial peptide (CAMP) resistance PA01	beta-Alanine metabolism PA01	6.0	
+Cyanoamino acid metabolism PA01	Tryptophan biosynthesis, chorismate => tryptophan	6.0	
+RNA degradation PA01	Citrate cycle (TCA cycle, Krebs cycle)	5.0	
+Ribosome PA01	Pyrimidine metabolism PA01	5.0	
+Benzoate degradation PA01	Butanoate metabolism PA01	5.0	
+Glycolysis / Gluconeogenesis PA01	Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate	5.0	
+Ribosome PA01	Protein export PA01	5.0	
+Cationic antimicrobial peptide (CAMP) resistance, arnBCADTEF operon	Phospholipid transport system	5.0	
+Branched-chain amino acid transport system	Glycolysis / Gluconeogenesis PA01	5.0	
+Histidine metabolism PA01	Glycine betaine/proline transport system	5.0	
+Branched-chain amino acid transport system	Glutamate/aspartate transport system	5.0	
+Glycerophospholipid metabolism PA01	Bacterial secretion system PA01	4.0	
+Glycine betaine/proline transport system	Tetrahydrofolate biosynthesis, GTP => THF	4.0	
+Phosphonate and phosphinate metabolism PA01	Bacterial secretion system PA01	4.0	
+Valine, leucine and isoleucine degradation PA01	Polyketide sugar unit biosynthesis PA01	4.0	
+Butanoate metabolism PA01	Degradation of aromatic compounds PA01	4.0	
+Glycine, serine and threonine metabolism PA01	Tetrahydrofolate biosynthesis, GTP => THF	4.0	
+Ribosome PA01	F-type ATPase, prokaryotes and chloroplasts	4.0	
+Amino sugar and nucleotide sugar metabolism PA01	Cysteine biosynthesis, serine => cysteine	4.0	
+Citrate cycle (TCA cycle) PA01	RNA degradation PA01	4.0	
+Glycerolipid metabolism PA01	Putative spermidine/putrescine transport system	4.0	
+Ribosome, bacteria	F-type ATPase, prokaryotes and chloroplasts	4.0	
+Methane metabolism PA01	Tetrahydrofolate biosynthesis, GTP => THF	4.0	
+Porphyrin and chlorophyll metabolism PA01	Spermidine/putrescine transport system	4.0	
+Methane metabolism PA01	Arginine and proline metabolism PA01	4.0	
+Multidrug resistance, efflux pump MexGHI-OpmD	Polyketide sugar unit biosynthesis PA01	4.0	
+Phosphonate transport system	Bacterial secretion system PA01	4.0	
+Putative polar amino acid transport system	2-Oxocarboxylic acid metabolism PA01	3.0	
+Bacterial secretion system PA01	Type II general secretion pathway	3.0	
+Citrate cycle (TCA cycle) PA01	Pyrimidine metabolism PA01	3.0	
+NitT/TauT family transport system	D-Methionine transport system	3.0	
+Phosphate transport system	Bacterial secretion system PA01	3.0	
+Flagellar assembly PA01	Cysteine biosynthesis, serine => cysteine	3.0	
+Arginine and proline metabolism PA01	Phenylalanine metabolism PA01	3.0	
+Putative spermidine/putrescine transport system	Propanoate metabolism PA01	3.0	
+Sulfur metabolism PA01	D-Methionine transport system	3.0	
+Citrate cycle (TCA cycle) PA01	Purine metabolism PA01	3.0	
+Iron(III) transport system	Iron complex transport system	3.0	
+Ribosome, bacteria	Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	3.0	
+Branched-chain amino acid transport system	Chloroalkane and chloroalkene degradation PA01	3.0	
+Oxidative phosphorylation PA01	Aminoacyl-tRNA biosynthesis, prokaryotes	3.0	
+Ribosome PA01	Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	2.0	
+Pyrimidine metabolism PA01	Sec (secretion) system	2.0	
+RNA degradation PA01	F-type ATPase, prokaryotes and chloroplasts	2.0	
+Oxidative phosphorylation PA01	Aminoacyl-tRNA biosynthesis PA01	2.0	
+Phospholipid transport system	Cysteine and methionine metabolism PA01	2.0	
+Ribosome PA01	Aminoglycoside resistance, protease FtsH	2.0	
+Aminoacyl-tRNA biosynthesis, prokaryotes	gamma-Hexachlorocyclohexane transport system	2.0	
+Arginine and proline metabolism PA01	beta-Alanine metabolism PA01	2.0	
+Propanoate metabolism PA01	Aminoacyl-tRNA biosynthesis, prokaryotes	2.0	
+Citrate cycle (TCA cycle, Krebs cycle)	Purine metabolism PA01	2.0	
+Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	Citrate cycle (TCA cycle, Krebs cycle)	2.0	
+Putative polar amino acid transport system	D-Methionine transport system	2.0	
+Glycerophospholipid metabolism PA01	Tetrahydrofolate biosynthesis, GTP => THF	2.0	
+Glycolysis / Gluconeogenesis PA01	Sulfate-sulfur assimilation	2.0	
+Citrate cycle (TCA cycle) PA01	Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate	2.0	
+RNA degradation PA01	Purine metabolism PA01	2.0	

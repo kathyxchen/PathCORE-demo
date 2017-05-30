@@ -115,7 +115,6 @@ def edge(edge_pws):
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     pw1, pw2 = edge_pws.split("&")
-    print(experiment)
     experiment, tag = experiment.split("&")
     if ("edge_info" not in session or
             session["edge_info"]["edge_name"] != (pw1, pw2)):
@@ -181,7 +180,6 @@ def edge_experiment_session(edge_pws, experiment):
 def edge_excel_file(edge_pws):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
-
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
@@ -228,6 +226,8 @@ SAMPLE_INFO_FIELDS = [
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
+    if "flag" in edge_info:
+        return render_template("no_edge.html", pw1=pw1, pw2=pw2)
     print(pw1 + " " + pw2)
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
@@ -243,12 +243,7 @@ def get_edge_template(edge_pws, db):
 
     pathway_owner_index = []
     for ownership in edge_info["pathway_owner"]:
-        if ownership == "both":
-            pathway_owner_index.append(-1)
-        elif ownership == pw1:
-            pathway_owner_index.append(0)
-        else:
-            pathway_owner_index.append(1)
+        pathway_owner_index.append(int(ownership))
 
     edge_info["ownership"] = pathway_owner_index
 
@@ -310,8 +305,8 @@ def _build_heatmap_rows_excel_file(edge_info,
                                    which_heatmap_str):
     rows = []
     for cell in edge_info["{0}_expressed_heatmap".format(which_heatmap_str)]:
-        sample_index = cell["source_index"]
-        gene_index = cell["target_index"]
+        sample_index = cell["col_index"]
+        gene_index = cell["row_index"]
         expression_value = cell["value"]
         sample = edge_info["{0}_expressed_samples".format(
             which_heatmap_str)][sample_index]

@@ -92,8 +92,8 @@ for (let i = 0; i < sampleNames.length; i++) {
     const exprValues = sampleData[sample];
     for (let j = 0; j < exprValues.length; j++) {
         let coordinate = {};
-        coordinate["source_index"] = i;
-        coordinate["target_index"] = j;
+        coordinate["col_index"] = i;
+        coordinate["row_index"] = j;
         coordinate["value"] = exprValues[j];
         heatmapCells.push(coordinate);
     }
