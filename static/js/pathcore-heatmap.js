@@ -42,17 +42,17 @@ function rearrangeHeatmapIndices(heatmapData, indexArr) {
     
     for (let i = 0; i < heatmapData.length; i++) {
       let cell = heatmapData[i];
-      let key = cell.source_index + " " + cell.target_index;
+      let key = cell.col_index + " " + cell.row_index;
       heatmapCells[key] = cell.value;
     }
 
     for (let i = 0; i < heatmapData.length; i++) {
       let heatmapCell = {};
-      let currentGenePos = heatmapData[i]["target_index"];
+      let currentGenePos = heatmapData[i]["row_index"];
 
-      heatmapCell["source_index"] = heatmapData[i]["source_index"];
-      heatmapCell["target_index"] = heatmapData[i]["target_index"];
-      heatmapCell["value"] = heatmapCells[heatmapCell.source_index + " " +
+      heatmapCell["col_index"] = heatmapData[i]["col_index"];
+      heatmapCell["row_index"] = heatmapData[i]["row_index"];
+      heatmapCell["value"] = heatmapCells[heatmapCell.col_index + " " +
                                           indexArr[currentGenePos]];
       rearrangedHeatmapData.push(heatmapCell);
     }
@@ -143,13 +143,13 @@ function createHeatmap(divId, data, color, min, max) {
     const rects = cellGroup.selectAll(".cell")
       .data(data.heatmapData)
       .enter().append("rect")
-      .attr("x", function(d) { return d.source_index * cellSize; })
-      .attr("y", function(d) { return d.target_index * cellSize; })
+      .attr("x", function(d) { return d.col_index * cellSize; })
+      .attr("y", function(d) { return d.row_index * cellSize; })
       .style("fill", function(d) { return color(d.value); })
       .attr("width", cellSize)
       .attr("height", cellSize)
       .on("mouseover", function(d) {
-        const sampleName = data.samplesX[d.source_index];
+        const sampleName = data.samplesX[d.col_index];
         let metadata = data.meta[sampleName];
         if (typeof(metadata) == "string") {
             metadata = JSON.parse(metadata);
@@ -162,7 +162,7 @@ function createHeatmap(divId, data, color, min, max) {
         }
         metadata["Expression Value"] = Math.ceil(d.value * 1000.0) / 1000.0;
         metadata["Gene-to-edge odds ratio"] = Math.ceil(
-          data.oddsratios[d.target_index] * 1000.0) / 1000.0;
+          data.oddsratios[d.row_index] * 1000.0) / 1000.0;
         metadataHtml = "<table class='table table-sm'>" +
           "<thead><tr><th style='width: 30%;'></th>" + 
           "<th style='width: 70%;'></th></tr></thead><tbody>"; 
@@ -191,10 +191,9 @@ function createHeatmap(divId, data, color, min, max) {
           .style("stroke", color(d.value));
       })
       .on("click", function(d) {
-        const sampleName = data.samplesX[d.source_index];
+        const sampleName = data.samplesX[d.col_index];
         const metadata = JSON.parse(data.meta[sampleName]);
         const experiment = metadata["Experiment"];
-        //const xhr = new XMLHttpRequest();
         window.location.href += "/experiment/" + experiment + "&" +
           divId.substring(1);
       });
