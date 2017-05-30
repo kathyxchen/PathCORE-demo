@@ -32,8 +32,10 @@
                 &nbsp; / &nbsp;
                 {{title}}
             </h4>
-            <p>Drag nodes in the network to different spots on the page to
-            improve readability. Click on edges to view more information about each relationship.
+            <p>Drag nodes in the network to different spots on the page to improve readability.
+            {% if not view_only %}
+                Click on edges to view more information about each relationship.
+            {% endif %}
             </p>
             <p>
                 <b>Press Shift-L</b> to view the PathCORE network
