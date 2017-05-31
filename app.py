@@ -237,7 +237,7 @@ def get_edge_template(edge_pws, db):
 def _sort_samples(sample_gene_expr, gene_odds_ratio_map, genes):
     sample_scores = []
     sum_odds_ratio = float(sum(gene_odds_ratio_map.values()))
-    for sample, gene_expr in sample_gene_expr.iteritems():
+    for sample, gene_expr in sample_gene_expr.items():
         score = 0
         for index, expression in enumerate(gene_expr):
             odds_ratio = gene_odds_ratio_map[genes[index]]
@@ -338,5 +338,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")

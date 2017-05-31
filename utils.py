@@ -1,4 +1,5 @@
-from cStringIO import StringIO as IO
+from io import BytesIO as IO
+
 from flask import after_this_request, request
 import functools
 import gzip
