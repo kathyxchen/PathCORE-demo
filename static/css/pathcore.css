@@ -1,0 +1,56 @@
+body {
+   font-family: Helvetica, Arial, sans-serif;
+   font-size: 13pt;
+}
+
+#pathcore {
+    border: 1px solid black;
+    overflow-y: scroll;
+}
+
+.link {
+    stroke: #000;
+    opacity: 0.5;
+}
+
+.node {
+    stroke: #fff;
+}
+
+.node text {
+    pointer-events: none;
+    font: 14px, sans-serif;
+    fill: white;
+    stroke: gray;
+}
+
+.pw1 {
+	color: pink;
+}
+
+.pw2 {
+	color: green;
+}
+
+.both {
+	color: purple;
+}
+
+table {
+	border: 1px solid #ccc;
+}
+
+table th {
+	background-color: #F7F7F7;
+	color: #333;
+	font-weight: bold;
+}
+
+table th, table td {
+	padding: 5px;
+	border-color: #ccc;
+}
+
+.hide {
+	display: none;
+}

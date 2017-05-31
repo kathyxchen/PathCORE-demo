@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Quickview{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/pathcore-network.js') }}">
+  </script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="container">
+            <h4><a href="{{ url_for('home') }}">Home</a>
+                &nbsp; / &nbsp;
+                {{title}}
+            </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <input type="file" id="file-upload" aria-describedby="fileHelp" />
+            <small id="fileHelp" class="form-text text-muted">
+                Load a PathCORE network .tsv/.txt file
+                (tab-separated columns pw0, pw1, weight)
+            </small>
+            <input type="button" class="btn" id="upload" value="Upload" />
+        </div>
+    </div>
+    {% include "network.html" %}
+</div>
+<script type="text/javascript">
+Math.seedrandom("10pa4t5hcoRE");
+const target = "#pathcore";
+const width  = Math.max($(".container").width(), 960);
+const height = Math.max($(window).height() + 100, 500);
+
+let svg;
+
+function createNetworkSVG(data) {
+  svg = d3.select(target).append("svg")
+    .attr("width", width)
+    .attr("height", height);
+  const force = d3.layout.force()
+    .charge(-180)
+    .linkDistance(30)
+    .size([width, height]);
+  loadPathCORENetwork(data, force, svg, true);
+}
+
+// event listener for the search bar
+$("#searchbar").keypress(function(e) {
+    $(".err-message").hide();
+    if (e.which == 13) {
+        $("button").click();
+        return false;
+    }
+});
+
+$(function () {
+    $("#upload").on("click", function () {
+        const file = $("#file-upload")[0];
+        const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
+        if (regex.test(file.value.toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                const reader = new FileReader();
+                reader.onload = function (e) {	
+                    const tsvString = e.target.result;
+                	const data = d3.tsv.parse(tsvString);
+                	$(".container").find("svg").remove();
+                    createNetworkSVG(data);
+                }
+                reader.readAsText(file.files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        } else {
+            alert("Please upload a TSV file with columns [pw0, pw1, weight].");
+        }
+    });
+});
+</script>
+{% endblock %}

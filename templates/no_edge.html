@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Edge{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div id="overview" class="container">
+    <div class="row">
+      <h3>
+        [<span class="pw1">{{pw1}}</span> 
+        - <span class="pw2">{{pw2}}</span>]
+        does not contain any genes with an odds ratio above 1.
+      </h3>
+      <p>
+        This means that the genes annotated to one or both of these pathways
+        were not more likely to appear in features containing this edge. We are
+        unable to suggest candidate genes for further analysis of the
+        pathway-pathway relationship at this time.
+      </p>
+      <h4>
+        Return to the 
+        <a href="{{ url_for('pathcore_network') }}">
+          PathCORE network
+        </a>
+      </h4>
+    </div>
+</div>
+{% endblock %}

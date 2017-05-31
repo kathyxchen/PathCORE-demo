@@ -1,193 +1,124 @@
-<!DOCTYPE html>
-<head>
-<meta charset="utf-8">
-<style>
-.link {
-  stroke: #000;
-}
-
-.node {
-  stroke: #fff;
-}
-
-.node text {
-  pointer-events: none;
-  font: 12px sans-serif;
-  stroke: black;
-}
-
-</style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block title %}PathCORE network{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/pathcore-network.js') }}">
+  </script>
+{% endblock %}
+{% block content %}
 <div class="container">
-    <div class="row" id="ppin">
+    <div class="row">
+        <div class="container">
+            <h4><a href="{{ url_for('home') }}">Home</a>
+                &nbsp; / &nbsp;
+                {{title}}
+            </h4>
+            <p>Drag nodes in the network to different spots on the page to
+               improve readability.
+            {% if not view_only %}
+                Click on edges to view more information about each relationship.
+            {% endif %}
+            </p>
+            <p>
+                <b>Press Shift-L</b> to view the PathCORE network
+                as a list of edges.
+                <b>Press Shift-N</b> to return to the PathCORE network.
+            </p>
+        </div>
+    </div>
+    <div class="network-view">
+        {% include "network.html" %}
+    </div>
+    <div class="row list-view hide">
+      <div class="container list-view-container">
+      </div>
     </div>
 </div>
-<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+</body>
+
 <script>
-Math.seedrandom("ppin");
-var width  = $("#ppin").width(),
-    height = 1000;
+/* initialize the random seed to make the PathCORE network layout
+ * load in the same way every time.
+ */
+Math.seedrandom("10pa4t5hcoRE");
 
-var svg = d3.select("#ppin").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+const target = "#pathcore";
+const width  = Math.max($(".container").width(), 960);
+const height = Math.max($(window).height() + 100, 500);
+const svg = d3.select(target).append("svg")
+  .attr("width", width)
+  .attr("height", height);
+const force = d3.layout.force()
+  .charge(-180)
+  .linkDistance(20)
+  .size([width, height]);
 
-var force = d3.layout.force()
-    .distance(350)
-    .charge(-50)
-    .gravity(0.03)
-    .size([width, height]);
-var filename = "{{ filename }}";
-d3.tsv("{{ url_for('static', filename='data/' + filename) }}", function(error, links) {
+const networkFilename = "{{ filename }}";
+const filepath = "{{ url_for('static', filename='data/' + filename) }}";
 
-  if (error) throw error;
+const currentUrl = window.location.href;
+const baseUrl = currentUrl.substring(0, currentUrl.indexOf("eADAGE"));
+const edgeBaseUrl = baseUrl + "edge/";
 
-  var nodesByName = {};
-  var links;
+const viewOnly = "{{view_only}}" == "True";
 
-  // Create nodes for each unique source and target.
-  links.forEach(function(link) {
-    link.source = nodeByName(link.PW1);
-    link.target = nodeByName(link.PW2);
-    link.weight = parseInt(link.Weight);
-    link.type = parseInt(link.Type);
+// create the edges table HTML
+d3.tsv(filepath, function(data) {
+  const table = $("<table />");
+  const thead = $("<thead />");
+  thead.append("<th>Edge</th>");
+  thead.append("<th>Odds ratio</th>");
+  table.append(thead);
+  data.forEach(function(d) {
+    const row = $("<tr />");
+    const edge = "[" + d.pw0 + " - " + d.pw1 + "]";
+    const edgeUrl = (edgeBaseUrl + d.pw0 + "&" + d.pw1).replace(/ /g, '%20')
+      .replace(/=/g, '&#x3D;')
+      .replace(/>/g, '&gt;');
+    let edgeData;
+    if (viewOnly) {
+      edgeData = edge;
+    } else {
+      edgeData = "<a href=" + edgeUrl + ">" + edge + "</a>";
+    }
+    row.append("<td>" + edgeData + "</td>");
+    row.append("<td>" + d.weight + "</td>");
+    table.append(row);
   });
 
-  // Extract the array of nodes from the map by name.
-  var nodes = d3.values(nodesByName);
-  
-  force
-    .nodes(nodes)
-    .links(links)
-    .start();
+  $(".list-view-container").html("");
+  $(".list-view-container").append(table);
+});
 
-  function weightConv(weight) {
-    if (weight > 15) {
-        return 5 + weight/4.0;
-    } else {
-        return weight/2.0;
-    }
-  }
-
-  function lineColor(etype) {
-    if (etype == -1) {
-        return "#FF9933";
-    } else {
-        return "#6600FF";
-    }
-  }
-
-  // Create the link lines.
-  var link = svg.selectAll(".link")
-      .data(links)
-    .enter().append("line")
-      .attr("class", "link")
-      .attr("stroke-width", function(d) {
-        return weightConv(d.weight);
-      })
-      .style("stroke", function(d) {
-        return lineColor(d.type);
-      })
-      .on("mouseover", function() {
-        var tgt = d3.select(this);
-        tgt.style("stroke", "red");
-        var currWt = weightConv(tgt[0][0].__data__.Weight);
-        tgt.style("stroke-width", Math.max(currWt, 5));
-      })
-      .on("mouseout", function() {
-        var tgt = d3.select(this);
-        var etype = tgt[0][0].__data__.Type;
-        var weight = tgt[0][0].__data__.Weight;
-        if (!weight) {
-            var weight = tgt[0][0].__data__.weight;
-        }
-        tgt.style("stroke", lineColor(etype)); 
-        tgt.style("stroke-width", weightConv(weight));
-      })
-      .on("click", function(d) {
-        var xhr = new XMLHttpRequest();
-        var etype = parseInt(d.Type);
-        var append = "";
-        if (filename == "tgraph_remove_large_network.txt") {
-            append = "2";
-        }
-        if (etype == -1) {
-            window.location.href = append + "/edge/inverse/" + d.PW1 + "&" + d.PW2
-        } else {
-            window.location.href = append + "/edge/direct/" + d.PW1 + "&" + d.PW2
-        }
-      });
-  
-  link.append("title").text(function(d) {
-        return "weight: " + d.weight;
-      });
-  
-  var node_drag = d3.behavior.drag()
-    .on("dragstart", dragstart)
-    .on("drag", dragmove)
-    .on("dragend", dragend)
-
-  function dragstart(d, i) {
-    force.stop()
-  }
-
-  function dragmove(d, i) {
-    d.px += d3.event.dx;
-    d.py += d3.event.dy;
-    d.x += d3.event.dx;
-    d.y += d3.event.dy;
-    tick();
-  }
-
-  function dragend(d, i) {
-    d.fixed = true;
-    tick();
-    force.resume();
-  }
-
-  // Create the node circles.
-  var node = svg.selectAll(".node")
-      .data(nodes)
-    .enter().append("g")
-      .attr("class", "node")
-      .call(node_drag);
-
-  node.append("circle")
-    .attr("r", 8)
-
-  node.append("text")
-    .attr("dx", 12)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.name; });
-  
-
-  // Start the force layout.
-  force.on("tick", tick)
-  
-  function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-  }
-
-  function nodeByName(name) {
-    return nodesByName[name] || (nodesByName[name] = {name: name});
+// event listener for the search bar
+$("#searchbar").keypress(function(e) {
+  $(".err-message").hide();
+  if (e.which == 13) {
+    $("button").click();
+    return false;
   }
 });
 
+// event listeners for network & list views
+$(document).keypress(function(e) {
+  if (e.shiftKey) {
+    const key = String.fromCharCode(e.keyCode);
+    console.log(key);
+    if (key == "L") {
+      $(".list-view").removeClass("hide");
+      $(".network-view").addClass("hide");
+    }
+    if (key == "N") {
+      $(".list-view").addClass("hide");
+      $(".network-view").removeClass("hide");
+    }
+  }
+});
+
+d3.tsv(filepath, function(error, links) {
+  if (error) throw error;
+  loadPathCORENetwork(links, force, svg, viewOnly);
+});
+
 </script>
+{% endblock %}

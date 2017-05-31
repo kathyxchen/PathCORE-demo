@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}PathCORE network{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="container">
+<h2>PathCORE Web Interface</h2>
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+  <a href="{{ url_for('pathcore_network') }}">
+    <b>Interact</b> with the PAO1 KEGG network demo server.
+  </a>
+    <h4>Additional:</h4>
+    <p>
+        <a href="http://biorxiv.org/content/early/2016/10/03/078659">
+          Tan et al. (2016): System-wide automatic extraction of
+          functional signatures in Pseudomonas aeruginosa with
+          eADAGE
+        </a>
+        <br />
+        <a href="http://www.kegg.jp/kegg-bin/show_organism?menu_type=pathway_maps&org=pae">
+          Click here
+        </a> 
+        to go to the PAO1 KEGG pathway maps.
+    </p>
+  </li>
+  <li class="list-group-item list-group-item-warning">
+  <a href="{{ url_for('tcga_network') }}">
+      <b>View</b> the TCGA PID network</a> described in our paper.
+    <h4>Additional:</h4>
+    <p>
+        <a href="http://doi.org/10.1038/ng.2764">
+          Weinstein et al. (2013): The Cancer Genome Atlas Pan-Cancer
+          analysis project
+        </a>
+        <br />
+        <a href="http://doi.org/10.1093/nar/gkn653">
+          PID: the Pathway Interaction Database
+        </a>
+    </p>
+  </li>
+  <li class="list-group-item list-group-item-warning">
+  <a href="{{ url_for('pathcore_network_quickview') }}">
+    <b>Upload and view</b>
+  </a>
+  your own PathCORE-generated network.
+  </li>
+</ul>
+</div>
+{% endblock %}

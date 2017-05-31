@@ -1,105 +1,194 @@
-<html>
-<head>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+{% extends "layout.html" %}
+{% block title %}Edge{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/pathcore-heatmap.js') }}">
+  </script>
+{% endblock %}
+{% block content %}
+<div id="overview" class="container">
+    <div class="row">
+        <h3>
+          <span class="pw1">{{pw1}}</span> 
+          <span class="pw2">{{pw2}}</span>
+        </h3>
+        <h4>
+          <a href="{{ url_for('pathcore_network') }}">PathCORE network</a>
+        </h4>
+        <h4 class="description"><b>Description</b></h4>
+        <p>
+            For every gene annotated to one or both of {{pw1}} and {{pw2}},
+            we computed an odds ratio that measures how often we observe a
+            feature enriched for both the gene and the edge of interest.
+            This page displays a maximum of 20 genes that had an odds
+            ratio of above 1. 
+            We do this to highlight the genes that are most observed
+            with the current pathway co-occurrence relationship.
+        </p>
+        <p>        
+            A summary expression score per sample was determined based on
+            the normalized expression values of the selected genes,
+            where each expression value was weighted by the corresponding
+            gene's odds ratio.
+            Displayed are the <a href="#most-expressed-samples">
+            {{n_samples}} most expressed</a>
+            and <a href="#least-expressed-samples">
+            {{n_samples}} least expressed</a> samples. 
+        </p>
+        <p>
+            If a gene-by-sample square has an experiment associated with
+            it (the information shows up when you hover over the square),
+            you can <b>click through</b> to view an <b>experiment page</b>
+            that displays the selected genes' expression values for
+            all samples from that experiment.
+        </p>
+        <p>
+            When available, we provide the common name for a given PA
+            gene locus tag. Genes in <span class="pw1">pink</span> are
+            annotated to <span class="pw1">{{pw1}}</span> in KEGG,
+            <span class="pw2">green</span> to <span class="pw2">{{pw2}}</span>,
+            and <span class="both">purple</span> to
+            <span class="both">both</span>.
+        </p>
+        <h4>
+          <a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
+            Click here to download a .csv file of the data provided in the
+            two heatmaps.
+          </a>
+        </h4>
+    </div>
+</div>
+<div class="container" id="most-expressed-samples">
+<h4>Most expressed samples</h4>
+<div class="row">
+    <div class="col-xs-6">
+    <div class="text-right">
+      <button type="button" class="btn btn-default toggle-genes">
+        Sort genes alphabetically
+      </button>
+    </div>
+    </div>
+</div>
+<div class="row" id="most_expressed_parent">
+    <div class="col-md-4 sample-view" id="most_expressed">
+    </div>
+</div>
+</div>
+<div class="container" id="least-expressed-samples">
+<h4>Least expressed samples</h4>
+<div class="row">
+    <div class="col-xs-6">
+    <div class="text-right">
+        <button type="button" class="btn btn-default toggle-genes">
+          Sort genes alphabetically
+        </button>
+    </div>
+    </div>
+</div>
+<div class="row" id="least_expressed_parent">
+    <div class="col-md-4 sample-view" id="least_expressed">
+    </div>
+</div>
+</div>
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script type="text/javascript">
+const edgeInfo = JSON.parse(JSON.stringify({{ edge_info|safe }}));
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous"></script>
+const mostExpressedData = 
+    {"samplesX": edgeInfo["most_expressed_samples"],
+     "genesY": edgeInfo["gene_names"],
+     "heatmapData": edgeInfo["most_expressed_heatmap"],
+     "meta": edgeInfo["most_metadata"],
+     "oddsratios": edgeInfo["odds_ratios"],
+     "ownership": edgeInfo["ownership"]
+    };
+const leastExpressedData =
+    {"samplesX": edgeInfo["least_expressed_samples"],
+     "genesY": edgeInfo["gene_names"],
+     "heatmapData": edgeInfo["least_expressed_heatmap"],
+     "meta": edgeInfo["least_metadata"],
+     "oddsratios": edgeInfo["odds_ratios"],
+     "ownership": edgeInfo["ownership"]
+    };
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-<script>
-var toy = [[0.4, 0.2], [0.3, 0.1]];
-console.log(toy);
-var width = 200, height = 200, gridSize = Math.floor(width / 2), legendElementWidth = gridSize * 2,
-    buckets = 9,
-    colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"],
-    rows = ["s1", "s2"],
-    cols = ["g1", "g2"];
+const mostExprMinMax = expressionMinMax(mostExpressedData["heatmapData"]);
+const leastExprMinMax = expressionMinMax(leastExpressedData["heatmapData"]);
 
+const mostExprColors = ["white", "yellow", "red", "black"];
+const leastExprColors = ["white", "blue", "purple", "black"];
 
+const mostExprColorbar = colorbar(
+  mostExprMinMax["min"], mostExprMinMax["max"], mostExprColors); 
+const leastExprColorbar = colorbar(
+  leastExprMinMax["min"], leastExprMinMax["max"], leastExprColors);
+
+const copyMost = replaceWithAlphabetical(
+  jQuery.extend(true, {}, mostExpressedData));
+const copyLeast = replaceWithAlphabetical(
+  jQuery.extend(true, {}, leastExpressedData));
+
+const mostExprHeatmap = createHeatmap("#most_expressed",
+  mostExpressedData, mostExprColorbar,
+  mostExprMinMax["min"], mostExprMinMax["max"]);
+const leastExprHeatmap = createHeatmap("#least_expressed",
+  leastExpressedData, leastExprColorbar,
+  leastExprMinMax["min"], leastExprMinMax["max"]);
+
+mostExprHeatmap.prependTo($("#most_expressed_parent"));
+leastExprHeatmap.prependTo($("#least_expressed_parent"));
+
+function expressionMinMax(data) {
+    const minExpression = Math.min.apply(
+      Math, data.map(function(d) { return d.value; }));
+    const maxExpression = Math.max.apply(
+      Math, data.map(function(d) { return d.value; }));
+    return {"min": minExpression, "max": maxExpression};
+}
+
+function colorbar(minExpression, maxExpression, colors) {
+    const difference = maxExpression - minExpression;
+    const domain = [
+      minExpression,
+      minExpression + difference / 3.0,
+      maxExpression - difference / 3.0,
+      maxExpression];
+    return d3.scale.linear().domain(domain).range(colors);
+}
+
+/* listener for the button toggle
+ * (genes ordered by odds ratio or alphabetically)
+ */
+$(".toggle-genes").click(function() {
+    $(".toggle-genes").text(function(i, text) {
+        let x;
+        let y;
+        let returnButtonLabel;
+
+        $("#most_expressed svg").remove();
+        $("#least_expressed svg").remove();
+        text = text.trim();
+        if (text == "Sort genes alphabetically") {
+            x = createHeatmap("#most_expressed",
+              copyMost, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              copyLeast, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            returnButtonLabel = "Sort genes by odds ratio"; 
+        } else {
+            x = createHeatmap("#most_expressed",
+              mostExpressedData, mostExprColorbar,
+              mostExprMinMax["min"], mostExprMinMax["max"]);
+            y = createHeatmap("#least_expressed",
+              leastExpressedData, leastExprColorbar,
+              leastExprMinMax["min"], leastExprMinMax["max"]);
+            returnButtonLabel = "Sort genes alphabetically";
+        }
+        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
+        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
+        return returnButtonLabel;
+    });
+});
 
 </script>
-</head>
-<body>
-<div id="test">
-<h2>({{ pw1 }}, {{ pw2 }})</h2>
-<h3>Type: {{ etype }}</h3>
-</div>
-<div id="genes-ranked-or">
-<table class="table table-reflow">
-<thead>
-    <tr>
-        {% for gene, or in analysis.gene_names %}
-        <th>{{ gene }}</th>
-        {% endfor %}
-    </tr>
-</thead>
-<tbody>
-    <tr>
-    {% for gene, or in analysis.gene_names %}
-    <td>{{ or }}</td>
-    {% endfor %}
-    </tr>
-</tbody>
-</table>
-</div>
-<div id="per-gene-samples">
-</div>
-<div id="sorted-samples-scored">
-    <div class="top-samples">
-    <h2>15 most expressed samples (odds ratio score)</h2>
-    <table class="table table-reflow">
-    <thead>
-        <tr>
-        <th>#</th>
-        {% for gene, or in analysis.gene_names %}
-        <th>{{ gene }}</th>
-        {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for sample, genes in analysis.most_expressed %}
-        <tr>
-            <th scope="row">{{ sample }}</th>
-            {% for gval in genes %}
-            <td>{{ gval }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-    </table>
-    </div>
-    <div class="bot-samples">
-    <h2>15 least expressed samples (odds ratio scores)</h2>
-    <table class="table table-reflow">
-    <thead>
-        <tr>
-        <th>#</th>
-        {% for gene, or in analysis.gene_names %}
-        <th>{{ gene }}</th>
-        {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for sample, genes in analysis.least_expressed %}
-        <tr>
-            <th scope="row">{{ sample }}</th>
-            {% for gval in genes %}
-            <td>{{ gval }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-    </table>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}
