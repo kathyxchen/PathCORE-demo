@@ -1,15 +1,13 @@
 from bson.json_util import dumps
-from cStringIO import StringIO as IO
 from flask import Flask
-from flask import redirect, make_response, after_this_request, url_for
-from flask import render_template, request, session
+from flask import redirect, url_for
+from flask import render_template, session
 import flask_excel as excel
-import functools
-import gzip
 import json
 import os
 from pymongo import MongoClient
 
+from utils import gzipped
 
 MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
     os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
@@ -38,6 +36,15 @@ SAMPLE_INFO_FIELDS = [
     "Treatment (drug/small molecule)"
 ]
 
+
+def sum_session_counter():
+    session["edge_info"] = None
+    try:
+        session["counter"] += 1
+    except KeyError:
+        session["counter"] = 1
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -56,8 +63,9 @@ def pathcore_network():
 
 @app.route("/PAO1/file")
 def pathcore_network_file():
-    return redirect(url_for("static",
-        filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
+    return redirect(
+        url_for("static",
+                filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
 
 
 # for viewing purposes only.
@@ -151,7 +159,12 @@ def edge_experiment_session(edge_pws, experiment):
 @gzipped
 def edge_excel_file(edge_pws):
     pw1, pw2 = edge_pws.split("&")
-    edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
+
+    pw1_hotfix = pw1.replace("PAO1", "PA01")
+    pw2_hotfix = pw2.replace("PAO1", "PA01")
+
+    edge_info = db.pathcore_edge_data.find_one(
+        {"edge": [pw1_hotfix, pw2_hotfix]})
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
@@ -177,9 +190,15 @@ def edge_excel_file(edge_pws):
             pw1.replace(",", ""), pw2.replace(",", "")))
     return make_excel
 
+
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
-    edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
+
+    pw1_hotfix = pw1.replace("PAO1", "PA01")
+    pw2_hotfix = pw2.replace("PAO1", "PA01")
+
+    edge_info = db.pathcore_edge_data.find_one(
+        {"edge": [pw1_hotfix, pw2_hotfix]})
     if "flag" in edge_info:
         return render_template("no_edge.html", pw1=pw1, pw2=pw2)
     most_metadata, most_experiments = _get_sample_metadata(
@@ -212,7 +231,7 @@ def get_edge_template(edge_pws, db):
                            pw1=session["edge_info"]["edge_name"][0],
                            pw2=session["edge_info"]["edge_name"][1],
                            n_samples=len(edge_info["most_expressed_samples"]),
-                           edge_info=json.dumps(edge_info))
+                           edge_info=dumps(edge_info))
 
 
 def _sort_samples(sample_gene_expr, gene_odds_ratio_map, genes):
@@ -289,7 +308,6 @@ def _build_sample_excel_file_field(metadata_dict):
 
 
 def _cleanup_annotation(annotation):
-    """TODO: Move to a utility file"""
     # gets rid of some unnecessary fields
     del annotation["_id"]
     del annotation["CEL file"]
@@ -320,40 +338,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-def gzipped(f):
-    @functools.wraps(f)
-    def view_func(*args, **kwargs):
-        @after_this_request
-        def zipper(response):
-            accept_encoding = request.headers.get('Accept-Encoding', '')
-            if 'gzip' not in accept_encoding.lower():
-                return response
-            response.direct_passthrough = False
-            if (response.status_code < 200 or
-                    response.status_code >= 300 or
-                    'Content-Encoding' in response.headers):
-                return response
-            gzip_buffer = IO()
-            gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer)
-            gzip_file.write(response.data)
-            gzip_file.close()
-
-            response.data = gzip_buffer.getvalue()
-            response.headers['Content-Encoding'] = 'gzip'
-            response.headers['Vary'] = 'Accept-Encoding'
-            response.headers['Content-Length'] = len(response.data)
-            return response
-        return f(*args, **kwargs)
-    return view_func
-
-
-def sum_session_counter():
-    session["edge_info"] = None
-    try:
-        session["counter"] += 1
-    except KeyError:
-        session["counter"] = 1
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+#if __name__ == "__main__":
+    #app.run(debug=True, host="0.0.0.0")
