@@ -14,7 +14,7 @@ from pymongo import MongoClient
 
 MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
     os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
-    os.environ.get("MLAB_URI"), os.environ.get("DB_NAME"))
+    os.environ.get("MLAB_URI"), os.environ.get("MDB_NAME"))
 app = Flask(__name__, template_folder="templates")
 app.config['MONGO_URI'] = MONGODB_URL
 
@@ -228,7 +228,6 @@ def get_edge_template(edge_pws, db):
     edge_info = db.pathcore_edge_data.find_one({"edge": [pw1, pw2]})
     if "flag" in edge_info:
         return render_template("no_edge.html", pw1=pw1, pw2=pw2)
-    print(pw1 + " " + pw2)
     most_metadata, most_experiments = _get_sample_metadata(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
@@ -258,6 +257,7 @@ def get_edge_template(edge_pws, db):
     return render_template("edge.html",
                            pw1=session["edge_info"]["edge_name"][0],
                            pw2=session["edge_info"]["edge_name"][1],
+                           n_samples=len(edge_info["most_expressed_samples"]),
                            edge_info=json.dumps(edge_info))
 
 
@@ -372,5 +372,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")
