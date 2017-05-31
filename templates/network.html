@@ -1,7 +1,11 @@
 <div class="row network-view">
+  <!-- network view search bar -->
   <form class="form-inline">
-  <input class="form-control mb-4 mr-sm-4 mb-sm-4" id="searchbar" name="searchbar" type="text" placeholder="Search for a pathway" />
-  <button type="submit" class="btn btn-secondary" onclick="searchPathways()">Submit</button>
+  <input class="form-control mb-4 mr-sm-4 mb-sm-4" id="searchbar"
+         name="searchbar" type="text" placeholder="Search for a pathway" />
+  <button type="submit" class="btn btn-secondary" onclick="searchPathways()">
+    Submit
+  </button>
   <br />  
   <p class="err-message" style="display: none; font-size: 12px;">
     Not found. We're still working on a better
@@ -14,6 +18,7 @@
   </form>
   <br />
 </div>
+<!-- PathCORE network window -->
 <div class="row network-view network-wrapper" style="overflow: hidden;">
       <div id="pathcore"></div>
 </div>

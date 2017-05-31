@@ -2,27 +2,8 @@
 {% block title %}PathCORE network{% endblock %}
 {% block head %}
   {{ super() }}
-  <style type="text/css">
-  table {
-    border: 1px solid #ccc;
-  }
-
-  table th {
-    background-color: #F7F7F7;
-    color: #333;
-    font-weight: bold;
-  }
-
-  table th, table td {
-    padding: 5px;
-    border-color: #ccc;
-  }
-
-  .hide {
-    display: none;
-  }
-  </style>
-  <script src="{{ url_for('static', filename='js/pathcore.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pathcore-network.js') }}">
+  </script>
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -32,7 +13,8 @@
                 &nbsp; / &nbsp;
                 {{title}}
             </h4>
-            <p>Drag nodes in the network to different spots on the page to improve readability.
+            <p>Drag nodes in the network to different spots on the page to
+               improve readability.
             {% if not view_only %}
                 Click on edges to view more information about each relationship.
             {% endif %}

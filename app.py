@@ -1,14 +1,13 @@
-from cStringIO import StringIO as IO
-import gzip
-import functools
-import json
-import os
-
 from bson.json_util import dumps
+from cStringIO import StringIO as IO
 from flask import Flask
 from flask import redirect, make_response, after_this_request, url_for
 from flask import render_template, request, session
 import flask_excel as excel
+import functools
+import gzip
+import json
+import os
 from pymongo import MongoClient
 
 
@@ -18,52 +17,26 @@ MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
 app = Flask(__name__, template_folder="templates")
 app.config['MONGO_URI'] = MONGODB_URL
 
+app.secret_key = os.environ.get("SESSION_SECRET")
+
 client = MongoClient(MONGODB_URL)
 db = client[os.environ.get("DB_NAME")]
 
-app.secret_key = os.environ.get("SESSION_SECRET")
+ALL_EXCEL_FILE_FIELDS = [
+    "which_heatmap", "sample", "gene", "normalized_expression",
+    "pathway", "odds_ratio", "experiment",
+    ("info (strain; genotype; medium; biotic interactor 1 "
+        "(plant/human/bacteria); biotic interactor 2; treatment")
+]
 
 
-def output_json(obj, code, headers=None):
-    resp = make_response(dumps(obj), code)
-    resp.headers.extend(headers or {})
-    return resp
-
-
-def gzipped(f):
-    @functools.wraps(f)
-    def view_func(*args, **kwargs):
-        @after_this_request
-        def zipper(response):
-            accept_encoding = request.headers.get('Accept-Encoding', '')
-            if 'gzip' not in accept_encoding.lower():
-                return response
-            response.direct_passthrough = False
-            if (response.status_code < 200 or
-                    response.status_code >= 300 or
-                    'Content-Encoding' in response.headers):
-                return response
-            gzip_buffer = IO()
-            gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer)
-            gzip_file.write(response.data)
-            gzip_file.close()
-
-            response.data = gzip_buffer.getvalue()
-            response.headers['Content-Encoding'] = 'gzip'
-            response.headers['Vary'] = 'Accept-Encoding'
-            response.headers['Content-Length'] = len(response.data)
-            return response
-        return f(*args, **kwargs)
-    return view_func
-
-
-def sum_session_counter():
-    session["edge_info"] = None
-    try:
-        session["counter"] += 1
-    except KeyError:
-        session["counter"] = 1
-
+SAMPLE_INFO_FIELDS = [
+    "Strain", "Genotype", "Medium (biosynthesis/energy)",
+    "Biotic interactor_level 1 (Plant, Human, Bacteria)",
+    ("Biotic interactor_level 2 (Lung, epithelial cells, "
+        "Staphylococcus aureus, etc)"),
+    "Treatment (drug/small molecule)"
+]
 
 @app.route("/")
 def home():
@@ -71,7 +44,7 @@ def home():
 
 
 # PA eADAGE demo server
-@app.route("/eADAGE")
+@app.route("/PAO1")
 def pathcore_network():
     sum_session_counter()
     return render_template("index.html",
@@ -81,14 +54,14 @@ def pathcore_network():
                            view_only=False)
 
 
-@app.route("/eADAGE/file")
+@app.route("/PAO1/file")
 def pathcore_network_file():
     return redirect(url_for("static",
         filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
 
 
 # for viewing purposes only.
-@app.route("/tcga")
+@app.route("/TCGA")
 def tcga_network():
     sum_session_counter()
     return render_template("index.html",
@@ -169,7 +142,6 @@ def edge_experiment_session(edge_pws, experiment):
                        "metadata": metadata,
                        "ownership": session["edge_info"]["ownership"]}
     return render_template("experiment.html",
-                           edge_str=_edge_to_string(current_edge_name),
                            edge=current_edge_name,
                            experiment_name=experiment,
                            experiment_info=dumps(experiment_data))
@@ -204,24 +176,6 @@ def edge_excel_file(edge_pws):
         file_name="{0}-{1}_edge_heatmap_data".format(
             pw1.replace(",", ""), pw2.replace(",", "")))
     return make_excel
-
-
-ALL_EXCEL_FILE_FIELDS = [
-    "which_heatmap", "sample", "gene", "normalized_expression",
-    "pathway", "odds_ratio", "experiment",
-    ("info (strain; genotype; medium; biotic interactor 1 "
-        "(plant/human/bacteria); biotic interactor 2; treatment")
-]
-
-
-SAMPLE_INFO_FIELDS = [
-    "Strain", "Genotype", "Medium (biosynthesis/energy)",
-    "Biotic interactor_level 1 (Plant, Human, Bacteria)",
-    ("Biotic interactor_level 2 (Lung, epithelial cells, "
-        "Staphylococcus aureus, etc)"),
-    "Treatment (drug/small molecule)"
-]
-
 
 def get_edge_template(edge_pws, db):
     pw1, pw2 = edge_pws.split("&")
@@ -291,12 +245,6 @@ def _sort_genes(sample_gene_expr, gene_odds_ratio_map, genes):
         for index in gene_indices:
             sorted_sample_gene_expr[sample].append(gene_expr_list[index])
     return sorted_genes, sorted_odds_ratios, sorted_sample_gene_expr
-
-
-def _edge_to_string(edge):
-    pw1, pw2 = edge
-    to_str = "Edge [{0}, {1}]".format(pw1, pw2)
-    return to_str
 
 
 def _build_heatmap_rows_excel_file(edge_info,
@@ -370,6 +318,41 @@ def _get_sample_metadata(sample_names):
             info = _cleanup_annotation(info)
         metadata[sample] = dumps(info)
     return metadata, experiments
+
+
+def gzipped(f):
+    @functools.wraps(f)
+    def view_func(*args, **kwargs):
+        @after_this_request
+        def zipper(response):
+            accept_encoding = request.headers.get('Accept-Encoding', '')
+            if 'gzip' not in accept_encoding.lower():
+                return response
+            response.direct_passthrough = False
+            if (response.status_code < 200 or
+                    response.status_code >= 300 or
+                    'Content-Encoding' in response.headers):
+                return response
+            gzip_buffer = IO()
+            gzip_file = gzip.GzipFile(mode='wb', fileobj=gzip_buffer)
+            gzip_file.write(response.data)
+            gzip_file.close()
+
+            response.data = gzip_buffer.getvalue()
+            response.headers['Content-Encoding'] = 'gzip'
+            response.headers['Vary'] = 'Accept-Encoding'
+            response.headers['Content-Length'] = len(response.data)
+            return response
+        return f(*args, **kwargs)
+    return view_func
+
+
+def sum_session_counter():
+    session["edge_info"] = None
+    try:
+        session["counter"] += 1
+    except KeyError:
+        session["counter"] = 1
 
 
 if __name__ == "__main__":

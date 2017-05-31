@@ -2,19 +2,6 @@
 {% block title %}Edge{% endblock %}
 {% block head %}
   {{ super() }}
-  <style>
-  .pw1 {
-   color: pink;
-  }
-
-  .pw2 {
-   color: green;
-  }
-
-  .both {
-    color: purple;
-  }
-  </style>
   <script src="{{ url_for('static', filename='js/pathcore-heatmap.js') }}">
   </script>
 {% endblock %}

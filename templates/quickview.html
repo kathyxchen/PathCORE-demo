@@ -2,7 +2,8 @@
 {% block title %}Quickview{% endblock %}
 {% block head %}
   {{ super() }}
-  <script src="{{ url_for('static', filename='js/pathcore.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pathcore-network.js') }}">
+  </script>
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -18,7 +19,8 @@
         <div class="container">
             <input type="file" id="file-upload" aria-describedby="fileHelp" />
             <small id="fileHelp" class="form-text text-muted">
-                Load a PathCORE network .tsv/.txt file (tab-separated columns pw0, pw1, weight)
+                Load a PathCORE network .tsv/.txt file
+                (tab-separated columns pw0, pw1, weight)
             </small>
             <input type="button" class="btn" id="upload" value="Upload" />
         </div>

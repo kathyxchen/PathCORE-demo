@@ -1,47 +1,27 @@
 <!doctype html>
 <html>
  	<head>
-	  	{% block head %}
-		
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
-		<style>
-		body {
-           font-family: Helvetica, Arial, sans-serif;
-           font-size: 13pt;
-        }
+  	{% block head %}
+	
+	<meta charset="utf-8">
+	<link rel="stylesheet"
+	      href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet"
+	      href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/pathcore.css') }}">
+	
+    <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js') }}">
+    </script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}">
+	</script>
+	<script src="{{ url_for('static', filename='js/seedrandom-2.4.0.min.js') }}">
+	</script>
+	<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
 
-        #pathcore {
-            border: 1px solid black;
-            overflow-y: scroll;
-        }
-        
-        .link {
-            stroke: #000;
-            opacity: 0.5;
-        }
-
-        .node {
-            stroke: #fff;
-        }
-
-        .node text {
-            pointer-events: none;
-            font: 14px, sans-serif;
-            fill: white;
-            stroke: gray;
-        }
-        </style>
-		
-        <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js') }}">
-		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/seedrandom-2.4.0.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-
-		<title>{% block title %}{% endblock %} - demo server</title>
-		
-		{% endblock %}
+	<title>{% block title %}{% endblock %} - demo server</title>
+	
+	{% endblock %}
 	</head>
 	<body>
 	{% block content %}{% endblock %}
