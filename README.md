@@ -9,6 +9,7 @@ Set the following environment variables:
 - MDB_PW
 - MDB_NAME
 - MLAB_URI
+- SESSION_SECRET
 
 Example:
     `export MDB_USER=kathy`

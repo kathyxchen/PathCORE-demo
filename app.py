@@ -18,7 +18,7 @@ app.config['MONGO_URI'] = MONGODB_URL
 app.secret_key = os.environ.get("SESSION_SECRET")
 
 client = MongoClient(MONGODB_URL)
-db = client[os.environ.get("DB_NAME")]
+db = client[str(os.environ.get("DB_NAME"))]
 
 ALL_EXCEL_FILE_FIELDS = [
     "which_heatmap", "sample", "gene", "normalized_expression",
