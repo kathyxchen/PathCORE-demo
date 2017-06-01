@@ -20,7 +20,8 @@ After installing dependencies (`pip install -r requirements.txt`), you can launc
     python app.py
 
 ## Deploy to Heroku
-Follow this guide. Steps to read through at minimum: "Introduction" to "View logs," and then "Push local changes" to "Define config vars."
+[Follow this guide.](https://devcenter.heroku.com/articles/getting-started-with-python) 
+Steps to read through at minimum: "Introduction" to "View logs," and then "Push local changes" to "Define config vars."
 Comment out the last two lines in `app.py` (Contents of `__main__`) before pushing to heroku.
 
 ### Heroku-specific files provided for you
