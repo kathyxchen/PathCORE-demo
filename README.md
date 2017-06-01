@@ -3,7 +3,8 @@
 This repository contains the source for the PathCORE demo application. 
 
 ## Run locally
-Tested on Python 3.5
+Tested on Python 3.
+
 Set the following environment variables:
 - MDB_USER
 - MDB_PW
@@ -25,3 +26,4 @@ Comment out the last two lines in `app.py` (Contents of `__main__`) before pushi
 ### Heroku-specific files provided for you
 - `Procfile`
 - `app.json`
+- `runtime.txt` (required to specify Python-3.6.1, [per this article](https://devcenter.heroku.com/articles/python-runtimes)).
