@@ -1,3 +1,5 @@
+"""This file initializes the Flask application and specifies the routes
+for each of the web pages."""
 from bson.json_util import dumps
 from flask import Flask
 from flask import redirect, url_for
@@ -9,24 +11,15 @@ from pymongo import MongoClient
 
 from utils import gzipped
 
-MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
-    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
-    os.environ.get("MLAB_URI"), os.environ.get("MDB_NAME"))
-app = Flask(__name__, template_folder="templates")
-app.config['MONGO_URI'] = MONGODB_URL 
 
-app.secret_key = os.environ.get("SESSION_SECRET")
-
-client = MongoClient(MONGODB_URL)
-db = client[str(os.environ.get("MDB_NAME"))]
-
+# these 2 constants are used to specify the columns for the excel files,
+# downloadable on each edge page
 ALL_EXCEL_FILE_FIELDS = [
     "which_heatmap", "sample", "gene", "normalized_expression",
     "pathway", "odds_ratio", "experiment",
     ("info (strain; genotype; medium; biotic interactor 1 "
         "(plant/human/bacteria); biotic interactor 2; treatment")
 ]
-
 
 SAMPLE_INFO_FIELDS = [
     "Strain", "Genotype", "Medium (biosynthesis/energy)",
@@ -36,8 +29,22 @@ SAMPLE_INFO_FIELDS = [
     "Treatment (drug/small molecule)"
 ]
 
+mongodb_url = "mongodb://{0}:{1}@{2}/{3}".format(
+    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
+    os.environ.get("MLAB_URI"), os.environ.get("MDB_NAME"))
+
+app = Flask(__name__, template_folder="templates")
+app.config['MONGO_URI'] = mongodb_url
+app.secret_key = os.environ.get("SESSION_SECRET")
+
+client = MongoClient(mongodb_url)
+db = client[str(os.environ.get("MDB_NAME"))]
+
 
 def sum_session_counter():
+    """Used to maintain a user's session when navigating
+    from the network to an edge page and then an experiment page
+    """
     session["edge_info"] = None
     try:
         session["counter"] += 1
@@ -68,7 +75,7 @@ def pathcore_network_file():
                 filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
 
 
-# for viewing purposes only.
+# TCGA NMF network, for viewing purposes only.
 @app.route("/TCGA")
 def tcga_network():
     sum_session_counter()
@@ -89,7 +96,7 @@ def pathcore_network_quickview():
 @app.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
-    return get_edge_template(edge_pws, db)
+    return _get_edge_template(edge_pws, db)
 
 
 @app.route("/edge/<path:edge_pws>/experiment/<experiment>")
@@ -99,13 +106,14 @@ def edge_experiment_session(edge_pws, experiment):
     experiment, tag = experiment.split("&")
     if ("edge_info" not in session or
             session["edge_info"]["edge_name"] != (pw1, pw2)):
-        print("Retrieving edge page information...")
-        get_edge_template(edge_pws, db)
+        # need the edge page session information before
+        # loading the experiment page
+        _get_edge_template(edge_pws, db)
 
     # retrieve all samples associated with an experiment.
     metadata = {}
     get_samples = {}
-    sample_gene_vals = {}
+    sample_gene_values = {}
 
     # get all annotations associated with an experiment
     annotations_iterator = db.sample_annotations.find(
@@ -114,7 +122,7 @@ def edge_experiment_session(edge_pws, experiment):
         sample_name = annotation["CEL file"]
         get_samples[sample_name] = annotation["sample_id"]
         metadata[sample_name] = _cleanup_annotation(annotation)
-        sample_gene_vals[sample_name] = []
+        sample_gene_values[sample_name] = []
 
     # for each sample, get the expression value for each gene in the list
     gene_order = []
@@ -125,7 +133,7 @@ def edge_experiment_session(edge_pws, experiment):
         gene_order.append(gene_name)
         expression_values = gene_info["expression"]
         for sample, index in get_samples.items():
-            sample_gene_vals[sample].append(expression_values[index])
+            sample_gene_values[sample].append(expression_values[index])
 
     samples_from = {}
     edge_experiments = session["edge_info"]["experiments"]
@@ -137,13 +145,14 @@ def edge_experiment_session(edge_pws, experiment):
 
     current_odds_ratios = session["edge_info"]["odds_ratios"]
     current_edge_name = session["edge_info"]["edge_name"]
-    sorted_genes, sorted_odds_ratios, sorted_gene_vals = _sort_genes(
-        sample_gene_vals, current_odds_ratios, gene_order)
-    experiment_data = {"sample_values": sorted_gene_vals,
+
+    sorted_genes, sorted_odds_ratios, sorted_gene_values = _sort_genes(
+        sample_gene_values, current_odds_ratios, gene_order)
+    sorted_samples = _sort_samples(
+        sorted_gene_values, current_odds_ratios, sorted_genes)
+    experiment_data = {"sample_values": sorted_gene_values,
                        "genes": sorted_genes,
-                       "samples": _sort_samples(sorted_gene_vals,
-                                                current_odds_ratios,
-                                                sorted_genes),
+                       "samples": sorted_samples,
                        "odds_ratios": sorted_odds_ratios,
                        "whitelist_samples": samples_from,
                        "heatmap_color": heatmap_color,
@@ -165,11 +174,11 @@ def edge_excel_file(edge_pws):
 
     edge_info = db.pathcore_edge_data.find_one(
         {"edge": [pw1_hotfix, pw2_hotfix]})
-    most_metadata, most_experiments = _get_sample_metadata(
+    most_metadata, most_experiments = _get_sample_annotation(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
 
-    least_metadata, least_experiments = _get_sample_metadata(
+    least_metadata, least_experiments = _get_sample_annotation(
         edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
 
@@ -191,7 +200,14 @@ def edge_excel_file(edge_pws):
     return make_excel
 
 
-def get_edge_template(edge_pws, db):
+#####################################################################
+# HELPER FUNCTIONS FOR RETRIEVING THE DATA CORRESPONDING TO A ROUTE.
+#####################################################################
+
+
+def _get_edge_template(edge_pws, db):
+    """Function used to generate the edge page.
+    """
     pw1, pw2 = edge_pws.split("&")
 
     pw1_hotfix = pw1.replace("PAO1", "PA01")
@@ -201,11 +217,11 @@ def get_edge_template(edge_pws, db):
         {"edge": [pw1_hotfix, pw2_hotfix]})
     if "flag" in edge_info:
         return render_template("no_edge.html", pw1=pw1, pw2=pw2)
-    most_metadata, most_experiments = _get_sample_metadata(
+    most_metadata, most_experiments = _get_sample_annotation(
         edge_info["most_expressed_samples"])
     edge_info["most_metadata"] = most_metadata
 
-    least_metadata, least_experiments = _get_sample_metadata(
+    least_metadata, least_experiments = _get_sample_annotation(
         edge_info["least_expressed_samples"])
     edge_info["least_metadata"] = least_metadata
 
@@ -235,6 +251,9 @@ def get_edge_template(edge_pws, db):
 
 
 def _sort_samples(sample_gene_expr, gene_odds_ratio_map, genes):
+    """Sort the samples based on the odds ratio information for the
+    genes we would like to display in the edge page.
+    """
     sample_scores = []
     sum_odds_ratio = float(sum(gene_odds_ratio_map.values()))
     for sample, gene_expr in sample_gene_expr.items():
@@ -249,6 +268,10 @@ def _sort_samples(sample_gene_expr, gene_odds_ratio_map, genes):
 
 
 def _sort_genes(sample_gene_expr, gene_odds_ratio_map, genes):
+    """The result of sorting these genes: we must also sort the odds
+    ratio information and sample gene expression data that is associated
+    with each of the genes.
+    """
     sorted_by_odds_ratio = reversed(
         sorted(gene_odds_ratio_map.items(), key=lambda tup: tup[1]))
     sorted_sample_gene_expr = {}
@@ -270,6 +293,9 @@ def _build_heatmap_rows_excel_file(edge_info,
                                    gene_odds_ratio_map,
                                    metadata,
                                    which_heatmap_str):
+    """Create a single row in the excel file. This corresponds to one cell
+    in one of the heatmaps on an edge page.
+    """
     rows = []
     for cell in edge_info["{0}_expressed_heatmap".format(which_heatmap_str)]:
         sample_index = cell["col_index"]
@@ -296,6 +322,9 @@ def _build_heatmap_rows_excel_file(edge_info,
 
 
 def _build_sample_excel_file_field(metadata_dict):
+    """One of the columns in the excel file acts as a "summary" of all
+    the information provided in a sample annotation.
+    """
     include_in_field_value = []
     for field in SAMPLE_INFO_FIELDS:
         value = metadata_dict[field] if field in metadata_dict else "N/A"
@@ -308,6 +337,9 @@ def _build_sample_excel_file_field(metadata_dict):
 
 
 def _cleanup_annotation(annotation):
+    """Remove keys that should not be displayed on the page.
+    Also trims the experiment summary to a maximum of 240 characters.
+    """
     # gets rid of some unnecessary fields
     del annotation["_id"]
     del annotation["CEL file"]
@@ -322,7 +354,10 @@ def _cleanup_annotation(annotation):
     return annotation
 
 
-def _get_sample_metadata(sample_names):
+def _get_sample_annotation(sample_names):
+    """Get the annotation information (metadata) associated with
+    each sample so it can be displayed on the application
+    """
     metadata = {}
     experiments = {}
     for sample in sample_names:
@@ -338,5 +373,5 @@ def _get_sample_metadata(sample_names):
     return metadata, experiments
 
 
-#if __name__ == "__main__":
-    #app.run(debug=True, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")
