@@ -18,6 +18,12 @@
             {% if not view_only %}
                 Click on edges to view more information about each relationship.
             {% endif %}
+            <br />
+            {% if view_only %}
+                <b>This network is view-only: edges cannot be clicked
+                   on because no demo server has been set up for the network.
+               </b>
+            {% endif %}
             </p>
             <p>
                 <b>Press Shift-L</b> to view the PathCORE network
