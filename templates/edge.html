@@ -9,19 +9,19 @@
 <div id="overview" class="container">
     <div class="row">
         <h3>
-          <span class="pw1">{{pw1}}</span> 
-          <span class="pw2">{{pw2}}</span>
+          <span class="pw0">{{pw0}}</span> 
+          <span class="pw1">{{pw1}}</span>
         </h3>
         <h4>
           <a href="{{ url_for('pathcore_network') }}">PathCORE network</a>
         </h4>
         <h4 class="description"><b>Description</b></h4>
         <p>
-            For every gene annotated to one or both of {{pw1}} and {{pw2}},
+            For every gene annotated to one or both of {{pw0}} and {{pw1}},
             we computed an odds ratio that measures how often we observe a
             feature enriched for both the gene and the edge of interest.
-            This page displays a maximum of 20 genes that had an odds
-            ratio of above 1. 
+            This page displays a maximum of 20 genes with odds ratios
+            of above 1. 
             We do this to highlight the genes that are most observed
             with the current pathway co-occurrence relationship.
         </p>
@@ -44,14 +44,14 @@
         </p>
         <p>
             When available, we provide the common name for a given PA
-            gene locus tag. Genes in <span class="pw1">pink</span> are
-            annotated to <span class="pw1">{{pw1}}</span> in KEGG,
-            <span class="pw2">green</span> to <span class="pw2">{{pw2}}</span>,
+            gene locus tag. Genes in <span class="pw0">pink</span> are
+            annotated to <span class="pw0">{{pw0}}</span> in KEGG,
+            <span class="pw1">green</span> to <span class="pw1">{{pw1}}</span>,
             and <span class="both">purple</span> to
             <span class="both">both</span>.
         </p>
         <h4>
-          <a href="{{ url_for('edge_excel_file', edge_pws=pw1 + '&' + pw2) }}">
+          <a href="{{ url_for('edge_excel_file', edge_pws=pw0 + '&' + pw1) }}">
             Click here to download a .csv file of the data provided in the
             two heatmaps.
           </a>

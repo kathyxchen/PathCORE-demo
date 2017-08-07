@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
 const experimentInfo = JSON.parse(JSON.stringify({{ experiment_info|safe }}));
-const sampleData = experimentInfo["sample_values"];
+const sampleData = experimentInfo["samples_expression"];
 const samples = experimentInfo["samples"];
 const whitelisted = experimentInfo["whitelist_samples"];
 let finalSortedSamples = [];
