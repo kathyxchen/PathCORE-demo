@@ -74,7 +74,7 @@ def get_edge_template(edge_pws, db):
     Called when a user clicks on an edge in the PAO1 KEGG network.
     """
     pw0, pw1 = edge_pws.split("&")
-    # The database currently active has a typo in the 'PAO1' abbreviation
+    # The active/production database has a typo in the 'PAO1' abbreviation
     # present in the KEGG pathway names. To be removed when we run a clean
     # update...
     pw0_hotfix = pw0.replace("PAO1", "PA01")
@@ -87,9 +87,9 @@ def get_edge_template(edge_pws, db):
         # return render_template("no_edge.html", pw1=pw1, pw2=pw2)
 
     most_metadata, most_experiments = _get_sample_annotations(
-        edge_info["most_expressed_samples"])
+        edge_info["most_expressed_samples"], db)
     least_metadata, least_experiments = _get_sample_annotations(
-        edge_info["least_expressed_samples"])
+        edge_info["least_expressed_samples"], db)
 
     edge_info["most_metadata"] = most_metadata
     edge_info["least_metadata"] = least_metadata
@@ -122,7 +122,7 @@ def get_edge_template(edge_pws, db):
     #                       edge_info=dumps(edge_info))
 
 
-def _get_sample_annotations(sample_names):
+def _get_sample_annotations(sample_names, db):
     """Get the annotation information (metadata) associated with
     each sample when possible. This information is displayed on the demo
     server alongside the heatmaps in the edge & experiment pages
@@ -139,7 +139,6 @@ def _get_sample_annotations(sample_names):
                 if sample_from_experiment not in experiments:
                     experiments[sample_from_experiment] = []
                 experiments[sample_from_experiment].append(sample)
-            sample_info = _cleanup_annotation(sample_info)
         metadata[sample] = dumps(sample_info)
     return metadata, experiments
 
@@ -166,11 +165,19 @@ def _cleanup_annotation(annotation):
     return annotation
 
 
-def get_experiment_template(experiment, tag, db):
+def get_experiment_template(edge_pws, experiment, db):
     """Function used to generate an experiment page for the demo server.
     Called when a user clicks through from an sample's heatmap cell (on an edge
     page) to the experiment page.
     """
+    pw0, pw1 = edge_pws.split("&")
+    experiment, tag = experiment.split("&")
+    if ("edge_info" not in session or
+            session["edge_info"]["edge_name"] != (pw0, pw1)):
+        # need the edge page session information in order to load the
+        # experiment page
+        get_edge_template(edge_pws, db)
+    
     # retrieve all samples associated with an experiment.
     samples_index = {}
     samples_metadata = {}
@@ -188,10 +195,10 @@ def get_experiment_template(experiment, tag, db):
     # for each sample, get the expression value for each gene in the list
     genes = []
     for gene_name in session["edge_info"]["genes"]:
-        genes = db.genes.find_one(
+        genes.append(gene_name)
+        gene_info = db.genes.find_one(
             {"$or": [{"gene": gene_name},
                      {"common_name": gene_name}]})
-        genes.append(gene_name)
         expression_values = gene_info["expression"]
         for sample, index in samples_index.items():
             samples_gene_expression[sample].append(expression_values[index])
@@ -260,8 +267,8 @@ def _sort_genes_samples_by_odds_ratio(gene_odds_ratio_map,
 
     return (sorted_genes,
             sorted_odds_ratios,
-            sorted_sample_gene_expr,
-            sorted_samples)
+            sorted_samples,
+            sorted_sample_gene_expr)
 
 
 def _sort_samples(gene_odds_ratio_map, sample_gene_expr, genes):
@@ -288,7 +295,7 @@ def get_excel_template(edge_pws, db):
     Called when a user clicks on the download Excel file text on an edge page.
     """
     pw0, pw1 = edge_pws.split("&")
-    # The database currently active has a typo in the 'PAO1' abbreviation
+    # The active/production database has a typo in the 'PAO1' abbreviation
     # present in the KEGG pathway names. To be removed when we run a clean
     # update...
     pw0_hotfix = pw0.replace("PAO1", "PA01")
@@ -296,12 +303,12 @@ def get_excel_template(edge_pws, db):
     edge_info = db.pathcore_edge_data.find_one(
         {"edge": [pw0_hotfix, pw1_hotfix]})
 
-    most_metadata, most_experiments = _get_sample_annotation(
-        edge_info["most_expressed_samples"])
+    most_metadata, most_experiments = _get_sample_annotations(
+        edge_info["most_expressed_samples"], db)
     edge_info["most_metadata"] = most_metadata
 
-    least_metadata, least_experiments = _get_sample_annotation(
-        edge_info["least_expressed_samples"])
+    least_metadata, least_experiments = _get_sample_annotations(
+        edge_info["least_expressed_samples"], db)
     edge_info["least_metadata"] = least_metadata
 
     gene_odds_ratio_map = {}

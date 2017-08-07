@@ -10,11 +10,11 @@
     <div class="row">
         <h3>Experiment {{ experiment_name }}</h3>
         <h4>
-          <a href="{{ url_for('pathcore_network') }}">PathCORE network</a>
+          <a href="{{ url_for('routes.pathcore_network') }}">PathCORE network</a>
           &nbsp; / &nbsp;
-          <a href="{{ url_for('edge', edge_pws=edge[0] + '&' + edge[1]) }}">
-          [<span class="pw1">{{edge[0]}}</span> -
-           <span class="pw2">{{edge[1]}}</span>] page</a>
+          <a href="{{ url_for('routes.edge', edge_pws=edge[0] + '&' + edge[1]) }}">
+          [<span class="pw0">{{edge[0]}}</span> -
+           <span class="pw1">{{edge[1]}}</span>] page</a>
         </h4> 
         <p>
           Samples highlighted in <span style="color: red;">red</span>
@@ -46,6 +46,7 @@ const experimentInfo = JSON.parse(JSON.stringify({{ experiment_info|safe }}));
 const sampleData = experimentInfo["samples_expression"];
 const samples = experimentInfo["samples"];
 const whitelisted = experimentInfo["whitelist_samples"];
+
 let finalSortedSamples = [];
 let least = [];
 let heatmapCells = [];
@@ -73,7 +74,6 @@ for (let i = 0; i < samples.length; i++) {
 
 finalSortedSamples = finalSortedSamples.concat(least);
 sampleNames = finalSortedSamples;
-
 for (let i = 0; i < sampleNames.length; i++) {
     const sample = sampleNames[i];
     const exprValues = sampleData[sample];

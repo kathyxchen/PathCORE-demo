@@ -1,27 +1,34 @@
-from app import MONGODB_URL
+import os
+
+from flask import Blueprint
 from flask import redirect, url_for
 from flask import render_template
 from pymongo import MongoClient
 
+# from app import MONGODB_URL
 # from app import app
 from utils import gzipped, sum_session_counter
 from utils import get_edge_template, get_experiment_template
 from utils import get_excel_template
 
 
-client = MongoClient(mongodb_url)
+MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
+    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
+    os.environ.get("MLAB_URI"), os.environ.get("MDB_NAME"))
+client = MongoClient(MONGODB_URL)
 db = client[str(os.environ.get("MDB_NAME"))]
 
+routes = Blueprint("routes", __name__)
 
-@app.route("/")
+@routes.route("/")
 def home():
     """The PathCORE project homepage. This is
-    https://pathcore-demo.herokuapp.com
+    https://pathcore-demo.herokuroutes.com
     """
     return render_template("home.html")
 
 
-@app.route("/PAO1")
+@routes.route("/PAO1")
 def pathcore_network():
     """The demo server for the eADAGE-based, P. aeruginosa KEGG network
     """
@@ -33,7 +40,7 @@ def pathcore_network():
                            view_only=False)
 
 
-@app.route("/PAO1/file")
+@routes.route("/PAO1/file")
 def pathcore_network_file():
     """Allow access to the eADAGE-based, P. aeruginosa KEGG network file.
     """
@@ -42,7 +49,7 @@ def pathcore_network_file():
                 filename="data/PAO1_KEGG_10_eADAGE_network.tsv"))
 
 
-@app.route("/TCGA")
+@routes.route("/TCGA")
 def tcga_network():
     """The NMF-based, TCGA PID network, only available for view (network does
     not come with an underlying demo server)
@@ -55,7 +62,7 @@ def tcga_network():
                            view_only=True)
 
 
-@app.route("/quickview")
+@routes.route("/quickview")
 def pathcore_network_quickview():
     """Users can load their own network file, generated from using the PathCORE
     software, onto this page for temporary viewing.
@@ -70,7 +77,7 @@ def pathcore_network_quickview():
 #####################################################################
 
 
-@app.route("/edge/<path:edge_pws>")
+@routes.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
     """Loads the PathCORE network edge page
@@ -82,25 +89,25 @@ def edge(edge_pws):
     return render_template(html, **params)
 
 
-@app.route("/edge/<path:edge_pws>/experiment/<experiment>")
+@routes.route("/edge/<path:edge_pws>/experiment/<experiment>")
 @gzipped
 def edge_experiment_session(edge_pws, experiment):
     """Loads an experiment page with edge-specific information (retrieved
     using the user's current session)
     """
-    pw0, pw1 = edge_pws.split("&")
-    experiment, tag = experiment.split("&")
-    if ("edge_info" not in session or
-            session["edge_info"]["edge_name"] != (pw0, pw1)):
-        # need the edge page session information in order to load the
-        # experiment page
-        get_edge_template(edge_pws, db)
+    #pw0, pw1 = edge_pws.split("&")
+    #experiment, tag = experiment.split("&")
+    #if ("edge_info" not in session or
+    #        session["edge_info"]["edge_name"] != (pw0, pw1)):
+    #    # need the edge page session information in order to load the
+    #    # experiment page
+    #    get_edge_template(edge_pws, db)
 
-    experiment_params = get_experiment_template(experiment, tag, db)
+    experiment_params = get_experiment_template(edge_pws, experiment, db)
     return render_template("experiment.html", **experiment_params)
 
 
-@app.route("/edge/<path:edge_pws>/download")
+@routes.route("/edge/<path:edge_pws>/download")
 @gzipped
 def edge_excel_file(edge_pws):
-    return get_edge_template(edge_pws, db)
+    return get_excel_template(edge_pws, db)

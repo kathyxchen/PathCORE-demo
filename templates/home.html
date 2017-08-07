@@ -8,7 +8,7 @@
 <h2>PathCORE Web Interface</h2>
 <ul class="list-group">
   <li class="list-group-item list-group-item-success">
-  <a href="{{ url_for('pathcore_network') }}">
+  <a href="{{ url_for('routes.pathcore_network') }}">
     <b>Interact</b> with the PAO1 KEGG network demo server.
   </a>
     <h4>Additional:</h4>
@@ -26,8 +26,11 @@
     </p>
   </li>
   <li class="list-group-item list-group-item-warning">
-  <a href="{{ url_for('tcga_network') }}">
+  <a href="{{ url_for('routes.tcga_network') }}">
       <b>View</b> the TCGA PID network</a> described in our paper.
+    <br /> 
+    **This network is <b>view-only</b>. That is, it is not accompanied
+    by a demo server and the edges are not interactive.
     <h4>Additional:</h4>
     <p>
         <a href="http://doi.org/10.1038/ng.2764">
@@ -41,8 +44,13 @@
     </p>
   </li>
   <li class="list-group-item list-group-item-warning">
-  <a href="{{ url_for('pathcore_network_quickview') }}">
+  <a href="{{ url_for('routes.pathcore_network_quickview') }}">
     <b>Upload and view</b></a> your own PathCORE-generated network.
+  </li>
+  
+  <li class="list-group-item list-group-item-warning">
+  <a href="https://doi.org/10.1101/147645">
+      <b>Read the manuscript.</b></a>
   </li>
 
   <li class="list-group-item list-group-item-info">
