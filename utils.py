@@ -1,15 +1,16 @@
+"""Utility functions for retrieving information needed in each route."""
 from bson.json_util import dumps
-from io import BytesIO as IO
-import json
 import functools
 import gzip
+from io import BytesIO as IO
+import json
 
 from flask import after_this_request, request, session
 import flask_excel as excel
 
 
-# these 2 constants are used to specify the columns for the excel files,
-# downloadable on each edge page
+# these 2 constants are used to specify the columns for the excel files
+# that are downloadable on each edge page
 ALL_EXCEL_FILE_FIELDS = [
     "which_heatmap", "sample", "gene", "normalized_expression",
     "pathway", "odds_ratio", "experiment",
@@ -38,6 +39,9 @@ def sum_session_counter():
 
 
 def gzipped(f):
+    """Used to compress the large amount of data sent for each edge/experiment
+    page
+    """
     @functools.wraps(f)
     def view_func(*args, **kwargs):
         @after_this_request
@@ -84,7 +88,6 @@ def get_edge_template(edge_pws, db):
 
     if "flag" in edge_info:
         return (False, {"pw0": pw0, "pw1": pw1})
-        # return render_template("no_edge.html", pw1=pw1, pw2=pw2)
 
     most_metadata, most_experiments = _get_sample_annotations(
         edge_info["most_expressed_samples"], db)
@@ -115,11 +118,6 @@ def get_edge_template(edge_pws, db):
                    "pw1": pw1,
                    "n_samples": len(edge_info["most_expressed_samples"]),
                    "edge_info": dumps(edge_info)})
-    #return render_template("edge.html",
-    #                       pw0=session["edge_info"]["edge_name"][0],
-    #                       pw1=session["edge_info"]["edge_name"][1],
-    #                       n_samples=len(edge_info["most_expressed_samples"]),
-    #                       edge_info=dumps(edge_info))
 
 
 def _get_sample_annotations(sample_names, db):
@@ -177,7 +175,7 @@ def get_experiment_template(edge_pws, experiment, db):
         # need the edge page session information in order to load the
         # experiment page
         get_edge_template(edge_pws, db)
-    
+
     # retrieve all samples associated with an experiment.
     samples_index = {}
     samples_metadata = {}
@@ -209,7 +207,7 @@ def get_experiment_template(edge_pws, experiment, db):
     sorted_genes, sorted_odds_ratios, sorted_samples, sorted_samples_expr = \
         _sort_genes_samples_by_odds_ratio(
             current_odds_ratios, samples_gene_expression, genes)
-    
+
     # which samples are from the edge's most/least expressed heatmaps?
     samples_from = {}
     edge_experiments = session["edge_info"]["experiments"]
@@ -256,7 +254,7 @@ def _sort_genes_samples_by_odds_ratio(gene_odds_ratio_map,
         sorted_odds_ratios.append(odds_ratio)
         sorted_genes.append(gene)
         gene_indices.append(genes.index(gene))
-    
+
     for sample, gene_expr_list in sample_gene_expr.items():
         sorted_sample_gene_expr[sample] = []
         for index in gene_indices:
@@ -291,7 +289,7 @@ def _sort_samples(gene_odds_ratio_map, sample_gene_expr, genes):
 
 def get_excel_template(edge_pws, db):
     """Function used to generate an excel file that contains the information
-    in the edge page's 2 heatmaps. 
+    in the edge page's 2 heatmaps.
     Called when a user clicks on the download Excel file text on an edge page.
     """
     pw0, pw1 = edge_pws.split("&")
@@ -327,6 +325,7 @@ def get_excel_template(edge_pws, db):
         file_name="{0}-{1}_edge_heatmap_data".format(
             pw0.replace(",", ""), pw1.replace(",", "")))
     return make_excel
+
 
 def _build_heatmap_rows_excel_file(edge_info,
                                    gene_odds_ratio_map,
