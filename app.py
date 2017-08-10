@@ -1,5 +1,5 @@
-"""This file initializes the Flask application and specifies the routes
-for each of the web pages."""
+"""This file initializes the Flask application and imports the routes
+for the application."""
 import os
 
 from flask import Flask

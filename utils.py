@@ -1,15 +1,16 @@
+"""Utility functions for retrieving information needed in each route."""
 from bson.json_util import dumps
-from io import BytesIO as IO
-import json
 import functools
 import gzip
+from io import BytesIO as IO
+import json
 
 from flask import after_this_request, request, session
 import flask_excel as excel
 
 
-# these 2 constants are used to specify the columns for the excel files,
-# downloadable on each edge page
+# these 2 constants are used to specify the columns for the excel files
+# that are downloadable on each edge page
 ALL_EXCEL_FILE_FIELDS = [
     "which_heatmap", "sample", "gene", "normalized_expression",
     "pathway", "odds_ratio", "experiment",
@@ -38,6 +39,9 @@ def sum_session_counter():
 
 
 def gzipped(f):
+    """Used to compress the large amount of data sent for each edge/experiment
+    page
+    """
     @functools.wraps(f)
     def view_func(*args, **kwargs):
         @after_this_request
@@ -84,8 +88,7 @@ def get_edge_template(edge_pws, db):
 
     if "flag" in edge_info:
         return (False, {"pw0": pw0, "pw1": pw1})
-        # return render_template("no_edge.html", pw1=pw1, pw2=pw2)
-
+    
     most_metadata, most_experiments = _get_sample_annotations(
         edge_info["most_expressed_samples"], db)
     least_metadata, least_experiments = _get_sample_annotations(
@@ -115,11 +118,6 @@ def get_edge_template(edge_pws, db):
                    "pw1": pw1,
                    "n_samples": len(edge_info["most_expressed_samples"]),
                    "edge_info": dumps(edge_info)})
-    #return render_template("edge.html",
-    #                       pw0=session["edge_info"]["edge_name"][0],
-    #                       pw1=session["edge_info"]["edge_name"][1],
-    #                       n_samples=len(edge_info["most_expressed_samples"]),
-    #                       edge_info=dumps(edge_info))
 
 
 def _get_sample_annotations(sample_names, db):
