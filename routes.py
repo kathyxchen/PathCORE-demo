@@ -22,6 +22,7 @@ db = client[str(os.environ.get("MDB_NAME"))]
 
 routes = Blueprint("routes", __name__)
 
+
 @routes.route("/")
 def home():
     """The PathCORE project homepage. This is
@@ -55,7 +56,7 @@ def pathcore_network_file():
 def tcga_network():
     """The NMF-based, TCGA PID network, only available for view (network does
     not come with an underlying demo server)
-    """ 
+    """
     sum_session_counter()
     return render_template("pathcore_vis.html",
                            title="TCGA PID network, built from 1 NMF model "

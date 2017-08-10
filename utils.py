@@ -88,7 +88,7 @@ def get_edge_template(edge_pws, db):
 
     if "flag" in edge_info:
         return (False, {"pw0": pw0, "pw1": pw1})
-    
+
     most_metadata, most_experiments = _get_sample_annotations(
         edge_info["most_expressed_samples"], db)
     least_metadata, least_experiments = _get_sample_annotations(
@@ -175,7 +175,7 @@ def get_experiment_template(edge_pws, experiment, db):
         # need the edge page session information in order to load the
         # experiment page
         get_edge_template(edge_pws, db)
-    
+
     # retrieve all samples associated with an experiment.
     samples_index = {}
     samples_metadata = {}
@@ -207,7 +207,7 @@ def get_experiment_template(edge_pws, experiment, db):
     sorted_genes, sorted_odds_ratios, sorted_samples, sorted_samples_expr = \
         _sort_genes_samples_by_odds_ratio(
             current_odds_ratios, samples_gene_expression, genes)
-    
+
     # which samples are from the edge's most/least expressed heatmaps?
     samples_from = {}
     edge_experiments = session["edge_info"]["experiments"]
@@ -254,7 +254,7 @@ def _sort_genes_samples_by_odds_ratio(gene_odds_ratio_map,
         sorted_odds_ratios.append(odds_ratio)
         sorted_genes.append(gene)
         gene_indices.append(genes.index(gene))
-    
+
     for sample, gene_expr_list in sample_gene_expr.items():
         sorted_sample_gene_expr[sample] = []
         for index in gene_indices:
@@ -289,7 +289,7 @@ def _sort_samples(gene_odds_ratio_map, sample_gene_expr, genes):
 
 def get_excel_template(edge_pws, db):
     """Function used to generate an excel file that contains the information
-    in the edge page's 2 heatmaps. 
+    in the edge page's 2 heatmaps.
     Called when a user clicks on the download Excel file text on an edge page.
     """
     pw0, pw1 = edge_pws.split("&")
@@ -325,6 +325,7 @@ def get_excel_template(edge_pws, db):
         file_name="{0}-{1}_edge_heatmap_data".format(
             pw0.replace(",", ""), pw1.replace(",", "")))
     return make_excel
+
 
 def _build_heatmap_rows_excel_file(edge_info,
                                    gene_odds_ratio_map,
