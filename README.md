@@ -26,20 +26,14 @@ After installing dependencies (`pip install -r requirements.txt`), launch the Fl
 
     python app.py
 
-In order to do so, you must have the following lines of code in `app.py`:
+(This works because we have the following lines of code in `app.py`):
 
 	if __name__ == "__main__":
     	app.run(debug=True, host="0.0.0.0")
 
-Keep in mind that deployment to Heroku requires that you remove those 2 lines.
-
 ## Deploy to Heroku
 [Follow this guide.](https://devcenter.heroku.com/articles/getting-started-with-python) 
 Steps to read through at minimum: "Introduction" to "View logs," and then "Push local changes" to "Define config vars."
-**Comment out** the last two lines in `app.py` (Contents of `__main__`) before pushing to Heroku:
-
-	# if __name__ == "__main__":
-    #     app.run(debug=True, host="0.0.0.0")
 
 ### Heroku-specific files provided for you
 - `Procfile`
