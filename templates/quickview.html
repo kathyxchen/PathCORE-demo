@@ -24,6 +24,11 @@
             </small>
             <input type="button" class="btn" id="upload" value="Upload" />
         </div>
+        <p>
+        <a href="{{ url_for('routes.pathcore_network_file') }}">
+            Click here to download an example input file
+        </a>
+        </p>
     </div>
     {% include "network.html" %}
 </div>
@@ -58,7 +63,7 @@ $("#searchbar").keypress(function(e) {
 $(function () {
     $("#upload").on("click", function () {
         const file = $("#file-upload")[0];
-        const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.tsv|.txt)$/;
+        const regex = /\.(tsv|txt)$/i;
         if (regex.test(file.value.toLowerCase())) {
             if (typeof (FileReader) != "undefined") {
                 const reader = new FileReader();
