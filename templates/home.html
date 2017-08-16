@@ -28,7 +28,7 @@
   <a href="{{ url_for('routes.tcga_network') }}">
       <b>View</b> the TCGA PID network</a> described in our paper.
     <br /> 
-    **This network is <b>view-only</b>. That is, it is not accompanied
+    ** This network is <b>view-only</b>. That is, it is not accompanied
     by a demo server and the edges are not interactive.
     <h4>Additional:</h4>
     <p>
@@ -50,11 +50,31 @@
     [Download an example file]</a>
   </li>
   
-  <li class="list-group-item list-group-item-warning">
+  <li class="list-group-item list-group-item">
   <a href="https://doi.org/10.1101/147645">
       <b>Read the manuscript.</b></a>
   </li>
 
+  <li class="list-group-item list-group-item">
+    <b>PathCORE repositories:</b><br />
+    <a href="https://github.com/greenelab/PathCORE-analysis">
+    PathCORE-analysis
+    </a> contains the analysis scripts used to generate the results
+    visualized on this demo server.
+
+    <br />
+    <a href="https://github.com/greenelab/pathcore">
+    PathCORE
+    </a> is a pip-installable Python 3 package that contains
+    the methods used in the PathCORE analysis workflow (these are imported
+    in the scripts in PathCORE-analysis)
+    
+    <br />
+    **<a href="{{url_for( 'routes.pathcore_docs') }}">
+    Documentation for the methods in the 'pathcore' PyPI package
+    can be viewed here.</a>
+  </li>
+  
   <li class="list-group-item list-group-item-info">
     <a href="https://github.com/kathyxchen/PathCORE-demo/">
         Find me on <b>Github</b>.

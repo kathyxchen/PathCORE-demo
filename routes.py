@@ -31,6 +31,15 @@ def home():
     return render_template("home.html")
 
 
+@routes.route("/pathcore-docs")
+def pathcore_docs():
+    """The documentation for modules in the pathcore package lives here
+    """
+    return redirect(
+        url_for("static",
+                filename="data/docs_pathcore/index.html"))
+
+
 @routes.route("/PAO1")
 def pathcore_network():
     """The demo server for the eADAGE-based, P. aeruginosa KEGG network
