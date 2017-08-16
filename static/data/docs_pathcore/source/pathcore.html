@@ -1,0 +1,758 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pathcore package &#8212; PathCORE 1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pathcore" href="modules.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pathcore-package">
+<h1>pathcore package<a class="headerlink" href="#pathcore-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pathcore.feature_pathway_overrepresentation">
+<span id="pathcore-feature-pathway-overrepresentation-module"></span><h2>pathcore.feature_pathway_overrepresentation module<a class="headerlink" href="#module-pathcore.feature_pathway_overrepresentation" title="Permalink to this headline">¶</a></h2>
+<p>Determine the pathways overrepresented in a constructed feature.</p>
+<dl class="function">
+<dt id="pathcore.feature_pathway_overrepresentation.pathway_enrichment_no_overlap_correction">
+<code class="descname">pathway_enrichment_no_overlap_correction</code><span class="sig-paren">(</span><em>feature_weight_vector</em>, <em>pathway_definitions</em>, <em>gene_signature_definition</em>, <em>alpha=0.05</em>, <em>metadata=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.feature_pathway_overrepresentation.pathway_enrichment_no_overlap_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify pathways overrepresented in a constructed feature
+according to a user-specified criterion (see <cite>gene_signature_definitions</cite>
+in the parameters list below) for identifying the feature’s gene
+signature. Overlap correction is not applied to the pathway definitions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>feature_weight_vector</strong> : pandas.Series(float), shape = n</p>
+<blockquote>
+<div><p>A vector containing gene weights</p>
+</div></blockquote>
+<p><strong>pathway_definitions</strong> : dict(str -&gt; set(str))</p>
+<blockquote>
+<div><p>A pathway (key) is defined by a set of genes (value).</p>
+</div></blockquote>
+<p><strong>gene_signature_definition</strong> : functools.partial callable, returns (set(), set())</p>
+<blockquote>
+<div><p>Accepts the <cite>feature_weight_vector</cite> as input. Provide a function to
+distinguish positive and/or negative gene signatures.
+Both a positive &amp; negative signature may be appropriate if the feature’s
+gene weight distribution spans positive and negative values. If this
+is not the case, a user can just specify a single gene signature by
+returning one or the other as an empty set.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float (default=0.05)</p>
+<blockquote>
+<div><p>Significance level for pathway enrichment.</p>
+</div></blockquote>
+<p><strong>metadata</strong> : bool (default=False)</p>
+<blockquote>
+<div><p>Return information about the gene signature(s)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tup([pandas.DataFrame|None], dict())</p>
+<p><strong>tup[0]</strong> : pandas.DataFrame|None:</p>
+<blockquote>
+<div><p>a dataframe of significant pathways or
+None if the gene signature does not contain any genes in the
+pathway definitions</p>
+</div></blockquote>
+<p><strong>tup[1]</strong> : if <cite>metadata</cite>:</p>
+<blockquote class="last">
+<div><blockquote>
+<div><dl class="docutils">
+<dt>{“positive signature”: &lt;set() positive gene signature&gt;,</dt>
+<dd><p class="first last">“negative signature”: &lt;set() negative gene signature&gt;,
+“pathway definitions”: &lt;dict(str -&gt; set()) the pathway genes
+that are in the gene signature(s)&gt;}</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>else: {}</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pathcore.feature_pathway_overrepresentation.pathway_enrichment_with_overlap_correction">
+<code class="descname">pathway_enrichment_with_overlap_correction</code><span class="sig-paren">(</span><em>feature_weight_vector</em>, <em>pathway_definitions</em>, <em>gene_signature_definition</em>, <em>alpha=0.05</em>, <em>correct_all_genes=True</em>, <em>metadata=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.feature_pathway_overrepresentation.pathway_enrichment_with_overlap_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify pathways overrepresented in a constructed feature
+according to a user-specified criterion (see <cite>gene_signature_definitions</cite>
+in the parameters list below) for identifying the feature’s gene
+signature. Donato et al.’s (2013) algorithm for pathway crosstalk
+correction (removes gene overlap between pathway definitions) is applied to
+the pathway definitions before overrepresentation analysis.
+Here, we refer to it as <em>overlap correction</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>feature_weight_vector</strong> : pandas.Series(float), shape = n</p>
+<blockquote>
+<div><p>A vector containing gene weights</p>
+</div></blockquote>
+<p><strong>pathway_definitions</strong> : dict(str -&gt; set(str))</p>
+<blockquote>
+<div><p>A pathway (key) is defined by a set of genes (value).</p>
+</div></blockquote>
+<p><strong>gene_signature_definition</strong> : functools.partial callable,</p>
+<blockquote>
+<div><blockquote>
+<div><p>returns (set(), set())</p>
+</div></blockquote>
+<p>Accepts the <cite>feature_weight_vector</cite> as input. Provide a function to
+distinguish positive and/or negative gene signatures.
+Both a positive &amp; a negative signature may be appropriate if the
+feature’s gene weight distribution spans positive and negative values.
+If this is not the case, specify a single gene signature by returning
+one of the sides as an empty set.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float (default=0.05)</p>
+<blockquote>
+<div><p>Significance level for pathway enrichment.</p>
+</div></blockquote>
+<p><strong>correct_all_genes</strong> : bool (default=True)</p>
+<blockquote>
+<div><p>The overlap correction procedure is applied independently to both
+the gene signature (union of positive and negative signature when
+applicable) _and_ the genes outside of the signature (termed
+<em>remaining</em> genes).
+If not <cite>correct_all_genes</cite>, overlap correction is not applied to
+the set of remaining genes.</p>
+</div></blockquote>
+<p><strong>metadata</strong> : bool (default=False)</p>
+<blockquote>
+<div><p>Gather information to store in a MongoDB-backed Flask web application.
+Users can interact with the PathCORE-produced network and analyze the
+genes underlying a pair of pathways linked in the network.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tup([pandas.DataFrame|None], dict())</p>
+<p><strong>tup[0]</strong> : pandas.DataFrame|None:</p>
+<blockquote>
+<div><p>a dataframe of significant pathways or
+None if the gene signature does not contain any genes in the
+pathway definitions</p>
+</div></blockquote>
+<p><strong>tup[1]</strong> : if <cite>metadata</cite>:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>{“positive signature”: &lt;set() positive gene signature&gt;,</dt>
+<dd><p class="first">“negative signature”: &lt;set() negative gene signature&gt;,
+“pathway definitions”: &lt;dict(str -&gt; set())</p>
+<blockquote class="last">
+<div><p>overlap-corrected definitions–only signature genes&gt;}</p>
+</div></blockquote>
+</dd>
+</dl>
+<p>else: {}</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pathcore.feature_pathway_overrepresentation.single_side_pathway_enrichment">
+<code class="descname">single_side_pathway_enrichment</code><span class="sig-paren">(</span><em>pathway_definitions</em>, <em>gene_signature</em>, <em>n_genes</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.feature_pathway_overrepresentation.single_side_pathway_enrichment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify overrepresented pathways using the Fisher’s exact test for
+significance on a given pathway definition and gene signature.
+(FDR correction for multiple testing is applied in
+<cite>_significant_pathways_dataframe</cite>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pathway_definitions</strong> : dict(str -&gt; set(str))</p>
+<blockquote>
+<div><p>Pathway definitions, <em>post</em>-overlap-correction if this function
+is called from <cite>pathway_enrichment_with_overlap_correction</cite>.
+A pathway (key) is defined by a set of genes (value).</p>
+</div></blockquote>
+<p><strong>gene_signature</strong> : set(str)</p>
+<blockquote>
+<div><p>The set of genes we consider to be enriched in a feature.</p>
+</div></blockquote>
+<p><strong>n_genes</strong> : int</p>
+<blockquote>
+<div><p>The total number of genes for which we have assigned weights in the
+features of an unsupervised model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">pandas.Series, for each pathway, the p-value from applying the Fisher’s exact test.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pathcore.network">
+<span id="pathcore-network-module"></span><h2>pathcore.network module<a class="headerlink" href="#module-pathcore.network" title="Permalink to this headline">¶</a></h2>
+<p>CoNetwork is the data structure that supports the pathway co-occurrence
+network produced by the PathCORE software.</p>
+<p>The classes Vertex and Edge are used in CoNetwork.</p>
+<dl class="class">
+<dt id="pathcore.network.CoNetwork">
+<em class="property">class </em><code class="descname">CoNetwork</code><span class="sig-paren">(</span><em>model_n_features</em>, <em>significant_pathways=None</em>, <em>permutation_max_iters=30000</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.add_pathway">
+<code class="descname">add_pathway</code><span class="sig-paren">(</span><em>pathway</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.add_pathway" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <cite>self.pathways</cite> and <cite>self.n_pathways.</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pathway</strong> : str</p>
+<blockquote class="last">
+<div><p>the pathway to add to the network.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.aggregate">
+<code class="descname">aggregate</code><span class="sig-paren">(</span><em>merge</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.aggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine this network with another network. The aggregation step
+takes the union of the edges in the two networks, where we take the
+sum of weights for edges common to both networks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>merge</strong> : CoNetwork</p>
+<blockquote class="last">
+<div><p>the CoNetwork object being merged into the current network.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.convert_pathway_mapping">
+<code class="descname">convert_pathway_mapping</code><span class="sig-paren">(</span><em>other_pathway_mapping</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.convert_pathway_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to convert the pathway-to-vertex id mapping in one CoNetwork
+to the one used in the current CoNetwork (<cite>self</cite>).
+The following tasks are carried out in the remapping:</p>
+<ol class="arabic simple">
+<li>If <cite>self.pathways</cite> contains the pathway to be merged, map the
+vertex id in <cite>other_pathway_mapping</cite> to the vertex id
+in <cite>self.pathways</cite>.</li>
+<li>If not, create a vertex in <cite>self</cite> and then add the key-value pair
+to <cite>self.pathways</cite> accordingly.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>other_pathway_mapping</strong> : dict(str -&gt; int)</p>
+<blockquote>
+<div><p>the <cite>pathways</cite> field in the CoNetwork class. This is a
+(pathway -&gt; vertex id) map.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict(int -&gt; int), the (other vertex id -&gt; <cite>self</cite> vertex id)</p>
+<blockquote class="last">
+<div><p>conversion map</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.edge_tuple">
+<code class="descname">edge_tuple</code><span class="sig-paren">(</span><em>vertex0_id</em>, <em>vertex1_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.edge_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>To avoid duplicate edges where the vertex ids are reversed,
+we maintain that the vertex ids are ordered so that the corresponding
+pathway names are alphabetical.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>vertex0_id</strong> : int</p>
+<blockquote>
+<div><p>one vertex in the edge</p>
+</div></blockquote>
+<p><strong>vertex1_id</strong> : int</p>
+<blockquote>
+<div><p>the other vertex in the edge</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tup(int, int)|None, the edge id or None if the vertices do not exist in the network or they map to the same pathway (there should not be any self-loops in the network)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.get_adjacent_pathways">
+<code class="descname">get_adjacent_pathways</code><span class="sig-paren">(</span><em>pathway</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.get_adjacent_pathways" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pathways adjacent to this pathway in the network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pathway</strong> : str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list(str), a list of pathways adjacent to the input pathway</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.get_edge_pathways">
+<code class="descname">get_edge_pathways</code><span class="sig-paren">(</span><em>edge_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.get_edge_pathways" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pathways associated with an edge.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>edge_id</strong> : tup(int, int)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tup(str, str)|None, the edge as a pair of 2 pathways if the edge id is in this network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.get_pathway_from_vertex_id">
+<code class="descname">get_pathway_from_vertex_id</code><span class="sig-paren">(</span><em>vertex_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.get_pathway_from_vertex_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pathway string corresponding to a vertex id</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vertex_id</strong> : int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str|None, the pathway name if the vertex is in this network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.get_vertex_obj">
+<code class="descname">get_vertex_obj</code><span class="sig-paren">(</span><em>vertex_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.get_vertex_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Vertex object that corresponds to a vertex id</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vertex_id</strong> : int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Vertex|None, the Vertex obj if the vertex id is in this network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.get_vertex_obj_from_pathway">
+<code class="descname">get_vertex_obj_from_pathway</code><span class="sig-paren">(</span><em>pathway</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.get_vertex_obj_from_pathway" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the vertex object that corresponds to a pathway name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pathway</strong> : str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Vertex|None, the Vertex obj if the pathway is in this network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.permute_pathways_across_features">
+<code class="descname">permute_pathways_across_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.permute_pathways_across_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a permutation of the network. Requires that the
+significant pathways file has been specified during CoNetwork
+initialization (or set <cite>self.feature_pathway_df</cite> to the
+pandas.DataFrame afterwards).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.read_network_file">
+<code class="descname">read_network_file</code><span class="sig-paren">(</span><em>path_to_network_file</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.read_network_file" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path_to_network_file</strong> : str</p>
+<blockquote class="last">
+<div><p>Expects a network file with columns “pw0” and “pw1.” A “features”
+column that specifies the features where the (pw0, pw1) edge is
+present will assign a weight to the edge, though it is not required
+(edge will have weight 1 if no “features” column exists).</p>
+<blockquote>
+<div><p>“features” format: space-separated feature numbers,
+e.g. 0.0 1.0 2.0</p>
+</div></blockquote>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.remapped_edge">
+<code class="descname">remapped_edge</code><span class="sig-paren">(</span><em>vertex_id_conversion</em>, <em>other_edge_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.remapped_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an edge (<cite>vertex0_id</cite>, <cite>vertex1_id</cite>) from a
+different CoNetwork, return the corresponding edge id from this
+CoNetwork (<cite>self</cite>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>vertex_id_conversion</strong> : dict (int -&gt; int)</p>
+<blockquote>
+<div><p>the dict produced by <cite>convert_pathway_mapping,</cite> which maps
+the other CoNetwork’s vertex ids to this CoNetwork’s vertex ids.</p>
+</div></blockquote>
+<p><strong>other_edge_id</strong> : tup(int, int)</p>
+<blockquote>
+<div><p>the edge id for the edge in the other CoNetwork</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tup(int, int), the corresponding edge id</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.to_dataframe">
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>drop_weights_below=0</em>, <em>whitelist=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conversion of the network to a pandas.DataFrame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>drop_weights_below</strong> : int (default=0)</p>
+<blockquote>
+<div><p>specify an edge weight threshold - remove all edges with weight
+below this value</p>
+</div></blockquote>
+<p><strong>whitelist</strong> : [set|list](tup(int, int))|None (default=None)</p>
+<blockquote>
+<div><p>option to pass in a set/list of edge ids (tup(int, int)) that should
+be kept in the resulting dataframe</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>a pandas.DataFrame containing the network edge information.
+columns = [pw0, pw1, weight]. an additional “features” column is
+returned if this network is not an aggregate of multiple networks.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.CoNetwork.weight_by_edge_odds_ratios">
+<code class="descname">weight_by_edge_odds_ratios</code><span class="sig-paren">(</span><em>edges_expected_weight</em>, <em>flag_as_significant</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.CoNetwork.weight_by_edge_odds_ratios" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applied during the permutation test. Update the edges in the
+network to be weighted by their odds ratios. The odds ratio measures
+how unexpected the observed edge weight is based on the expected
+weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>edges_expected_weight</strong> : list(tup(int, int), float)</p>
+<blockquote>
+<div><p>A tuple list of (edge id, edge expected weight) generated from the
+permutation test step.</p>
+</div></blockquote>
+<p><strong>flag_as_significant</strong> : [set|list](tup(int, int))</p>
+<blockquote class="last">
+<div><p>A set or list of edge ids that are considered significant against
+the null model of random associations generated in the permutation
+test</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pathcore.network.Edge">
+<em class="property">class </em><code class="descname">Edge</code><span class="sig-paren">(</span><em>vertex0_id</em>, <em>vertex1_id</em>, <em>which_features=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A co-occurrence relationship between two pathways is
+represented by an Edge object</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pathcore.network.Edge.connected_to">
+<code class="descname">connected_to</code><span class="sig-paren">(</span><em>vertex_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Edge.connected_to" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>vertex_id</strong> : int</p>
+<blockquote>
+<div><p>Get what <cite>vertex_id</cite> is connected to.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int|None, the vertex id connected to the</p>
+<blockquote class="last">
+<div><p>input <cite>vertex_id</cite> in this edge, as long as <cite>vertex_id</cite> is
+one of the vertices connected by this edge.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.Edge.features_to_string">
+<code class="descname">features_to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Edge.features_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pathcore.network.Vertex">
+<em class="property">class </em><code class="descname">Vertex</code><span class="sig-paren">(</span><em>vertex_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A pathway is represented as a Vertex object</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pathcore.network.Vertex.degree">
+<code class="descname">degree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Vertex.degree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pathcore.network.Vertex.get_adjacent_vertex_ids">
+<code class="descname">get_adjacent_vertex_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network.Vertex.get_adjacent_vertex_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pathcore.network_permutation_test">
+<span id="pathcore-network-permutation-test-module"></span><h2>pathcore.network_permutation_test module<a class="headerlink" href="#module-pathcore.network_permutation_test" title="Permalink to this headline">¶</a></h2>
+<p>Methods for permuting the pathways across constructed features of one
+or more unsupervised models.
+A permutation maintains the number of unique pathways that correspond to a
+feature. If applicable, it also preserves the side (positive or negative)
+in which pathway was overrepresented as well.</p>
+<dl class="function">
+<dt id="pathcore.network_permutation_test.aggregate_permuted_network">
+<code class="descname">aggregate_permuted_network</code><span class="sig-paren">(</span><em>observed_networks</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network_permutation_test.aggregate_permuted_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method handles the case where multiple observed networks are
+generated (e.g. from models produced by different random seed
+initializations of an unsupervised feature construction algorithm).
+We handle analysis of multiple networks by aggregating them; likewise,
+we require that the permutation test generates N aggregate permuted
+networks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>observed_networks</strong> : list(CoNetwork)</p>
+<blockquote>
+<div><p>the list of observed networks, generated from models produced by
+different random seed initializations of the same unsupervised feature
+construction algorithm</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">CoNetwork, the aggregate permuted network created by generating a permutation for each individual observed network and then aggregating them into a single network</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pathcore.network_permutation_test.network_edges_permutation_test">
+<code class="descname">network_edges_permutation_test</code><span class="sig-paren">(</span><em>observed_network</em>, <em>permuted_networks</em>, <em>alpha</em>, <em>n_networks=1</em>, <em>output_edges_to_file=None</em>, <em>output_network_to_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pathcore.network_permutation_test.network_edges_permutation_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the observed network and N permutations of that network,
+determine the significance of each observed, weighted edge. Edges that
+are not distinguishable from the null model of random associations will
+be removed from the network file output. Additionally, weights of the
+significant edges are updated to an odds ratio that quantifies the
+“unexpectedness” of an observed pathway co-occurrence relationship
+based on the generated null model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>observed_network</strong> : CoNetwork</p>
+<blockquote>
+<div><p>the original observed network (this can be an aggregate of
+multiple networks, see CoNetwork’s <cite>aggregate</cite> function in
+<cite>network.py</cite>)</p>
+</div></blockquote>
+<p><strong>permuted_networks</strong> : list(CoNetwork)</p>
+<blockquote>
+<div><p>the list of N permuted networks generated from the original observed
+CoNetwork by calling its <cite>permute_pathways_across_features</cite> function
+N times and collecting the output in a list.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float</p>
+<blockquote>
+<div><p>specify the threshold for significance testing</p>
+</div></blockquote>
+<p><strong>n_networks</strong> : int (default=1)</p>
+<blockquote>
+<div><p>in the case where <cite>observed_network</cite> is an aggregate of multiple
+co-occurrence networks, <cite>n_networks</cite> can be greater than 1.</p>
+</div></blockquote>
+<p><strong>output_edges_to_file</strong> : str|None (default=None)</p>
+<blockquote>
+<div><p>specify the filepath to write the edges that had q-values
+below <cite>alpha</cite></p>
+</div></blockquote>
+<p><strong>output_network_to_file</strong> : str|None (default=None)</p>
+<blockquote>
+<div><p>specify the filepath to write the final, filtered network</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">CoNetwork, the observed network after the permutation test (filtered to only report significant edges, weighted by their odds ratios)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pathcore">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pathcore" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PathCORE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pathcore package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">pathcore</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">pathcore</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kathleen Chen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/source/pathcore.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
