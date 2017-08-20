@@ -67,6 +67,37 @@
         </p>
     </div>
 </div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+          <button type="button" class="btn btn-default toggle-genes">
+            Sort genes alphabetically
+          </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <h4>Least expressed samples</h4>
+            <div class="row">
+                <div class="col-md-4" id="least_expressed">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4" id="annotations">
+            <div style="padding-top: 30px;" class="meta sample-view">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <h4>Most expressed samples</h4>
+            <div class="row">
+                <div class="col-md-4" id="most_expressed">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--
 <div class="container" id="most-expressed-samples">
 <h4>Most expressed samples</h4>
 <div class="row">
@@ -94,11 +125,11 @@
     </div>
     </div>
 </div>
-<div class="row" id="least_expressed_parent">
+<div class="row" id="least_expressed_parent_x">
     <div class="col-md-4 sample-view" id="least_expressed">
     </div>
 </div>
-</div>
+</div>-->
 
 <script type="text/javascript">
 const edgeInfo = JSON.parse(JSON.stringify({{ edge_info|safe }}));
@@ -120,11 +151,11 @@ const leastExpressedData =
      "ownership": edgeInfo["ownership"]
     };
 
-const mostExprMinMax = expressionMinMax(mostExpressedData["heatmapData"]);
-const leastExprMinMax = expressionMinMax(leastExpressedData["heatmapData"]);
+//const mostExprMinMax = expressionMinMax(mostExpressedData["heatmapData"]);
+//const leastExprMinMax = expressionMinMax(leastExpressedData["heatmapData"]);
 
-const mostExprColors = ["white", "blue", "red", "black"];
-const leastExprColors = ["white", "blue", "purple", "black"];
+const colors = ["white", "blue", "red", "black"];
+//const leastExprColors = ["white", "blue", "purple", "black"];
 
 /*
 const mostExprColorbar = colorbar(
@@ -133,10 +164,10 @@ const leastExprColorbar = colorbar(
   leastExprMinMax["min"], leastExprMinMax["max"], leastExprColors);
 */
 
-const mostExprColorbar = colorbar(
-  0.0, 1.0, mostExprColors); 
-const leastExprColorbar = colorbar(
-  0.0, 1.0, leastExprColors);
+const expressionColorbar = colorbar(
+  0.0, 1.0, colors); 
+//const leastExprColorbar = colorbar(
+//  0.0, 1.0, leastExprColors);
 
 const copyMost = replaceWithAlphabetical(
   jQuery.extend(true, {}, mostExpressedData));
@@ -144,22 +175,22 @@ const copyLeast = replaceWithAlphabetical(
   jQuery.extend(true, {}, leastExpressedData));
 
 const mostExprHeatmap = createHeatmap("#most_expressed",
-  mostExpressedData, mostExprColorbar,
-  mostExprMinMax["min"], mostExprMinMax["max"]);
+  mostExpressedData, expressionColorbar,
+  0.0, 1.0);
 const leastExprHeatmap = createHeatmap("#least_expressed",
-  leastExpressedData, leastExprColorbar,
-  leastExprMinMax["min"], leastExprMinMax["max"]);
+  leastExpressedData, expressionColorbar,
+  0.0, 1.0);
 
-mostExprHeatmap.prependTo($("#most_expressed_parent"));
-leastExprHeatmap.prependTo($("#least_expressed_parent"));
-
+//mostExprHeatmap.prependTo($("#annotations"));
+//leastExprHeatmap.prependTo($("#annotations"));
+/*
 function expressionMinMax(data) {
     const minExpression = Math.min.apply(
       Math, data.map(function(d) { return d.value; }));
     const maxExpression = Math.max.apply(
       Math, data.map(function(d) { return d.value; }));
     return {"min": minExpression, "max": maxExpression};
-}
+}*/
 
 function colorbar(minExpression, maxExpression, colors) {
     const difference = maxExpression - minExpression;
@@ -185,23 +216,21 @@ $(".toggle-genes").click(function() {
         text = text.trim();
         if (text == "Sort genes alphabetically") {
             x = createHeatmap("#most_expressed",
-              copyMost, mostExprColorbar,
-              mostExprMinMax["min"], mostExprMinMax["max"]);
+              copyMost, expressionColorbar,
+              0.0, 1.0);
             y = createHeatmap("#least_expressed",
-              copyLeast, leastExprColorbar,
-              leastExprMinMax["min"], leastExprMinMax["max"]);
+              copyLeast, expressionColorbar,
+              0.0, 1.0);
             returnButtonLabel = "Sort genes by odds ratio"; 
         } else {
             x = createHeatmap("#most_expressed",
-              mostExpressedData, mostExprColorbar,
-              mostExprMinMax["min"], mostExprMinMax["max"]);
+              mostExpressedData, expressionColorbar,
+              0.0, 1.0);
             y = createHeatmap("#least_expressed",
-              leastExpressedData, leastExprColorbar,
-              leastExprMinMax["min"], leastExprMinMax["max"]);
+              leastExpressedData, expressionColorbar,
+              0.0, 1.0);
             returnButtonLabel = "Sort genes alphabetically";
         }
-        $("#most_expressed_parent .meta.sample-view").replaceWith(x);
-        $("#least_expressed_parent .meta.sample-view").replaceWith(y);
         return returnButtonLabel;
     });
 });
