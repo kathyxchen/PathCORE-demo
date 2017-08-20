@@ -30,10 +30,8 @@
             the normalized expression values of the selected genes,
             where each expression value was weighted by the corresponding
             gene's odds ratio.
-            Displayed are the <a href="#most-expressed-samples">
-            {{n_samples}} most expressed</a>
-            and <a href="#least-expressed-samples">
-            {{n_samples}} least expressed</a> samples. 
+            Displayed are the {{n_samples}} most expressed
+            and {{n_samples}} least expressed samples. 
         </p>
         <p>
             If a gene-by-sample square has an experiment associated with
@@ -44,11 +42,11 @@
         </p>
         <p>
             When available, we provide the common name for a given PA
-            gene locus tag. Genes in <span class="pw0">pink</span> are
+            gene locus tag. <b>Genes in <span class="pw0">pink</span> are
             annotated to <span class="pw0">{{pw0}}</span> in KEGG,
             <span class="pw1">green</span> to <span class="pw1">{{pw1}}</span>,
             and <span class="both">purple</span> to
-            <span class="both">both</span>.
+            <span class="both">both</span></b>.
         </p>
         <h4>
           <a href="{{ url_for('routes.edge_excel_file', edge_pws=pw0 + '&' + pw1) }}">
