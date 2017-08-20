@@ -79,7 +79,7 @@ function replaceWithAlphabetical(copyData) {
 function createHeatmap(divId, data, color, min, max) {
   const width = 960;
   const height = 800;
-  const cellSize = 25;
+  const cellSize = 18;
   const labelSize = 100;
 
   const heatmapHeight = cellSize * data.genesY.length;
@@ -97,7 +97,8 @@ function createHeatmap(divId, data, color, min, max) {
   let bounding;
 
   function heatmapLegend(heatmapWidth, heatmapHeight) {
-    const legendWidth = Math.max(Math.min(heatmapWidth, 500), 100);
+    //const legendWidth = Math.max(Math.min(heatmapWidth, 500), 100);
+    const legendWidth = 300;
     let colorbarLegend = [];
     for (var i = 0; i < legendWidth; i++) { 
       colorbarLegend.push(i / legendWidth); 
@@ -105,7 +106,8 @@ function createHeatmap(divId, data, color, min, max) {
 
     // handles interpolation between expression values and legend position
     var legendScale = d3.scale.linear()
-      .domain([min,max])
+      //.domain([min,max])
+      .domain([0.0, 1.0])
       .range([0,legendWidth]);
   
     // generates the tick values along the bottom of the legend

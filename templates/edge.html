@@ -123,13 +123,20 @@ const leastExpressedData =
 const mostExprMinMax = expressionMinMax(mostExpressedData["heatmapData"]);
 const leastExprMinMax = expressionMinMax(leastExpressedData["heatmapData"]);
 
-const mostExprColors = ["white", "yellow", "red", "black"];
+const mostExprColors = ["white", "blue", "red", "black"];
 const leastExprColors = ["white", "blue", "purple", "black"];
 
+/*
 const mostExprColorbar = colorbar(
   mostExprMinMax["min"], mostExprMinMax["max"], mostExprColors); 
 const leastExprColorbar = colorbar(
   leastExprMinMax["min"], leastExprMinMax["max"], leastExprColors);
+*/
+
+const mostExprColorbar = colorbar(
+  0.0, 1.0, mostExprColors); 
+const leastExprColorbar = colorbar(
+  0.0, 1.0, leastExprColors);
 
 const copyMost = replaceWithAlphabetical(
   jQuery.extend(true, {}, mostExpressedData));
