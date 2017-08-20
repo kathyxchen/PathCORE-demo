@@ -99,15 +99,13 @@ data = {
 copy = replaceWithAlphabetical(
   jQuery.extend(true, {}, data));
 
-heatmap = createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
+createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
 
 /* listener for the button toggle
  * (genes ordered by odds ratio or alphabetically)
  */
 $(".toggle-genes").click(function() {
     $(".toggle-genes").text(function(i, text) {
-        let x;
-        let y;
         let returnButtonLabel;
 
         $("#heatmap svg").remove();
