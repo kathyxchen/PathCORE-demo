@@ -113,7 +113,6 @@ function searchPathways() {
     // move this node to the front of the nodes collection
     this.parentNode.appendChild(this);
   });
-
   highlightEdges(pathwayNames); 
 }
 
