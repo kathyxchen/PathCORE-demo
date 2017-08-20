@@ -9,27 +9,56 @@ function hoverLineColor(viewOnly) {
 }
 
 function defaultNode(textSelect) {
-  textSelect.style("font-size", "14px");
+  textSelect.style("font-size", "16px");
   textSelect.style("font-weight", "normal");
   textSelect.style("fill", "white");
   textSelect.style("stroke", "gray");
 }
 
-function highlightNode(textSelect) {
+function highlightNode(textSelect, isNeighbor) {
   textSelect.style("font-size", "18px");
   textSelect.style("font-weight", "bold");
-  textSelect.style("fill", "black");
+  if (isNeighbor) {
+    textSelect.style("fill", "gray");
+  } else {
+    textSelect.style("fill", "black");
+  }
   textSelect.style("stroke", "black");
 }
 
 function highlightEdges(names) {
   const link = svg.selectAll(".link");
+  const neighbors = [];
+  
+  var color; 
   link.style("stroke", function(l) {
-    if (names.indexOf(l.source.name) != -1
-        || names.indexOf(l.target.name) != -1)
-      return hoverLineColor(viewOnly);
-    else
-      return lineColor;
+    if (names.indexOf(l.source.name) != -1) {
+      neighbors.push(l.target.name);
+      color = hoverLineColor(viewOnly);
+    } else if (names.indexOf(l.target.name) != -1) {
+      neighbors.push(l.source.name);
+      color = hoverLineColor(viewOnly);
+    } else {
+      color = lineColor;
+    }
+    return color;
+  });
+
+  neighbors.forEach(function(neighbor) {
+    const classes = neighbor.toLowerCase()
+                            .replace(/[^\w\s]|_/g, " ")
+                            .replace(/\s+/g, " ");
+    const pathways = $("." + classes.trim().replace(/ /g, "."));
+    pathways.each(function(index) {
+      const textSelect = d3.select(this).select("text");
+      const nodeSelect = d3.select(this).select("circle");
+      if (!nodeSelect.classed("searching")) {
+        highlightNode(textSelect, true);
+        nodeSelect.attr("class", "searching");
+        nodeSelect.style("fill", "orange");
+        $(this).addClass("search-text");
+      }
+    });
   });
 }
 
@@ -77,14 +106,13 @@ function searchPathways() {
   let pathwayNames = [];
   pathways.each(function(index) {
     const textSelect = d3.select(this).select("text");
-    highlightNode(textSelect);
+    highlightNode(textSelect, false);
     $(this).addClass("search-text");
     // the text label of the selected pathway node
     pathwayNames.push(d3.select(this)[0][0].textContent);
     // move this node to the front of the nodes collection
     this.parentNode.appendChild(this);
   });
-
   highlightEdges(pathwayNames); 
 }
 
@@ -204,7 +232,7 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
       .on("mouseover", function(d) {
         const target = d3.select(this);
         target.attr("r", 9).style("fill", "yellow");
-        highlightNode(target.select("text"));
+        highlightNode(target.select("text"), false);
         this.parentNode.appendChild(this);
         link.style("stroke", function(l) {
           if (d === l.source || d === l.target)
@@ -227,15 +255,15 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
 
   function wrap(text, width) {
     text.each(function() {
-      const text = d3.select(this);
-      const words = text.text().split(/\s+/).reverse();
-      const lineHeight = 0.5;
+      const label = d3.select(this);
+      const words = label.text().split(/\s+/).reverse();
+      const lineHeight = 0.45;
       const y = text.attr("y");
-      const dy = parseFloat(text.attr("dy"));
+      const dy = parseFloat(label.attr("dy"));
       let word;
       let line = [];
       let lineNumber = 0;
-      let tspan = text.text(null)
+      let tspan = label.text(null)
         .append("tspan")
         .attr("x", 0)
         .attr("y", y)
@@ -247,7 +275,7 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
             line.pop();
             tspan.text(line.join(" "));
             line = [word];
-            tspan = text.append("tspan")
+            tspan = label.append("tspan")
               .attr("x", 0)
               .attr("y", y)
               .attr("dy", ++lineNumber * lineHeight + dy + "em")
