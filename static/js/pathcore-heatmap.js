@@ -161,14 +161,14 @@ function createHeatmap(divId, data, color, min, max) {
           data.oddsratios[d.row_index] * 1000.0) / 1000.0;
         metadataHtml = "<table class='table table-sm'>" +
           "<thead><tr><th style='width: 30%;'></th>" + 
-          "<th style='width: 70%;'></th></tr></thead><tbody>"; 
+          "<th style='width: 80%;'></th></tr></thead><tbody>"; 
 
         for (let i = 0; i < sampleMetadataRows.length; i++) {
             const key = sampleMetadataRows[i];
             if (key in metadata) {
-                metadataHtml += "<tr><td style='line-height: 0.9;'><strong>" +
+                metadataHtml += "<tr><td style='line-height: 0.85; font-size: 14px;'><strong>" +
                   key + "</strong></td>" +
-                  "<td style='line-height: 0.9;'>" + 
+                  "<td style='line-height: 0.85; font-size: 14px;'>" + 
                   metadata[key] + 
                   "</td></tr>";
             }
