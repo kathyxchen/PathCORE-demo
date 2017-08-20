@@ -90,14 +90,9 @@ function createHeatmap(divId, data, color, min, max) {
     .attr("height", height)
     .append("g");
 
-  const container = $("<div style='padding-top: 30px;'>")
-    .attr("class","meta col-md-5")
-    .addClass("sample-view");
-
   let bounding;
 
   function heatmapLegend(heatmapWidth, heatmapHeight) {
-    //const legendWidth = Math.max(Math.min(heatmapWidth, 500), 100);
     const legendWidth = 300;
     let colorbarLegend = [];
     for (var i = 0; i < legendWidth; i++) { 
@@ -106,8 +101,7 @@ function createHeatmap(divId, data, color, min, max) {
 
     // handles interpolation between expression values and legend position
     var legendScale = d3.scale.linear()
-      //.domain([min,max])
-      .domain([0.0, 1.0])
+      .domain([min,max])
       .range([0,legendWidth]);
   
     // generates the tick values along the bottom of the legend
@@ -120,7 +114,7 @@ function createHeatmap(divId, data, color, min, max) {
     // colored by their interpolated color value
     svg.append("g")
       .attr("class", "legend axis")
-      .attr("transform", "translate(0,-100)")
+      .attr("transform", "translate(-30,-100)")
       .call(legendAxis)
       .selectAll(".legend_cell")
       .data(colorbarLegend)
@@ -133,7 +127,7 @@ function createHeatmap(divId, data, color, min, max) {
 
     // legend title
     svg.append("text")
-       .attr("x", legendWidth / 2)
+       .attr("x", legendWidth / 2 - 30)
        .attr("y", -65)
        .attr("text-anchor", "middle")
        .text("normalized expression value");
@@ -180,7 +174,7 @@ function createHeatmap(divId, data, color, min, max) {
             }
         }
         metadataHtml += "</tbody>";
-        container.html(metadataHtml);
+        $(".meta").html(metadataHtml);
         if (metadataHtml.length != 0) {
           d3.select(this)
             .style("stroke", "black")
@@ -245,7 +239,7 @@ function createHeatmap(divId, data, color, min, max) {
               return "blue";
           }
         }
-        return 'black';
+        return "black";
       });
 
     // title for the x axis
@@ -258,8 +252,8 @@ function createHeatmap(divId, data, color, min, max) {
     // title for the y axis
     svg.append("text")
      .attr("text-anchor", "middle")
-     .attr("transform","translate(-150" + "," +
-                       (heatmapHeight / 2) +") rotate(90)")
+     .attr("transform","translate(-100" + "," +
+                       (heatmapHeight / 3) +") rotate(90)")
      .text("Genes");
   }
   
@@ -273,6 +267,5 @@ function createHeatmap(divId, data, color, min, max) {
   
   d3.select("svg").attr("width", bounding.width);
   d3.select("svg").attr("height", bounding.height);
-  return container;
 }
 
