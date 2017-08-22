@@ -19,9 +19,9 @@ function highlightNode(textSelect, isNeighbor) {
   textSelect.style("font-size", "18px");
   textSelect.style("font-weight", "bold");
   if (isNeighbor) {
-    textSelect.style("fill", "gray");
-  } else {
     textSelect.style("fill", "black");
+  } else {
+    textSelect.style("fill", "pink");
   }
   textSelect.style("stroke", "black");
 }
@@ -109,7 +109,7 @@ function searchPathways() {
     highlightNode(textSelect, false);
     $(this).addClass("search-text");
     // the text label of the selected pathway node
-    pathwayNames.push(d3.select(this)[0][0].textContent);
+    pathwayNames.push(d3.select(this)[0][0].__data__.name);
     // move this node to the front of the nodes collection
     this.parentNode.appendChild(this);
   });
