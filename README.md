@@ -38,7 +38,7 @@ Steps to read through at minimum: "Introduction" to "View logs," and then "Push 
 ### Heroku-specific files provided for you
 - `Procfile`
 - `app.json`
-- `runtime.txt` (required to specify Python-3.6.1, [per this article](https://devcenter.heroku.com/articles/python-runtimes))
+- `runtime.txt` (required to specify Python-3.6.2, [per this article](https://devcenter.heroku.com/articles/python-runtimes))
 
 ## Directory structure
 - top-level:
