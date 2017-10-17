@@ -25,7 +25,7 @@ routes = Blueprint("routes", __name__)
 
 @routes.route("/")
 def home():
-    """The PathCORE project homepage. This is
+    """The PathCORE-T project homepage. This is
     https://pathcore-demo.herokuroutes.com
     """
     return render_template("home.html")
@@ -76,7 +76,7 @@ def tcga_network():
 
 @routes.route("/quickview")
 def pathcore_network_quickview():
-    """Users can load their own network file, generated from using the PathCORE
+    """Users can load their own network file, generated from using the PathCORE-T
     software, onto this page for temporary viewing.
     """
     sum_session_counter()
@@ -92,7 +92,7 @@ def pathcore_network_quickview():
 @routes.route("/edge/<path:edge_pws>")
 @gzipped
 def edge(edge_pws):
-    """Loads the PathCORE network edge page
+    """Loads the PathCORE-T network edge page
     """
     has_edge_info, params = get_edge_template(edge_pws, db)
     html = "edge.html"

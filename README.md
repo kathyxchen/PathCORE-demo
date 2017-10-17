@@ -1,14 +1,14 @@
 # Description
 
-This repository contains the source for the PathCORE demo Flask application.
-- [The PathCORE manuscript](https://doi.org/10.1101/147645)
+This repository contains the source for the PathCORE-T demo Flask application.
+- [The PathCORE-T manuscript](https://doi.org/10.1101/147645)
 - [The demo server](https://pathcore-demo.herokuapp.com)
 
 ## How to run the application locally
 Requires Python 3.6.2.
 
-[Read about the web application database setup in PathCORE-analysis.](https://github.com/greenelab/PathCORE-analysis#web-application-database-setup)
-Register for an MLab account and create a new database based on those [instructions](https://github.com/greenelab/PathCORE-analysis#step-1-mlab-setup).
+[Read about the web application database setup in PathCORE-T-analysis.](https://github.com/greenelab/PathCORE-T-analysis#web-application-database-setup)
+Register for an MLab account and create a new database based on those [instructions](https://github.com/greenelab/PathCORE-T-analysis#step-1-mlab-setup).
 
 Set the following environment variables (more information about [the MongoDB database](#the-mongodb-database) below):
 - `MDB_USER`
@@ -47,27 +47,27 @@ Steps to read through at minimum: "Introduction" to "View logs," and then "Push 
   - [utils.py](utils.py): Utility functions for retrieving information needed in each route.
 - [templates](templates): The HTML files for each of the pages needed for the routes.
   - [home.html](templates/home.html): The [project homepage](https://pathcore-demo.herokuapp.com/).
-  - [pathcore-vis.html](templates/pathcore-vis.html): The PathCORE network pages ([PAO1](https://pathcore-demo.herokuapp.com/PAO1), [TCGA](https://pathcore-demo.herokuapp.com/TCGA)).
-  - [network.html](templates/network.html): This is used in `pathcore-vis.html`. It is the formatting for the window that displays the D3.js network on the PathCORE network page.
+  - [pathcore-vis.html](templates/pathcore-vis.html): The PathCORE-T network pages ([PAO1](https://pathcore-demo.herokuapp.com/PAO1), [TCGA](https://pathcore-demo.herokuapp.com/TCGA)).
+  - [network.html](templates/network.html): This is used in `pathcore-vis.html`. It is the formatting for the window that displays the D3.js network on the PathCORE-T network page.
   - [edge.html](templates/edge.html): The edge page (see [example](https://pathcore-demo.herokuapp.com/edge/Phosphate%20transport%20system&Type%20II%20general%20secretion%20pathway)).
   - [no_edge.html](templates/no_edge.html): This contains the text for an edge that has no genes with odds ratio above 1.
   - [experiment.html](templates/experiment.html): The experiment page (see [example](https://pathcore-demo.herokuapp.com/edge/Phosphate%20transport%20system&Type%20II%20general%20secretion%20pathway/experiment/E-GEOD-22164&least_expressed))
-  - [quickview.html](templates/quickview.html): Users can [upload and view their own PathCORE-generated network](https://pathcore-demo.herokuapp.com/quickview).
+  - [quickview.html](templates/quickview.html): Users can [upload and view their own PathCORE-T-generated network](https://pathcore-demo.herokuapp.com/quickview).
   - [layout.html](templates/layout.html): Used in all the above templates. Specifies the same `<head>` data.
-  - [static](static): Static files (CSS, JS, fonts, data files). PathCORE-specific ones described here:
+  - [static](static): Static files (CSS, JS, fonts, data files). PathCORE-T-specific ones described here:
     - [css/pathcore.css](static/css/pathcore.css): Styling specific to this application (a lot of it is for the network styling)
-    - [data](static/data): The data files used in the PathCORE network pages
+    - [data](static/data): The data files used in the PathCORE-T network pages
     - [js/pathcore-heatmap.js](static/js/pathcore-heatmap.js): JS functions to load the heatmaps and allow a user to interact with heatmaps (particularly to fetch the sample annotation information)
-    - [js/pathcore-network.js](static/js/pathcore-network.js): JS functions to load the D3.js PathCORE network visualization. Allows users to interact with the network as well (e.g. drag the pathways to areas that make the network as a whole easier to read)
+    - [js/pathcore-network.js](static/js/pathcore-network.js): JS functions to load the D3.js PathCORE-T network visualization. Allows users to interact with the network as well (e.g. drag the pathways to areas that make the network as a whole easier to read)
 
 ## The MongoDB database
-Information about the _P. aeruginosa_ data compendium and genes are stored in several MongoDB collections using scripts in the [PathCORE-analysis](https://github.com/greenelab/PathCORE-analysis) repository.
-- Please see the instructions [in PathCORE-analysis](https://github.com/greenelab/PathCORE-analysis#web-application-database-setup). Note that the files needed to populate the MongoDB database are already available, save for a `.yml` credentials file you need to create. Provided for the PAO1 demo server:
-  - The [results](https://github.com/greenelab/PathCORE-analysis/tree/master/data/pao1_data/eADAGE_analysis) from running the PathCORE software on the _P. aeruginosa_ gene compendium and KEGG definitions.
-  - The [directory](https://github.com/greenelab/PathCORE-analysis/tree/master/data/pao1_web_info) containing the compendium samples annotations file and additional gene information. (See the [`data/README`](https://github.com/greenelab/PathCORE-analysis/tree/master/data) file in PathCORE-analysis for citation information.)
+Information about the _P. aeruginosa_ data compendium and genes are stored in several MongoDB collections using scripts in the [PathCORE-T-analysis](https://github.com/greenelab/PathCORE-T-analysis) repository.
+- Please see the instructions [in PathCORE-T-analysis](https://github.com/greenelab/PathCORE-T-analysis#web-application-database-setup). Note that the files needed to populate the MongoDB database are already available, save for a `.yml` credentials file you need to create. Provided for the PAO1 demo server:
+  - The [results](https://github.com/greenelab/PathCORE-T-analysis/tree/master/data/pao1_data/eADAGE_analysis) from running the PathCORE-T software on the _P. aeruginosa_ gene compendium and KEGG definitions.
+  - The [directory](https://github.com/greenelab/PathCORE-T-analysis/tree/master/data/pao1_web_info) containing the compendium samples annotations file and additional gene information. (See the [`data/README`](https://github.com/greenelab/PathCORE-T-analysis/tree/master/data) file in PathCORE-T-analysis for citation information.)
 
 The collections that are accessed in this application's GET requests are as follows:
-- **pathcore_edge_data**: This is data needed to load the edge page in the PathCORE demo server. Notably, the `gene_names` are the rows seen on the heatmap, the `most_expressed_samples` and `least_expressed_samples` the columns, and the `most_expressed_heatmap` and `least_expressed_heatmap` the data for each of the heatmaps. 
+- **pathcore_edge_data**: This is data needed to load the edge page in the PathCORE-T demo server. Notably, the `gene_names` are the rows seen on the heatmap, the `most_expressed_samples` and `least_expressed_samples` the columns, and the `most_expressed_heatmap` and `least_expressed_heatmap` the data for each of the heatmaps. 
   - `edge`: list[str (pathway 0), str (pathway 1)], the two pathways in this co-occurrence relationship
   - `weight_oddsratio`: float, the weight of the edge divided by the expected odds ratio
   - `gene_names`: list[str (gene names)], the PA locus tag or the common name of each gene (up to 20). The ordering of this list is dependent on the genes' corresponding odds ratio values (they are sorted in descending order).
@@ -77,7 +77,7 @@ The collections that are accessed in this application's GET requests are as foll
   - `least_expressed_samples`: list[str (sample CEL file)], the "least expressed" samples, where "most/least expressed" is based on a summary score that was computed as a function of the genes, their odds ratios, and their expression values in each sample of the compendia. (In descending order.)
   - `most_expressed_heatmap`: list[dict("value": float, "col_index": int, "row_index": int)], a list of dicts/objects corresponding to the expression value of each cell in the most expressed heatmap (at position specified by the row and col indices). Rows correspond to genes and columns correspond to samples.
   - `least_expressed_heatmap`: list[dict("value": float, "col_index": int, "row_index": int)], a list of dicts/objects corresponding to the value of each cell in the most expressed heatmap (at position specified by the row and col indices). Rows correspond to genes and columns correspond to samples.
-- **sample_annotations**: Contains the sample annotation information that shows up alongside a heatmap when you hover over a heatmap square. All columns in the [sample annotations file](https://github.com/greenelab/PathCORE-analysis/blob/master/data/pao1_web_info/PseudomonasAnnotation.tsv) are loaded into this collection.
+- **sample_annotations**: Contains the sample annotation information that shows up alongside a heatmap when you hover over a heatmap square. All columns in the [sample annotations file](https://github.com/greenelab/PathCORE-T-analysis/blob/master/data/pao1_web_info/PseudomonasAnnotation.tsv) are loaded into this collection.
   - Additionally, **there is a `sample_id` field that we add to each document** in the collection. We do this because the **genes** collection, described in the next point, contains the expression value of this gene in every single sample in the compendium. The expression values are ordered according to the samples' ordering in the compendium, and this `sample_id` tracks the position of each sample (and so allows us to fetch the correct expression value for a gene-by-sample).
 - **genes**: Information about the genes in the compendium. 
   -  `gene`: str, the PA gene locus tag
