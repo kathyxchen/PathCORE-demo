@@ -27,16 +27,16 @@
 </div>
 <div class="container" id="experiment-samples">
 <div class="row">
-    <div class="col-xs-6">
-    <div class="text-right">
+    <div class="col-xs-6" style="padding-bottom: 20px;">
       <button type="button" class="btn btn-default toggle-genes">
         Sort genes alphabetically
       </button>
-    </div>
-    </div>
+  </div>
 </div>
 <div class="row" id="heatmap_parent">
-    <div class="col-md-7 sample-view" id="heatmap" style="overflow-x: scroll;">
+    <div style="padding-top: 30px;" class="meta col-xs-4 sample-view">
+    </div>
+    <div style="padding-left: 25px;" class="col-md-8 sample-view" id="heatmap" style="overflow-x: scroll;">
     </div>
 </div>
 </div>
@@ -47,15 +47,15 @@ const sampleData = experimentInfo["samples_expression"];
 const samples = experimentInfo["samples"];
 const whitelisted = experimentInfo["whitelist_samples"];
 
+const colors = ["white", "blue", "red", "black"];
+const colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
+
 let finalSortedSamples = [];
 let least = [];
 let heatmapCells = [];
 let sampleNames;
 let data;
 let copy;
-
-let colors;
-let colorbar;
 
 let heatmap;
 
@@ -99,37 +99,26 @@ data = {
 copy = replaceWithAlphabetical(
   jQuery.extend(true, {}, data));
 
-if (experimentInfo["heatmap_color"] == "R") {
-    colors = ["white", "yellow", "red", "black"];
-} else {
-    colors = ["white", "blue", "purple", "black"];
-}
-colorbar = d3.scale.linear().domain([0, 0.25, 0.50, 1.0]).range(colors);
-
-heatmap = createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
-heatmap.prependTo($("#heatmap_parent"));
+createHeatmap("#heatmap", data, colorbar, 0.0, 1.0);
 
 /* listener for the button toggle
  * (genes ordered by odds ratio or alphabetically)
  */
 $(".toggle-genes").click(function() {
     $(".toggle-genes").text(function(i, text) {
-        let x;
-        let y;
         let returnButtonLabel;
 
         $("#heatmap svg").remove();
         text = text.trim();
         if (text == "Sort genes alphabetically") {
-            x = createHeatmap("#heatmap",
+            createHeatmap("#heatmap",
               copy, colorbar, 0.0, 1.0);
             returnButtonLabel = "Sort genes by odds ratio"; 
         } else {
-            x = createHeatmap("#heatmap",
+            createHeatmap("#heatmap",
               data, colorbar, 0.0, 1.0);
             returnButtonLabel = "Sort genes alphabetically";
         }
-        $("#heatmap_parent .meta.sample-view").replaceWith(x);
         return returnButtonLabel;
     });
 });
