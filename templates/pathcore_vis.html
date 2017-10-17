@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}PathCORE network{% endblock %}
+{% block title %}PathCORE-T network{% endblock %}
 {% block head %}
   {{ super() }}
   <script src="{{ url_for('static', filename='js/pathcore-network.js') }}">
@@ -26,9 +26,9 @@
             {% endif %}
             </p>
             <p>
-                <b>Press Shift-L</b> to view the PathCORE network
+                <b>Press Shift-L</b> to view the PathCORE-T network
                 as a list of edges.
-                <b>Press Shift-N</b> to return to the PathCORE network.
+                <b>Press Shift-N</b> to return to the PathCORE-T network.
             </p>
         </div>
     </div>
@@ -43,7 +43,7 @@
 </body>
 
 <script>
-/* initialize the random seed to make the PathCORE network layout
+/* initialize the random seed to make the PathCORE-T network layout
  * load in the same way every time.
  */
 Math.seedrandom("10pa4t5hcoRE");

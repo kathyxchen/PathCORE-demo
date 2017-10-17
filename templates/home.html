@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}PathCORE network{% endblock %}
+{% block title %}PathCORE-T network{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
 <div class="container">
-<h2>PathCORE Web Interface</h2>
+<h2>PathCORE-T Web Interface</h2>
 <ul class="list-group">
   <li class="list-group-item list-group-item-success">
   <a href="{{ url_for('routes.pathcore_network') }}">
@@ -44,7 +44,7 @@
   </li>
   <li class="list-group-item list-group-item-warning">
   <a href="{{ url_for('routes.pathcore_network_quickview') }}">
-    <b>Upload and view</b></a> your own PathCORE-generated network.
+    <b>Upload and view</b></a> your own PathCORE-T-generated network.
     <br />
     <a href="{{ url_for( 'routes.pathcore_network_file') }}">
     [Download an example file]</a>
@@ -56,18 +56,18 @@
   </li>
 
   <li class="list-group-item list-group-item">
-    <b>PathCORE repositories:</b><br />
-    <a href="https://github.com/greenelab/PathCORE-analysis">
-    PathCORE-analysis
+    <b>PathCORE-T repositories:</b><br />
+    <a href="https://github.com/greenelab/PathCORE-T-analysis">
+    PathCORE-T-analysis
     </a> contains the analysis scripts used to generate the results
     visualized on this demo server.
 
     <br />
-    <a href="https://github.com/greenelab/pathcore">
-    PathCORE
+    <a href="https://github.com/greenelab/PathCORE-T">
+    PathCORE-T
     </a> is a pip-installable Python 3 package that contains
-    the methods used in the PathCORE analysis workflow (these are imported
-    in the scripts in PathCORE-analysis)
+    the methods used in the PathCORE-T analysis workflow (these are imported
+    in the scripts in PathCORE-T-analysis)
     
     <br />
     **<a href="{{url_for( 'routes.pathcore_docs') }}">
@@ -76,12 +76,12 @@
   </li>
   
   <li class="list-group-item list-group-item-info">
-    <a href="https://github.com/kathyxchen/PathCORE-demo/">
+    <a href="https://github.com/kathyxchen/PathCORE-T-demo/">
         Find me on <b>Github</b>.
     </a>
     <br />
     Found a bug or have a suggestion? Start a conversation 
-    <a href="https://github.com/kathyxchen/PathCORE-demo/issues">
+    <a href="https://github.com/kathyxchen/PathCORE-T-demo/issues">
         <b>here</b>.
     </a>
   </li>
