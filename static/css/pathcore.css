@@ -19,9 +19,11 @@ body {
 
 .node text {
     pointer-events: none;
-    font: 14px, sans-serif;
+    font: 12pt, sans-serif;
+    color: #FFF;
+    color: rgba(255, 255, 255, 0.2);
     fill: white;
-    stroke: gray;
+    stroke: silver; 
 }
 
 .pw0 {

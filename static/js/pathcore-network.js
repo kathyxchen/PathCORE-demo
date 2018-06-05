@@ -9,19 +9,19 @@ function hoverLineColor(viewOnly) {
 }
 
 function defaultNode(textSelect) {
-  textSelect.style("font-size", "16px");
+  textSelect.style("font-size", "14px");
   textSelect.style("font-weight", "normal");
   textSelect.style("fill", "white");
-  textSelect.style("stroke", "gray");
+  textSelect.style("stroke", "silver");
 }
 
 function highlightNode(textSelect, isNeighbor) {
-  textSelect.style("font-size", "18px");
+  textSelect.style("font-size", "16px");
   textSelect.style("font-weight", "bold");
   if (isNeighbor) {
     textSelect.style("fill", "black");
   } else {
-    textSelect.style("fill", "pink");
+    textSelect.style("fill", "red");
   }
   textSelect.style("stroke", "black");
 }
@@ -29,8 +29,8 @@ function highlightNode(textSelect, isNeighbor) {
 function highlightEdges(names) {
   const link = svg.selectAll(".link");
   const neighbors = [];
-  
-  var color; 
+
+  var color;
   link.style("stroke", function(l) {
     if (names.indexOf(l.source.name) != -1) {
       neighbors.push(l.target.name);
@@ -78,7 +78,7 @@ function searchPathways() {
   const link = svg.selectAll(".link");
   const pathways = $(classes);
   const pathwayNodes = $(classes + " circle");
-  
+
   // reset view
   $(".searching").each(function(index) {
     d3.select(this).style("fill", "black");
@@ -94,7 +94,7 @@ function searchPathways() {
   if (pathwayNodes.length == 0) {
     $(".err-message").show();
     return;
-  } 
+  }
   $(".err-message").hide();
 
   pathwayNodes.each(function(index) {
@@ -102,7 +102,7 @@ function searchPathways() {
     $(this).attr("r", 10);
     $(this).addClass("searching");
   });
-  
+
   let pathwayNames = [];
   pathways.each(function(index) {
     const textSelect = d3.select(this).select("text");
@@ -113,7 +113,7 @@ function searchPathways() {
     // move this node to the front of the nodes collection
     this.parentNode.appendChild(this);
   });
-  highlightEdges(pathwayNames); 
+  highlightEdges(pathwayNames);
 }
 
 // event listener for the search bar
@@ -127,7 +127,7 @@ $("#searchbar").keypress(function(e) {
 
 function loadPathCORENetwork(links, force, svg, viewOnly) {
   const nodesByName = {};
-  
+
   function nodeByName(name) {
     return nodesByName[name] || (nodesByName[name] = {name: name});
   }
@@ -145,13 +145,15 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
   force
     .links(links)
     .nodes(nodes)
-    .linkStrength(0.5)
+    .linkStrength(0.15)
     .start();
-  
+
+  force.linkDistance(20);
+
   let link; // functions/attributes associated with each link
   let node; // functions/attributes associated with each node
   let node_drag;
-  
+
   // Create the link lines.
   link = svg.selectAll(".link")
     .data(links)
@@ -180,9 +182,9 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
       .on("mouseout", function() {
         const target = d3.select(this);
         const weight = target[0][0].__data__.weight;
-        target.style("stroke", lineColor); 
+        target.style("stroke", lineColor);
         target.style("stroke-width", edgeWeightConversion(weight));
-        node.style("fill", "black");  
+        node.style("fill", "black");
       })
       .on("click", function(d) {
         if (viewOnly) {
@@ -212,12 +214,12 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
     tick();
     force.resume();
   }
-  
+
   node_drag = d3.behavior.drag()
     .on("dragstart", dragstart)
     .on("drag", dragmove)
     .on("dragend", dragend)
-  
+
   // Create the node circles.
   node = svg.selectAll(".node")
     .data(nodes)
@@ -284,19 +286,19 @@ function loadPathCORENetwork(links, force, svg, viewOnly) {
       }
     });
   }
-  
+
   svg.selectAll("text").call(wrap, 350);
 
   // Start the force layout.
   force.on("tick", tick_initial);
-  
+
   function tick_initial() {
     link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
-    node.attr("transform", function(d) { 
-      return "translate(" + d.x + "," + d.y + ")"; 
+    node.attr("transform", function(d) {
+      return "translate(" + d.x + "," + d.y + ")";
     });
   }
 
