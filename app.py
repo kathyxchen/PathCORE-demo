@@ -6,7 +6,7 @@ from flask import Flask
 
 
 app = Flask(__name__, template_folder="templates")
-app.config['MONGO_URI'] = os.environ.get("ATLAS_URI")
+app.config['ATLAS_URI'] = os.environ.get("ATLAS_URI")
 app.secret_key = os.environ.get("SESSION_SECRET")
 
 from routes import routes
