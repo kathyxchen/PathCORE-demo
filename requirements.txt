@@ -1,4 +1,5 @@
 Flask==0.12.2
 Flask-Excel==0.0.5
 gunicorn==19.7.1
-pymongo==3.5.1
+pymongo==3.10.1
+dnspython==2.0.0
