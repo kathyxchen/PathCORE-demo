@@ -14,10 +14,7 @@ from utils import get_excel_template
 # There's some code repetition here that I could avoid
 # possibly by changing the directory structure. Something
 # to consider in a future version.
-MONGODB_URL = "mongodb://{0}:{1}@{2}/{3}".format(
-    os.environ.get("MDB_USER"), os.environ.get("MDB_PW"),
-    os.environ.get("MLAB_URI"), os.environ.get("MDB_NAME"))
-client = MongoClient(MONGODB_URL)
+client = MongoClient(str(os.environ.get("ATLAS_URI")))
 db = client[str(os.environ.get("MDB_NAME"))]
 
 routes = Blueprint("routes", __name__)
